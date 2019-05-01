@@ -1,0 +1,88 @@
+name: predicate
+version: '0.1.0.0'
+author: gbwey 
+maintainer: gbwey
+license: MIT
+dependencies:
+- aeson
+- aeson-pretty
+- base 
+- bytestring
+- containers
+- contravariant
+- edit-distance
+- file-embed
+- formatting
+- hashable
+- lens
+- lens-aeson
+- lens-datetime
+- mtl
+- pretty
+- pretty-terminal
+- pretty-tree
+- regex-applicative
+- scientific
+- shakespeare
+- split
+- tagged
+- text
+- these
+- time
+- tree-view
+- unordered-containers
+- vector
+- vinyl >= 0.10.0.1
+default-extensions: []
+
+library:
+  source-dirs: 
+  - src
+  ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wredundant-constraints
+  other-modules: []
+  exposed-modules: 
+  - Pred
+  - PredState
+  - SimplifyPred
+  - SimplifyPredState
+  - PredHelper
+  - PredJson
+  - PredADT
+  - RegexHelper
+  - VinylHelper
+  - JsonHelper
+  dependencies: []
+
+tests:
+  doctests:
+    main: doctests.hs
+    other-modules: []
+    ghc-options: -threaded
+    source-dirs: 
+    - .
+    - src
+    dependencies: 
+    # - predicate 
+    - doctest
+  testpred:
+    main: "TestPred.hs"
+    ghc-options: "-threaded -O0"
+    source-dirs:
+    - test
+    dependencies:
+      - predicate
+      - doctest
+      - QuickCheck
+      - easytest
+#      - validity
+#      - genvalidity
+#      - genvalidity-property
+#      - genvalidity-scientific
+ 
+data-files: 
+- myfile.txt
