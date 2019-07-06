@@ -290,7 +290,7 @@ data BoolP =
     FailP (NonEmpty String)
   | FalseP
   | TrueP
-  deriving (Data, Typeable, Show,Eq)
+  deriving (Data, Show,Eq)
 
 _FailP :: Prism' BoolP (NonEmpty String)
 _FailP = prism' FailP $ \case
@@ -347,7 +347,7 @@ type PE = Either PredE PredExceptionE
 data PredE = PredE { _peErr :: !String
                    , _peInput :: !String
                    , _peLogs :: [String]
-                   } deriving (Eq, Typeable)
+                   } deriving Eq
 
 instance Show PredE where
   show (PredE e i j) =
@@ -364,7 +364,7 @@ data PredExceptionE = PredExceptionE { _peExceptionE :: NonEmpty String
                    , _peErrE :: !String
                    , _peInputE :: !String
                    , _peLogsE :: [String]
-                   } deriving (Eq, Typeable)
+                   } deriving Eq
 
 instance Show PredExceptionE where
   show (PredExceptionE excs e i j) =
