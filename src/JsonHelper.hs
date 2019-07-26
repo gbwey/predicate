@@ -313,7 +313,7 @@ matchNull (x :| _, _) = x ^? _JPValue . _Null
 jkeyPrint' :: (Show a, Foldable t) => [(t JPath, (String, a))] -> IO [a]
 jkeyPrint' xs = do
   putStrLn ""
-  forM (zip [0::Int ..] xs) $ \(i,((reverse . toList) -> jps,(k,v))) -> do
+  forM (zip [0::Int ..] xs) $ \(i, (reverse . toList -> jps,(k,v))) -> do
     putStrLn $ "i=" <> show i <> "\tkey   => " <> k
     putStrLn $ "\tjpath => " <> show jps
     putStrLn $ "\tprism => " <> showJPaths jps

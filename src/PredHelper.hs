@@ -711,24 +711,14 @@ splitAndP opts msgs ts = -- could do isn't _BoolP
 -- uses a typesafe Map to hold the values
   let cmap = toCMap' (^. _2 . boolP) ts
   in case getC (FailP ("" :| [])) cmap of
-       excs@(e:_) -> Left $ mkNode (getBool (snd e), msgs <> ["excs=" <> show (length excs) <> " " <> formatList opts [e]]) (returnTS opts (Just e) ts)
+       excs@(e:_) -> Left $ mkNode (getBool (snd e), msgs <> ["excs=" <> show (length excs) <> " " <> formatList opts [e]]) (map fixit ts)
        _ -> Right (getC FalseP cmap, getC TrueP cmap)
 
-returnTS :: POpts -> Maybe ((Int, x), TT) -> [((Int, x), TT)] -> [TT]
-returnTS opts mt ts =
-  let fixit ((i, _), Node r xs) =
+fixit :: ((Int, x), TT) -> TT
+fixit ((i, _), Node r xs) =
         Node (r & peStrings %~ \case
                                   [] -> ["i=" <> show i]
-                                  (w:ws) -> ("i=" <> show i <> ": " <> w): ws) xs
-      rs | length ts <= 2 * oMaxElements opts = ts
-         | otherwise = let as = take (oMaxElements opts) ts
-                           lst = length ts - oMaxElements opts
-                           bs = drop lst ts
-                           dotdotdot = ((length as,snd (fst (head as))), mkNodeDebug (TrueP, ["....contd...."]) [])
-                           in case mt of
-                                Just t@((i, _), _) | i >= oMaxElements opts && i< lst -> as <> (t : dotdotdot : bs)
-                                _ -> as <> (dotdotdot : bs)
-  in map fixit rs
+                                  w:ws -> ("i=" <> show i <> ": " <> w): ws) xs
 
 orderImpl :: Show b =>
                    POpts
@@ -760,7 +750,7 @@ partitionImpl2 opts nm ts (bads, goods) ll =
              ([
               mkNode (getBool ll, [nm <> " Predicate"]) [ll]
               ] <>
-              [mkNodeDebug (TrueP, [nm <> " debugging info "]) (returnTS opts Nothing ts) | oDebug opts > 1]
+              [mkNodeDebug (TrueP, [nm <> " debugging info "]) (map fixit ts) | oDebug opts > 1]
              )
 
 breakImpl2 :: Show a2 =>
@@ -778,7 +768,7 @@ breakImpl2 opts nm ts (bads, goods) ll =
     in mkNode (getBool ll, [nm] <> msgl <> msgr)
              ([mkNode (getBool ll, [nm <> " Predicate"]) [ll]]
                <>
-              [mkNodeDebug (TrueP, [nm <> " debugging info "]) (returnTS opts Nothing ts) | oDebug opts > 1]
+              [mkNodeDebug (TrueP, [nm <> " debugging info "]) (map fixit ts) | oDebug opts > 1]
               )
 
 {-

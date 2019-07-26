@@ -5302,31 +5302,30 @@ eval' (POps ps q) a = do
   let nm = "POps"
   (opts,_) <- add11 nm
   ts <- zipWithM (\i p -> ((i, a),) <$> eval' p a) [0::Int ..] ps
-  let msg = ["truncated" | isTruncated opts ts]
-  case splitAndP opts ([nm] <> msg) ts of
+  case splitAndP opts [nm] ts of
     Left e -> return e
     Right (bads,goods) -> do
       let xs = ts ^.. traverse . _2 . root . peBoolP . _BoolP
       ll <- eval' q xs
-      let ll' = ll & branches %~ (<> returnTS opts Nothing ts)
-      return $ mkNode (getBool ll, [nm] <> msg <> [show (length bads, length goods)]) [ll']
+      let ll' = ll & branches %~ (<> map fixit ts)
+      return $ mkNode (getBool ll, [nm] <> [show (length bads, length goods)]) [ll']
 
 -- todo: need to limit output ala PForAll
 eval' (POrder c) (toList -> as) = do
   opts <- R.ask
   let nm = "POrder"
       xs = isSorted c as
-      (ts, (je, msg1)) = orderImpl opts xs
+      (ts, (_je, msg1)) = orderImpl opts xs
   add1 (nm <> "(" <> show c <> ")")
-  return $ mkNode (_BoolP # all fst xs, [nm <> " (" <> show c <> ")" <> msg1]) (returnTS opts je ts)
+  return $ mkNode (_BoolP # all fst xs, [nm <> " (" <> show c <> ")" <> msg1]) (map fixit ts)
 
 eval' (POrderEq bb) (toList -> as) = do
   opts <- R.ask
   let nm = "POrderEq"
       xs = isSortedEq bb as
-      (ts, (je, msg1)) = orderImpl opts xs
+      (ts, (_je, msg1)) = orderImpl opts xs
   add1 (nm <> "(" <> equalShow bb <> ")")
-  return $ mkNode (_BoolP # all fst xs, [nm <> " (" <> equalShow bb <> ")" <> msg1]) (returnTS opts je ts)
+  return $ mkNode (_BoolP # all fst xs, [nm <> " (" <> equalShow bb <> ")" <> msg1]) (map fixit ts)
 
 eval' (PChangeOpts f p) a = do
   opts <- R.ask
@@ -5700,11 +5699,10 @@ eval' (PForAll p) (toList -> as) = do
   let nm = "PForAll"
   (opts,_) <- add11 nm
   ts <- zipWithM (\i a -> ((i, a),) <$> eval' p a) [0::Int ..] as
-  let msg = ["truncated" | isTruncated opts ts]
-  return $ case splitAndP opts ([nm] <> msg) ts of
+  return $ case splitAndP opts [nm] ts of
        Left e -> e
-       Right ([], _) -> mkNode (TrueP, [nm] <> msg) (returnTS opts Nothing ts)
-       Right (bads@(b:_), _) -> mkNode (FalseP, [nm] <> msg <> ["cnt=" <> show (length bads) <> " " <> formatList opts [b]]) (returnTS opts (Just b) ts)
+       Right ([], _) -> mkNode (TrueP, [nm]) (map fixit ts)
+       Right (bads@(b:_), _) -> mkNode (FalseP, [nm] <> ["cnt=" <> show (length bads) <> " " <> formatList opts [b]]) (map fixit ts)
 
 -- if too many 'ts' then show first n and last n and then 1 good one if not already shown
 -- todo: NOPE if exists has one that is True then if succeeds even if the predicate fails???
@@ -5712,11 +5710,10 @@ eval' (PExists p) (toList -> as) = do
   let nm = "PExists"
   (opts,_) <- add11 nm
   ts <- zipWithM (\i a -> ((i, a),) <$> eval' p a) [0::Int ..] as
-  let msg = ["truncated" | isTruncated opts ts]
-  return $ case splitAndP opts ([nm] <> msg) ts of
+  return $ case splitAndP opts [nm] ts of
        Left e -> e
-       Right (_, goods@(g:_)) -> mkNode (TrueP, [nm] <> msg <> ["cnt=" <> show (length goods) <> " " <> formatList opts [g]]) (returnTS opts (Just g) ts)
-       Right _ -> mkNode (FalseP, [nm] <> msg) (returnTS opts Nothing ts) -- in this case all are bad!
+       Right (_, goods@(g:_)) -> mkNode (TrueP, [nm] <> ["cnt=" <> show (length goods) <> " " <> formatList opts [g]]) (map fixit ts)
+       Right _ -> mkNode (FalseP, [nm]) (map fixit ts) -- in this case all are bad!
 
 eval' (PZipExact ps e q) (toList -> as) = do
   let nm = "PZipExact"
@@ -5730,13 +5727,13 @@ eval' (PZipExact ps e q) (toList -> as) = do
                return $ mkNode (getBool ll, [nm,msg1]) [ll]
        Nothing -> do
                ts <- zipWithM (\(i, p) a -> ((i, a),) <$> eval' p a) (zip [0::Int ..] ps) as
-               let msgs = nm : ["truncated" | isTruncated opts ts] <> maybeToList mmsg1 <> [showA opts 2 "as=" as]
+               let msgs = nm : maybeToList mmsg1 <> [showA opts 2 "as=" as]
                case splitAndP opts msgs ts of
                     Left ex -> return ex
                     Right (bads,goods) -> do
                       let xs :: [Bool] = ts ^.. traverse . _2 . root . peBoolP . _BoolP
                       ll <- eval' q xs
-                      let ll' = ll & branches %~ (<> returnTS opts Nothing ts)
+                      let ll' = ll & branches %~ (<> map fixit ts)
                       return $ mkNode (getBool ll, msgs <> ["(bad,good)=" <> show (length bads, length goods)]) [ll']
 
 eval' (PSeq ps q) (toList -> as) = do
@@ -5746,13 +5743,13 @@ eval' (PSeq ps q) (toList -> as) = do
               then Just ("length ps " <> show (length ps) <> " /= length as " <> show (length as) <> " ")
               else Nothing
   ts <- zipWithM (\(i, p) a -> ((i, a),) <$> eval' p a) (zip [0::Int ..] ps) as
-  let msgs = nm : ["truncated" | isTruncated opts ts] <> maybeToList mmsg1 <> [showA opts 2 "as=" as]
+  let msgs = nm : maybeToList mmsg1 <> [showA opts 2 "as=" as]
   case splitAndP opts msgs ts of
     Left e -> return e
     Right (bads,goods) -> do
       let xs :: [Bool] = ts ^.. traverse . _2 . root . peBoolP . _BoolP
       ll <- eval' q (xs,drop (length ps) as)
-      let ll' = ll & branches %~ (returnTS opts Nothing ts <>)
+      let ll' = ll & branches %~ (map fixit ts <>)
       return $ mkNode (getBool ll, msgs <> [show (length bads, length goods)]) [ll']
 
 
@@ -5764,8 +5761,7 @@ eval' (PPartition p pbg) (toList -> as) = do
   let nm = "PPartition"
   (opts,_) <- add11 nm
   ts <- zipWithM (\i a -> ((i, a),) <$> eval' p a) [0::Int ..] as
-  let msg = ["truncated" | isTruncated opts ts]
-  case splitAndP opts ([nm] <> msg) ts of
+  case splitAndP opts [nm] ts of
        Left e -> return e
        -- means there are no errors so we can filter
        -- we already have the index so dont add it again!
@@ -5783,8 +5779,7 @@ eval' (PBreak p p12) (toList -> as) = do
   -- if we get a True then we stop
   tss <- zipWithM (\i a -> ((i, a),) <$> eval' p a) [0::Int ..] as
   let (ts,ts') = break (isn't _FalseP . view (_2 . boolP)) tss
-  let msg = ["truncated" | isTruncated opts ts]
-  case splitAndP opts ([nm] <> msg) (ts <> take 1 ts') of
+  case splitAndP opts [nm] (ts <> take 1 ts') of
        Left e -> return e
        Right (bads, _) -> do
             ll <- eval' p12 (take (length ts) as, drop (length ts) as)
@@ -5797,8 +5792,7 @@ eval' (PSpan p p12) (toList -> as) = do
   -- if we get a True then we stop
   tss <- zipWithM (\i a -> ((i, a),) <$> eval' p a) [0::Int ..] as
   let (ts,ts') = span (isn't _FalseP . view (_2 . boolP)) tss
-  let msg = ["truncated" | isTruncated opts ts]
-  case splitAndP opts ([nm] <> msg) (ts <> take 1 ts') of
+  case splitAndP opts [nm] (ts <> take 1 ts') of
        Left e -> return e
        Right (bads, _) -> do
             ll <- eval' p12 (take (length ts) as, drop (length ts) as)
@@ -5941,18 +5935,17 @@ linearImpl nm noextravalues qps as =  do
         errs = filter (linearityFilter noextravalues) (map fst ret)
 
         ns = ret <&> \(rc, (a, ts)) ->
-               let msg = ["truncated" | isTruncated opts ts]
-                   aa = showA opts 0 " a=" a
-               in case splitAndP opts ([nm] <> msg <> ["rc=" <> show rc]) ts of
+               let aa = showA opts 0 " a=" a
+               in case splitAndP opts ([nm] <> ["rc=" <> show rc]) ts of
                    Left e -> e
                    Right (_, goods@(g:_)) ->
                      case rc of
-                       OneMatch _ -> mkNode (TrueP, [nm] <> [show rc <> aa <> " cnt=" <> show (length goods) <> " " <> formatList opts [g]] <> msg) (returnTS opts (Just g) ts)
-                       _ -> mkNode (FalseP, [nm <> " " <> show rc <> aa] <> msg) (returnTS opts Nothing ts)
+                       OneMatch _ -> mkNode (TrueP, [nm] <> [show rc <> aa <> " cnt=" <> show (length goods) <> " " <> formatList opts [g]]) (map fixit ts)
+                       _ -> mkNode (FalseP, [nm <> " " <> show rc <> aa]) (map fixit ts)
                    Right _ ->
                      case rc of
-                       NoMatch _ | noextravalues == Loose -> mkNode (TrueP, [nm <> " " <> show rc <> aa] <> msg) (returnTS opts Nothing ts)
-                       _ -> mkNode (FalseP, [nm <> " " <> show rc <> aa] <> msg) (returnTS opts Nothing ts)
+                       NoMatch _ | noextravalues == Loose -> mkNode (TrueP, [nm <> " " <> show rc <> aa]) (map fixit ts)
+                       _ -> mkNode (FalseP, [nm <> " " <> show rc <> aa]) (map fixit ts)
 
         -- grafts showPred tree if debug mode
         fn p tt = mkNode (getBool tt, []) [tt, fmap (\n -> BoolPE (getBool tt) False [n]) (showPred opts p)]

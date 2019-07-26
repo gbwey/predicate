@@ -1,4 +1,3 @@
-# double-conversion is used by formatting and text-format
 flags: {}
 extra-package-dbs: []
 packages:
@@ -6,13 +5,8 @@ packages:
 - location: ../easytest
   extra-dep: true
 extra-deps: 
-- vinyl-0.10.0.1
 - pretty-terminal-0.1.0.0
 - pretty-tree-0.1.0.0
 - tree-view-0.5
-# - validity-0.9.0.1 
-# - genvalidity-0.8.0.0
-# - genvalidity-property-0.4.0.0
-# - genvalidity-scientific-0.2.1.0
 arch: x86_64
-resolver: lts-12.11
+resolver: lts-13.25
