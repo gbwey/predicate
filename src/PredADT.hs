@@ -50,7 +50,6 @@ import Data.These
 import RegexHelper
 import VinylHelper
 import JsonHelper
-import Text.Show.Functions ()
 import Data.Vinyl
 import Data.Vinyl.TypeLevel
 import qualified Data.Vinyl.Functor as W
@@ -1805,6 +1804,7 @@ _PIf mpexc mpb mpg (Pred x p) =
 
 -- | function application
 --
+--   >>> import Text.Show.Functions
 --   >>> pe2' (_PFn "xx" (*) (_PApp 7 1)) 1012
 --   <BLANKLINE>
 --   TrueP  PFn xx | a=1012 | b=<function>

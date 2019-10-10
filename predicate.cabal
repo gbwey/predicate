@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.0.
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0d582f55ff6898a249799f24de8e1daf7666e8fba651ef7232318feceea68262
+-- hash: 30cc15e2cd3c65e4da2a3703704692fa0dd79abb6ea084acdecacc6217471dbc
 
 name:           predicate
 version:        0.1.0.0
@@ -30,7 +30,7 @@ library
       JsonHelper
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints -fomit-interface-pragmas
   build-depends:
       aeson
     , aeson-pretty
@@ -69,7 +69,7 @@ test-suite doctests
   hs-source-dirs:
       ./.
       src
-  ghc-options: -threaded
+  ghc-options: -threaded -fomit-interface-pragmas
   build-depends:
       aeson
     , aeson-pretty
@@ -110,7 +110,7 @@ test-suite testpred
       Paths_predicate
   hs-source-dirs:
       test
-  ghc-options: -threaded -O0
+  ghc-options: -threaded -O0 -fomit-interface-pragmas
   build-depends:
       QuickCheck
     , aeson

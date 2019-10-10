@@ -26,22 +26,22 @@ json3 = json3' ^?! _Value
 json1' :: String
 json1' = T.unpack [I.st|
 {
-  "glossary": 
+  "glossary":
   {
     "title": "example glossary",
-    "GlossDiv": 
+    "GlossDiv":
     {
       "title": "S",
-      "GlossList": 
+      "GlossList":
       {
-        "GlossEntry": 
+        "GlossEntry":
         {
           "ID": "SGML",
           "SortAs": "SGML",
           "GlossTerm": "Standard Generalized Markup Language",
           "Acronym": "SGML",
           "Abbrev": "ISO 8879:1986",
-          "GlossDef": 
+          "GlossDef":
           {
               "para": "A meta-markup language, used to create markup languages such as DocBook.",
               "GlossSeeAlso": ["GML", "XML"]
@@ -56,7 +56,7 @@ json1' = T.unpack [I.st|
 
 json2' :: String
 json2' = T.unpack [I.st|
-[ 
+[
    { "firstName"  : "Daniel"
    , "lastName"   : "Diaz"
    , "age"        :  24
@@ -124,7 +124,7 @@ json3' = T.unpack [I.st|
                   "type":"number"
                }
             },
-            "required":[  
+            "required":[
                "length",
                "width",
                "height"
@@ -135,7 +135,7 @@ json3' = T.unpack [I.st|
             "$ref":"http://json-schema.org/geo"
          }
       },
-      "required":[  
+      "required":[
          "id",
          "name",
          "price"
@@ -145,11 +145,11 @@ json3' = T.unpack [I.st|
 |]
 
 
-data Lang = Lang { lang :: String, score :: Int, year :: Int, name :: String, langType :: LangType } 
+data Lang = Lang { lang :: String, score :: Int, year :: Int, name :: String, langType :: LangType }
   deriving (Eq, Show)
 
 langs :: [Lang]
-langs = 
+langs =
   [Lang "Haskell" 15  1990 "Simon Peyton-Jones" Func
   , Lang "Rust" 8 2010 "Graydon Hoare" Imperative
   , Lang "Idris" 19 2018 "Edwin Brady" Proof
@@ -162,7 +162,7 @@ langs =
   , Lang "F#" 11 2005 "Don Syme" Func
   , Lang "APL" 8 1966 "Kenneth E. Iverson" Imperative
   ]
-  
-data LangType = Proof | Func | Imperative 
+
+data LangType = Proof | Func | Imperative
   deriving (Eq, Ord, Show)
 

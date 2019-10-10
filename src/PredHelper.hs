@@ -10,7 +10,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ViewPatterns #-}
--- {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiWayIf #-}
 module PredHelper where
@@ -48,7 +48,7 @@ import Data.Semigroup
 import Data.These
 import Data.List.Split
 import Text.EditDistance
---import Data.Typeable
+import GHC.Generics (Generic)
 
 -- | default color loaded from required file "myfile.txt"
 myColor :: (String, PColor)
@@ -347,7 +347,7 @@ type PE = Either PredE PredExceptionE
 data PredE = PredE { _peErr :: !String
                    , _peInput :: !String
                    , _peLogs :: [String]
-                   } deriving Eq
+                   } deriving (Generic, Eq)
 
 instance Show PredE where
   show (PredE e i j) =
@@ -364,7 +364,7 @@ data PredExceptionE = PredExceptionE { _peExceptionE :: NonEmpty String
                    , _peErrE :: !String
                    , _peInputE :: !String
                    , _peLogsE :: [String]
-                   } deriving Eq
+                   } deriving (Generic, Eq)
 
 instance Show PredExceptionE where
   show (PredExceptionE excs e i j) =

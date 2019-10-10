@@ -54,7 +54,6 @@ import JsonHelper
 import Data.Maybe
 import qualified Control.Monad.Reader as R
 import Control.Monad
-import Text.Show.Functions ()
 import Data.Vinyl
 import qualified Data.Vinyl.Functor as V
 import Data.Vinyl.TypeLevel
@@ -1352,6 +1351,7 @@ data Pred z a where
 -- need to be able to join 2 predicates back together
   -- | function application
   --
+  --   >>> import Text.Show.Functions
   --   >>> pe2' (PFn "xx" (*) (PApp 7 1)) 1012
   --   <BLANKLINE>
   --   TrueP  PFn xx | a=1012 | b=<function>

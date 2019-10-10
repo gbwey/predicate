@@ -49,7 +49,6 @@ import Data.Vector (Vector)
 import Control.Monad
 import JsonHelper
 import Data.Maybe
-import Text.Show.Functions ()
 import Data.Vinyl
 import Data.Vinyl.TypeLevel
 import qualified Data.Vinyl.Functor as V
@@ -1344,6 +1343,7 @@ data Pred a where
 -- need to be able to join 2 predicates back together
   -- | function application
   --
+  --   >>> import Text.Show.Functions
   --   >>> pe2' (PFn "xx" (*) (PApp 7 1)) 1012
   --   <BLANKLINE>
   --   TrueP  PFn xx | a=1012 | b=<function>

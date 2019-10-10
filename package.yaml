@@ -1,12 +1,12 @@
 name: predicate
 version: '0.1.0.0'
-author: gbwey 
-maintainer: gbwey
-license: MIT
+author: Grant Weyburne
+maintainer: gbwey9@gmail.com
+license: BSD3
 dependencies:
 - aeson
 - aeson-pretty
-- base 
+- base
 - bytestring
 - containers
 - contravariant
@@ -36,7 +36,7 @@ dependencies:
 default-extensions: []
 
 library:
-  source-dirs: 
+  source-dirs:
   - src
   ghc-options:
   - -Wall
@@ -44,8 +44,9 @@ library:
   - -Wincomplete-record-updates
   - -Wincomplete-uni-patterns
   - -Wredundant-constraints
+  - -fomit-interface-pragmas
   other-modules: []
-  exposed-modules: 
+  exposed-modules:
   - Pred
   - PredState
   - SimplifyPred
@@ -62,16 +63,21 @@ tests:
   doctests:
     main: doctests.hs
     other-modules: []
-    ghc-options: -threaded
-    source-dirs: 
+    ghc-options:
+    - -threaded
+    - -fomit-interface-pragmas
+    source-dirs:
     - .
     - src
-    dependencies: 
-    # - predicate 
+    dependencies:
+    # - predicate
     - doctest
   testpred:
     main: "TestPred.hs"
-    ghc-options: "-threaded -O0"
+    ghc-options:
+    - -threaded
+    - -O0
+    - -fomit-interface-pragmas
     source-dirs:
     - test
     dependencies:
@@ -79,10 +85,6 @@ tests:
       - doctest
       - QuickCheck
       - easytest
-#      - validity
-#      - genvalidity
-#      - genvalidity-property
-#      - genvalidity-scientific
- 
-data-files: 
+
+data-files:
 - myfile.txt

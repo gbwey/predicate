@@ -5,6 +5,7 @@ module Main where
 import Control.Monad
 import EasyTest
 import PredState
+import Text.Show.Functions ()
 
 main :: IO ()
 main = run suite
@@ -16,12 +17,12 @@ suite = tests
   , scope "palg8.fail1 out of bounds" $ void $ expectLeft (runPred @() alg8 0)
   , scope "palg8.ok1" $ void $ expectRight (runPred @() alg8 1)
   , scope "palg8.ok2" $ void $ expectRight (runPred @() alg8 2)
-  , scope "palg8.fail except 3" $ void $ expectLeft (runPred @() alg8 3)
-  , scope "palg8.fail except 4" $ void $ expectLeft (runPred @() alg8 4)
+  , scope "palg8.fail1 except 3" $ void $ expectLeft (runPred @() alg8 3)
+  , scope "palg8.fail2 except 4" $ void $ expectLeft (runPred @() alg8 4)
   , scope "palg8.ok5" $ void $ expectRight (runPred @() alg8 5)
-  , scope "palg8.fail except 6" $ void $ expectLeft (runPred @() alg8 6)
+  , scope "palg8.fail3 except 6" $ void $ expectLeft (runPred @() alg8 6)
   , scope "palg8.ok7" $ void $ expectRight (runPred @() alg8 7)
-  , scope "palg8.fail2 out of bounds" $ void $ expectLeft (runPred @() alg8 8)
+  , scope "palg8.fail4 out of bounds" $ void $ expectLeft (runPred @() alg8 8)
   , scope "pexists_range.ok1" $ void $ expectRight (runPred @() (PExists (PRange 4 6) `POr` PNull) ([]::[Int]))
   , scope "pexists_range.ok2" $ void $ expectRight (runPred @() (PExists (PRange 4 6) `POr` PNull) [3::Int ..7])
   , scope "pexists_range.fail" $ void $ expectLeft (runPred @() (PExists (PRange 4 6) `POr` PNull) ([7::Int ..10]++[1..3]))
