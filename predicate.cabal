@@ -4,17 +4,15 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 30cc15e2cd3c65e4da2a3703704692fa0dd79abb6ea084acdecacc6217471dbc
+-- hash: fbde34d3c8432b5a89954b0efee784c91ccf51ae61a87a0012324b91185072cf
 
 name:           predicate
 version:        0.1.0.0
-author:         gbwey
-maintainer:     gbwey
-license:        MIT
+author:         Grant Weyburne
+maintainer:     gbwey9@gmail.com
+license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-data-files:
-    myfile.txt
 
 library
   exposed-modules:
@@ -39,7 +37,6 @@ library
     , containers
     , contravariant
     , edit-distance
-    , file-embed
     , formatting
     , hashable
     , lens
@@ -79,7 +76,6 @@ test-suite doctests
     , contravariant
     , doctest
     , edit-distance
-    , file-embed
     , formatting
     , hashable
     , lens
@@ -107,6 +103,7 @@ test-suite testpred
   type: exitcode-stdio-1.0
   main-is: TestPred.hs
   other-modules:
+      TestRegexHelper
       Paths_predicate
   hs-source-dirs:
       test
@@ -122,7 +119,6 @@ test-suite testpred
     , doctest
     , easytest
     , edit-distance
-    , file-embed
     , formatting
     , hashable
     , lens

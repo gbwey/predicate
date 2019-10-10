@@ -43,21 +43,11 @@ import qualified Data.ByteString.Char8 as BS8
 import Control.Monad
 import System.Console.Pretty
 import qualified Text.PrettyPrint as PP
-import Data.FileEmbed
 import Data.Semigroup
 import Data.These
 import Data.List.Split
 import Text.EditDistance
 import GHC.Generics (Generic)
-
--- | default color loaded from required file "myfile.txt"
-myColor :: (String, PColor)
-myColor =
-  let k = let z = $(embedStringFile "myfile.txt")
-          in dropWhileEnd isSpace $ dropWhile isSpace z
-  in case M.lookup k colorMap of
-      Nothing -> error $ "invalid color[" <> k <> "] in myfile.txt: not found in color map: valid choices are " <> unwords (M.keys colorMap)
-      Just v -> (k,v)
 
 -- | overrides Ord instance to hold the constructor value
 newtype COrd k = COrd k deriving Show
@@ -515,7 +505,7 @@ o0 = POpts
     , oDebug = 0
     , oDisp = NormalDisp
     , oHide = 0
-    , oColor = myColor
+    , oColor = color1
     }
 
 colorMap :: Map String PColor
