@@ -1,5 +1,4 @@
 {-# OPTIONS -Wall #-}
--- {-# OPTIONS -Wno-redundant-constraints #-} -- SConv on dopt dreq: no difference in how ghc handles it so drop the constraint on it
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -60,7 +59,7 @@ import Data.Vinyl.TypeLevel
 import qualified GHC.TypeLits as G
 import Text.Regex.Applicative
 
-import PredJson -- need this for doctests
+import PredJson -- needed for doctest
 
 data Pred z a where
   -- | leaf constructor that sets the final state. see 'BoolPE'

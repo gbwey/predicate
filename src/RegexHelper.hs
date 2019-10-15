@@ -12,7 +12,6 @@ import Data.Char
 import Data.Function
 import Data.Ratio
 import Data.List
---import Data.Functor
 import Data.Foldable
 import Data.Maybe
 import Control.Monad

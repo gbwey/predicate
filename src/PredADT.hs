@@ -56,7 +56,7 @@ import qualified Data.Vinyl.Functor as W
 import qualified GHC.TypeLits as G
 import Text.Regex.Applicative
 
-import PredJson -- need for doctests
+import PredJson -- needed for doctest
 
 data Pred a = Pred {
     _ppred :: Tree String

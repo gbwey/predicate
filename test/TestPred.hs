@@ -4,7 +4,6 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TupleSections #-}
 module Main where
-import Control.Monad
 import Test.Tasty
 import Test.Tasty.HUnit
 import PredState

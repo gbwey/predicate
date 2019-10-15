@@ -1,5 +1,4 @@
 {-# OPTIONS -Wall #-}
--- {-# OPTIONS -Wno-redundant-constraints #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -54,7 +53,8 @@ import Data.Vinyl.TypeLevel
 import qualified Data.Vinyl.Functor as V
 import qualified GHC.TypeLits as G
 import Text.Regex.Applicative
-import PredJson -- need it for doctest
+
+import PredJson -- needed for doctest
 
 data Pred a where
   -- | leaf constructor that sets the final state. see 'BoolPE'
