@@ -83,5 +83,7 @@ tests:
       - predicate
       - doctest
       - QuickCheck
-      - easytest
+      - tasty
+      - tasty-hunit
+      - tasty-quickcheck
 

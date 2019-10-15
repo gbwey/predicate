@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fbde34d3c8432b5a89954b0efee784c91ccf51ae61a87a0012324b91185072cf
+-- hash: e3695443ed4b813f8136598c1491662a37cdf551c6b4b47f20007db687b2edda
 
 name:           predicate
 version:        0.1.0.0
@@ -117,7 +117,6 @@ test-suite testpred
     , containers
     , contravariant
     , doctest
-    , easytest
     , edit-distance
     , formatting
     , hashable
@@ -134,6 +133,9 @@ test-suite testpred
     , shakespeare
     , split
     , tagged
+    , tasty
+    , tasty-hunit
+    , tasty-quickcheck
     , text
     , these
     , time

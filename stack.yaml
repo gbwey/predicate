@@ -2,9 +2,7 @@ flags: {}
 extra-package-dbs: []
 packages:
 - location: '.'
-- location: ../easytest
-  extra-dep: true
-extra-deps: 
+extra-deps:
 - pretty-terminal-0.1.0.0
 - pretty-tree-0.1.0.0
 - tree-view-0.5
