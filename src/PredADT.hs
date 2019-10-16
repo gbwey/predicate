@@ -47,6 +47,7 @@ import Data.Void
 import Data.Hashable
 import Data.Either
 import Data.These
+import Data.These.Combinators
 import RegexHelper
 import VinylHelper
 import JsonHelper
@@ -1173,7 +1174,7 @@ _PRegexIP thij t rdelim regex (Pred x e) (Pred x1 p) =
                    let ll = e opts ((0, ii), as)
                    in mkNode (getBool ll, [nm,"matched nothing"]) [ll]
         Just (b,as') ->
-                          let newthij = mapThese pred pred thij
+                          let newthij = bimapThese pred pred thij
                               (rs,leftovers) = runRegexN newthij (t, rdelim *> regex) as'
                               -- force in the first match into rs
                               (lrmsgs,tt) = regexsToTT opts thij leftovers ((b, take (length as - length as') as, as'):rs)

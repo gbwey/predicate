@@ -34,6 +34,7 @@ import RegexHelper
 import VinylHelper
 import Data.Either
 import Data.These
+import Data.These.Combinators
 import Data.List hiding (uncons)
 import Data.Time
 import Data.Time.Lens
@@ -4358,7 +4359,7 @@ eval opts (PRegexIP thij t rdelim regex e p) (toList -> as) =
                    let ll = eval opts e ((0, ii), as)
                    in mkNode (getBool ll, [nm,"matched nothing"]) [ll]
         Just (b,as') ->
-                          let newthij = mapThese pred pred thij
+                          let newthij = bimapThese pred pred thij
                               (rs,leftovers) = runRegexN newthij (t, rdelim *> regex) as'
                               --leftovers = rs ^? _last . _3 ^. non as'
                               -- force in the first match into rs

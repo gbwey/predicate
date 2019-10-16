@@ -8,7 +8,6 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -463,13 +462,13 @@ data POpts = POpts { oShowA :: Maybe Int -- ^ length of data to display for 'sho
 data Disp = NormalDisp | Vertical !Int | Unicode | PPTree deriving (Show, Eq)
 
 instance Show POpts where
-  show POpts {..} =
-    "POpts: showA=" <> show oShowA
-    <> " maxElements=" <> show oMaxElements
-    <> " debug=" <> show oDebug
-    <> " disp=" <> show oDisp
-    <> " hide=" <> show oHide
-    <> " color=" <> show (fst oColor)
+  show opts =
+    "POpts: showA=" <> show (oShowA opts)
+    <> " maxElements=" <> show (oMaxElements opts)
+    <> " debug=" <> show (oDebug opts)
+    <> " disp=" <> show (oDisp opts)
+    <> " hide=" <> show (oHide opts)
+    <> " color=" <> show (fst (oColor opts))
 {-
 >prettyEditExpr $ ediff o1 o2
 POpts
