@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e3695443ed4b813f8136598c1491662a37cdf551c6b4b47f20007db687b2edda
+-- hash: 69e762a6922d00e47712ea02c5720e62d39d2b1ba8dc2ef69a5f4baa56be7b32
 
 name:           predicate
 version:        0.1.0.0
@@ -48,11 +48,13 @@ library
     , pretty-tree
     , regex-applicative
     , scientific
+    , semialign
     , shakespeare
     , split
     , tagged
     , text
-    , these
+    , these >=1.0
+    , these-lens
     , time
     , tree-view
     , unordered-containers
@@ -87,11 +89,13 @@ test-suite doctests
     , pretty-tree
     , regex-applicative
     , scientific
+    , semialign
     , shakespeare
     , split
     , tagged
     , text
-    , these
+    , these >=1.0
+    , these-lens
     , time
     , tree-view
     , unordered-containers
@@ -130,6 +134,7 @@ test-suite testpred
     , pretty-tree
     , regex-applicative
     , scientific
+    , semialign
     , shakespeare
     , split
     , tagged
@@ -137,7 +142,8 @@ test-suite testpred
     , tasty-hunit
     , tasty-quickcheck
     , text
-    , these
+    , these >=1.0
+    , these-lens
     , time
     , tree-view
     , unordered-containers
