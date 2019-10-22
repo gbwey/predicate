@@ -21,7 +21,6 @@ import Data.Function
 import qualified Data.Tree.View as TV
 import Data.Tree
 import Data.Tree.Lens
-import Data.Tree.Pretty -- vertical is very cool: doesnt work great for wide trees of course
 import Data.Proxy
 import Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as N
@@ -41,7 +40,6 @@ import qualified Data.ByteString.Lazy.Char8 as BL8
 import qualified Data.ByteString.Char8 as BS8
 import Control.Monad
 import System.Console.Pretty
-import qualified Text.PrettyPrint as PP
 import Data.Semigroup
 import Data.These
 import Data.List.Split
@@ -459,7 +457,7 @@ data POpts = POpts { oShowA :: Maybe Int -- ^ length of data to display for 'sho
                    , oColor :: !(String, PColor) -- ^ color palette used
                    } -- deriving G.Generic
 
-data Disp = NormalDisp | Vertical !Int | Unicode | PPTree deriving (Show, Eq)
+data Disp = NormalDisp | Unicode deriving (Show, Eq)
 
 instance Show POpts where
   show opts =
@@ -519,13 +517,10 @@ o2 = defOpts { oDebug = 2, oShowA = Just 200, oMaxElements = 20 }
 o3 :: POpts
 o3 = defOpts { oDebug = 4, oShowA = Just 400, oMaxElements = 30 }
 
-defh, defv, defu :: POpts
+defh, defu :: POpts
 defh = o1
-defv = defv' defaultGap
 defu = setu o1
 
-defv' :: Width -> POpts
-defv' w = setv w o1
 
 {-
 addHide :: POpts -> Int -> POpts
@@ -539,9 +534,6 @@ unhide o = o { oHide = 0 }
 -}
 seta :: Int -> POpts -> POpts
 seta w o = o { oShowA = Just w }
-
-setv :: Int -> POpts -> POpts
-setv w o = o { oDisp = Vertical w }
 
 setm :: Int -> POpts -> POpts
 setm x o = o { oMaxElements = x }
@@ -630,16 +622,6 @@ showImpl :: POpts -> Tree String -> String
 showImpl o = ("\n" <>) . case oDisp o of
                            Unicode -> TV.showTree
                            NormalDisp -> drawTree
-                           Vertical w -> drawVerticalTreeWith w
-                           PPTree -> PP.render . ppTree PP.text
-
--- | display in document in tree format
-ppTree :: (a -> PP.Doc) -> Tree a -> PP.Doc
-ppTree pp = ppT
-  where
-    ppT (Node x []) = pp x
-    ppT (Node x xs) = PP.parens $ PP.hang (pp x) 2 $
-        PP.sep $ map ppT xs
 
 {-
 ppEditTree :: (a -> PP.Doc) -> Edit (EditTree a) -> PP.Doc
@@ -663,15 +645,6 @@ unicode o = o { oDisp = Unicode }
 
 horizontal :: POpts -> POpts
 horizontal o = o { oDisp = NormalDisp }
-
-vertical :: POpts -> POpts
-vertical = vertical' defaultGap
-
-vertical' :: Width -> POpts -> POpts
-vertical' w o = o { oDisp = Vertical w }
-
-pptree :: POpts -> POpts
-pptree o = o { oDisp = PPTree }
 
 formatList :: forall x z . Show x => POpts -> [((Int, x), z)] -> String
 formatList opts = unwords . map (\((i, a), _) -> "(i=" <> show i <> showA opts 0 ", a=" a <> ")")

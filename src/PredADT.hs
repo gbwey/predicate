@@ -21,7 +21,6 @@ import Data.Tree
 import Data.Tree.Lens
 import Data.Time.Lens
 import Data.Time
-import Data.Tree.Pretty
 import Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as N
 import Data.Char
@@ -108,13 +107,9 @@ instance Show (Pred a) where
   show (Pred x _) = "Pred\n"  <> showImpl defOpts x
 --       v1 = take 2000 (drawTree (toNodeString <$> t))
 
-pp, ppu, ppv :: Pred a -> IO ()
+pp, ppu :: Pred a -> IO ()
 pp = ppWith (horizontal defOpts)
 ppu = ppWith (unicode defOpts)
-ppv = ppWith (vertical defOpts)
-
-ppv' :: Width -> Pred a -> IO ()
-ppv' w = ppWith (vertical' w defOpts)
 
 ppWith :: POpts -> Pred a -> IO ()
 ppWith o (Pred x _) = prtImpl o x
@@ -4483,7 +4478,7 @@ pfirst = _PFn "pfirst" . first
 psecond :: (Show b, Show a, Show x) => (a -> b) -> Pred (x, b) -> Pred (x, a)
 psecond = _PFn "psecond" . second
 
-pe, pe1, pe2, pe', pe1', pe2', peu, peu1, peu2, pev, pev1, pev2, pep, pep1, pep2 :: Pred a -> a -> IO ()
+pe, pe1, pe2, pe', pe1', pe2', peu, peu1, peu2 :: Pred a -> a -> IO ()
 pe = peWith (horizontal o0)
 pe1 = peWith (horizontal o1)
 pe2 = peWith (horizontal o2)
@@ -4496,15 +4491,6 @@ pe2' = peWith (horizontal $ setc0 o2)
 peu = peWith (unicode o0)
 peu1 = peWith (unicode o1)
 peu2 = peWith (unicode o2)
-pev = peWith (vertical o0)
-pev1 = peWith (vertical o1)
-pev2 = peWith (vertical o2)
-pep = peWith (pptree o0)
-pep1 = peWith (pptree o1)
-pep2 = peWith (pptree o2)
-
-pev' :: Width -> Pred a -> a -> IO ()
-pev' w = peWith (vertical' w defOpts)
 
 peWith :: POpts -> Pred a -> a -> IO ()
 peWith o (Pred _ p) = prtImpl o . fmap (toNodeString o) . p o

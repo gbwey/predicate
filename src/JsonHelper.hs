@@ -81,9 +81,6 @@ jprth = jprt defh
 jprtu :: Value -> IO ()
 jprtu = jprt defu
 
-jprtv :: Int -> Value -> IO ()
-jprtv w = jprt (setv w o1)
-
 jprtSimple :: POpts -> Value -> IO ()
 jprtSimple o = prtImpl o . fmap (show . snd) . jtree
 

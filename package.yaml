@@ -19,14 +19,13 @@ dependencies:
 - mtl
 - pretty
 - pretty-terminal
-- pretty-tree
 - regex-applicative
 - scientific
 - shakespeare
 - split
 - tagged
 - text
-- these >= 1.0
+- these
 - these-lens
 - semialign
 - time

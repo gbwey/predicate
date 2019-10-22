@@ -17,7 +17,6 @@ import Control.Lens.Extras
 import Data.Function
 import Data.Tree
 import Data.Tree.Lens
-import Data.Tree.Pretty
 import Data.Coerce
 import Data.Proxy
 import Data.List.NonEmpty (NonEmpty(..))
@@ -2917,18 +2916,11 @@ instance Show a => Show (Pred a) where
   show = drawTree . showPred o1
 
 -- | show predicate using the default style
-pp, ppu, ppv :: Show a => Pred a -> IO ()
+pp, ppu :: Show a => Pred a -> IO ()
 pp = ppWith (horizontal defOpts)
 
 -- | show predicate using unicode
 ppu = ppWith (unicode defOpts)
-
--- | show predicate vertically
-ppv = ppWith (vertical defOpts)
-
--- | show predicate vertically but change the gap
-ppv' :: Show a => Width -> Pred a -> IO ()
-ppv' w = ppWith (vertical' w defOpts)
 
 -- specify options to show predicate
 ppWith :: Show a => POpts -> Pred a -> IO ()
@@ -4946,7 +4938,7 @@ runPredImpl (setc0 -> o) p a =
        FalseP -> Left $ Left $ PredE v1 v2 []
        FailP e -> Left $ Right $ PredExceptionE e v1 v2 []
 
-pe, pe1, pe2, pe', pe1', pe2', peu, peu1, peu2, pev, pev1, pev2, pep, pep1, pep2 :: Show a => Pred a -> a -> IO ()
+pe, pe1, pe2, pe', pe1', pe2', peu, peu1, peu2 :: Show a => Pred a -> a -> IO ()
 pe = peWith (horizontal o0)
 pe1 = peWith (horizontal o1)
 pe2 = peWith (horizontal o2)
@@ -4959,15 +4951,6 @@ pe2' = peWith (horizontal $ setc0 o2)
 peu = peWith (unicode o0)
 peu1 = peWith (unicode o1)
 peu2 = peWith (unicode o2)
-pev = peWith (vertical o0)
-pev1 = peWith (vertical o1)
-pev2 = peWith (vertical o2)
-pep = peWith (pptree o0)
-pep1 = peWith (pptree o1)
-pep2 = peWith (pptree o2)
-
-pev' :: Show a => Width -> Pred a -> a -> IO ()
-pev' w = peWith (vertical' w defOpts)
 
 peWith :: Show a => POpts -> Pred a -> a -> IO ()
 peWith o p a =
