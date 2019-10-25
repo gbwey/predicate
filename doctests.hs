@@ -1,7 +1,7 @@
 import Test.DocTest
 -- main = doctest ["src", "--verbose"]
 main :: IO ()
-main = doctest ["src"]
+main = doctest ["src", "-XTypeApplications", "-XOverloadedStrings", "-XDataKinds"]
 
 {-
 C:\haskell\predicate>stack exec doctest -- "src/PredState.hs"

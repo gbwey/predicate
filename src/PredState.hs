@@ -65,28 +65,28 @@ import PredJson -- needed for doctest
 data Pred z a where
   -- | leaf constructor that sets the final state. see 'BoolPE'
   --
-  --   >>> pe2' (ptrue' "true predicate") ()
-  --   <BLANKLINE>
-  --   TrueP  PConst a=() | true predicate
-  --   <BLANKLINE>
+  -- >>> pe2' (ptrue' "true predicate") ()
+  -- <BLANKLINE>
+  -- TrueP  PConst a=() | true predicate
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (pfalse' "false predicate") ()
-  --   <BLANKLINE>
-  --   FalseP PConst a=() | false predicate
-  --   <BLANKLINE>
+  -- >>> pe2' (pfalse' "false predicate") ()
+  -- <BLANKLINE>
+  -- FalseP PConst a=() | false predicate
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (pfail "failed predicate") ()
-  --   <BLANKLINE>
-  --   [Error failed predicate] PConst a=()
-  --   <BLANKLINE>
+  -- >>> pe2' (pfail "failed predicate") ()
+  -- <BLANKLINE>
+  -- [Error failed predicate] PConst a=()
+  -- <BLANKLINE>
   --
   PConst      :: BoolPE -> Pred z a
   -- | lifts a predicate function
   --
-  --   >>> pe1' (PLift "or" or) [True,False,True]
-  --   <BLANKLINE>
-  --   TrueP  PLift or | a=[True,False,True]
-  --   <BLANKLINE>
+  -- >>> pe1' (PLift "or" or) [True,False,True]
+  -- <BLANKLINE>
+  -- TrueP  PLift or | a=[True,False,True]
+  -- <BLANKLINE>
   --
   PLift       :: String -> (a -> Bool) -> Pred z a
   -- this gives us the contravariance we need
@@ -98,136 +98,136 @@ data Pred z a where
 
   -- | lifts a string to a 'Pred' using 'StringOperator' and case sensitivity
   --
-  --   >>> pe' (sinfix "abc") "xxxAbCyyy"
-  --   <BLANKLINE>
-  --   TrueP  PStringCI "abc" `isInfixOf` "xxxAbCyyy"
-  --   <BLANKLINE>
+  -- >>> pe' (sinfix "abc") "xxxAbCyyy"
+  -- <BLANKLINE>
+  -- TrueP  PStringCI "abc" `isInfixOf` "xxxAbCyyy"
+  -- <BLANKLINE>
   --
   PString     :: SConv s => Case -> StringOperator -> s -> Pred z s
   -- | finds the levenshtein distance between the two strings
   --
-  --   runs the predicate Pred Int using that calculated distance
+  -- runs the predicate Pred Int using that calculated distance
   --
-  --   >>> pe1' (PDist CS "abc" $ plt 2) "abCd"
-  --   <BLANKLINE>
-  --   FalseP PDistCS | dist=2 | s=abc | t=abCd
-  --   |
-  --   `- FalseP 2 < 2
-  --   <BLANKLINE>
+  -- >>> pe1' (PDist CS "abc" $ plt 2) "abCd"
+  -- <BLANKLINE>
+  -- FalseP PDistCS | dist=2 | s=abc | t=abCd
+  -- |
+  -- `- FalseP 2 < 2
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PDist CS "abc" 1) "abc"
-  --   <BLANKLINE>
-  --   TrueP  PDistCS | dist=0 | s=abc | t=abc
-  --   |
-  --   `- TrueP  PConst a=0
-  --   <BLANKLINE>
+  -- >>> pe1' (PDist CS "abc" 1) "abc"
+  -- <BLANKLINE>
+  -- TrueP  PDistCS | dist=0 | s=abc | t=abc
+  -- |
+  -- `- TrueP  PConst a=0
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PDist CS "abc" 1) "Abc"
-  --   <BLANKLINE>
-  --   TrueP  PDistCS | dist=1 | s=abc | t=Abc
-  --   |
-  --   `- TrueP  PConst a=1
-  --   <BLANKLINE>
+  -- >>> pe1' (PDist CS "abc" 1) "Abc"
+  -- <BLANKLINE>
+  -- TrueP  PDistCS | dist=1 | s=abc | t=Abc
+  -- |
+  -- `- TrueP  PConst a=1
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PDist CS "abc" 1) "Abcxyz"
-  --   <BLANKLINE>
-  --   TrueP  PDistCS | dist=4 | s=abc | t=Abcxyz
-  --   |
-  --   `- TrueP  PConst a=4
-  --   <BLANKLINE>
+  -- >>> pe1' (PDist CS "abc" 1) "Abcxyz"
+  -- <BLANKLINE>
+  -- TrueP  PDistCS | dist=4 | s=abc | t=Abcxyz
+  -- |
+  -- `- TrueP  PConst a=4
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PDist CI "abc" 1) "Abcxyz"
-  --   <BLANKLINE>
-  --   TrueP  PDistCI | dist=3 | s=abc | t=Abcxyz
-  --   |
-  --   `- TrueP  PConst a=3
-  --   <BLANKLINE>
+  -- >>> pe1' (PDist CI "abc" 1) "Abcxyz"
+  -- <BLANKLINE>
+  -- TrueP  PDistCI | dist=3 | s=abc | t=Abcxyz
+  -- |
+  -- `- TrueP  PConst a=3
+  -- <BLANKLINE>
   --
   PDist       :: SConv s => Case -> s -> Pred z Int -> Pred z s
 
   -- | compare the value using the 'CmpOperator'
   --
-  --   >>> pe2' (PCmp Gt 4 * PCmp Lt 10) 12
-  --   <BLANKLINE>
-  --   FalseP PAnd
-  --   |
-  --   +- TrueP  12 > 4
-  --   |
-  --   `- FalseP 12 < 10
-  --   <BLANKLINE>
+  -- >>> pe2' (PCmp Gt 4 * PCmp Lt 10) 12
+  -- <BLANKLINE>
+  -- FalseP PAnd
+  -- |
+  -- +- TrueP  12 > 4
+  -- |
+  -- `- FalseP 12 < 10
+  -- <BLANKLINE>
   --
   PCmp        :: Ord a => CmpOperator -> a -> Pred z a
 
   -- | compare the value using 'Eq' instance only so doesnt require 'Ord' instance
   --
-  --   >>> pe' (PEq False 'x') 'y'
-  --   <BLANKLINE>
-  --   TrueP  'y' /= 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PEq False 'x') 'y'
+  -- <BLANKLINE>
+  -- TrueP  'y' /= 'x'
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PEq True 'x') 'y'
-  --   <BLANKLINE>
-  --   FalseP 'y' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PEq True 'x') 'y'
+  -- <BLANKLINE>
+  -- FalseP 'y' == 'x'
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PEq True 'x') 'x'
-  --   <BLANKLINE>
-  --   TrueP  'x' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PEq True 'x') 'x'
+  -- <BLANKLINE>
+  -- TrueP  'x' == 'x'
+  -- <BLANKLINE>
   --
   PEq         :: Eq a => Bool -> a -> Pred z a
   -- | compare the values in a tuple using the 'CmpOperator'
   --
-  --   >>> pe2' plt2 (14,13)
-  --   <BLANKLINE>
-  --   FalseP PCmp2 14 < 13
-  --   <BLANKLINE>
+  -- >>> pe2' plt2 (14,13)
+  -- <BLANKLINE>
+  -- FalseP PCmp2 14 < 13
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PCmp2 Gt * PEq2 True + PFst (pgt 10) + PBoth 1 0) (12,11)
-  --   <BLANKLINE>
-  --   TrueP  POr
-  --   |
-  --   +- TrueP  POr
-  --   |  |
-  --   |  +- FalseP PAnd
-  --   |  |  |
-  --   |  |  +- TrueP  PCmp2 12 > 11
-  --   |  |  |
-  --   |  |  `- FalseP PEq2 12 == 11
-  --   |  |
-  --   |  `- TrueP  PFst a=12 snd=11
-  --   |     |
-  --   |     `- TrueP  12 > 10
-  --   |
-  --   `- FalseP PBoth
-  --      |
-  --      +- TrueP  PConst a=12
-  --      |
-  --      `- FalseP PConst a=11
-  --   <BLANKLINE>
+  -- >>> pe1' (PCmp2 Gt * PEq2 True + PFst (pgt 10) + PBoth 1 0) (12,11)
+  -- <BLANKLINE>
+  -- TrueP  POr
+  -- |
+  -- +- TrueP  POr
+  -- |  |
+  -- |  +- FalseP PAnd
+  -- |  |  |
+  -- |  |  +- TrueP  PCmp2 12 > 11
+  -- |  |  |
+  -- |  |  `- FalseP PEq2 12 == 11
+  -- |  |
+  -- |  `- TrueP  PFst a=12 snd=11
+  -- |     |
+  -- |     `- TrueP  12 > 10
+  -- |
+  -- `- FalseP PBoth
+  --    |
+  --    +- TrueP  PConst a=12
+  --    |
+  --    `- FalseP PConst a=11
+  -- <BLANKLINE>
   --
   PCmp2       :: (a' ~ a, Show a', Ord a) => CmpOperator -> Pred z (a, a')
   -- | compare the values in a tuple using (==) (/=) using only Eq constraint
   --
-  --   >>> pe' (PEq2 True) (14,4)
-  --   <BLANKLINE>
-  --   FalseP PEq2 14 == 4
-  --   <BLANKLINE>
+  -- >>> pe' (PEq2 True) (14,4)
+  -- <BLANKLINE>
+  -- FalseP PEq2 14 == 4
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PEq2 False) (14,4)
-  --   <BLANKLINE>
-  --   TrueP  PEq2 14 /= 4
-  --   <BLANKLINE>
+  -- >>> pe' (PEq2 False) (14,4)
+  -- <BLANKLINE>
+  -- TrueP  PEq2 14 /= 4
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PCmp2 Lt) (14,4)
-  --   <BLANKLINE>
-  --   FalseP PCmp2 14 < 4
-  --   <BLANKLINE>
+  -- >>> pe' (PCmp2 Lt) (14,4)
+  -- <BLANKLINE>
+  -- FalseP PCmp2 14 < 4
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PCmp2 Gt) (14,4)
-  --   <BLANKLINE>
-  --   TrueP  PCmp2 14 > 4
-  --   <BLANKLINE>
+  -- >>> pe' (PCmp2 Gt) (14,4)
+  -- <BLANKLINE>
+  -- TrueP  PCmp2 14 > 4
+  -- <BLANKLINE>
   --
   PEq2        :: (a' ~ a, Show a', Eq a) => Bool -> Pred z (a, a')
   -- same as String but works any foldables: case sensitivity doesnt come into it
@@ -247,339 +247,330 @@ data Pred z a where
 
   -- | matches sequentially each regex until completed or fails (using Vinyl)
   --
-  --   >>> :set -XTypeApplications
-  --   >>> :set -XDataKinds
-  --   >>> import Text.Regex.Applicative.Common (digit)
-  --   >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ pri @0 (pgt 33)) "234.56xabc7zzzz"
-  --   <BLANKLINE>
-  --   TrueP  PRegexV (4) | matched all | leftovers=zzzz
-  --   |
-  --   +- TrueP  PFst a={234.56, 'x', "abc", 7} snd="zzzz"
-  --   |  |
-  --   |  `- TrueP  PFn @0 | a={234.56, 'x', "abc", 7} | b=234.56
-  --   |     |
-  --   |     `- TrueP  234.56 > 33.0
-  --   |
-  --   `- matched all | leftovers=zzzz
-  --      |
-  --      +- i=0 | a=234.56 | used=234.56 | remaining=xabc7zzzz
-  --      |
-  --      +- i=1 | a='x' | used=x | remaining=abc7zzzz
-  --      |
-  --      +- i=2 | a="abc" | used=abc | remaining=7zzzz
-  --      |
-  --      `- i=3 | a=7 | used=7 | remaining=zzzz
-  --   <BLANKLINE>
+  -- >>> import Text.Regex.Applicative.Common (digit)
+  -- >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ pri @0 (pgt 33)) "234.56xabc7zzzz"
+  -- <BLANKLINE>
+  -- TrueP  PRegexV (4) | matched all | leftovers=zzzz
+  -- |
+  -- +- TrueP  PFst a={234.56, 'x', "abc", 7} snd="zzzz"
+  -- |  |
+  -- |  `- TrueP  PFn @0 | a={234.56, 'x', "abc", 7} | b=234.56
+  -- |     |
+  -- |     `- TrueP  234.56 > 33.0
+  -- |
+  -- `- matched all | leftovers=zzzz
+  --    |
+  --    +- i=0 | a=234.56 | used=234.56 | remaining=xabc7zzzz
+  --    |
+  --    +- i=1 | a='x' | used=x | remaining=abc7zzzz
+  --    |
+  --    +- i=2 | a="abc" | used=abc | remaining=7zzzz
+  --    |
+  --    `- i=3 | a=7 | used=7 | remaining=zzzz
+  -- <BLANKLINE>
   --
-  --   >>> :set -XTypeApplications
-  --   >>> :set -XDataKinds
-  --   >>> import Text.Regex.Applicative.Common (digit)
-  --   >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ pri @0 (pgt 33)) "234.56xabczzzz"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (4) | only matched 3 of 4 | leftovers=zzzz
-  --   |
-  --   +- FalseP PConst a="zzzz"
-  --   |
-  --   `- only matched 3 of 4 | leftovers=zzzz
-  --      |
-  --      +- i=0 | a=234.56 | used=234.56 | remaining=xabczzzz
-  --      |
-  --      +- i=1 | a='x' | used=x | remaining=abczzzz
-  --      |
-  --      `- i=2 | a="abc" | used=abc | remaining=zzzz
-  --   <BLANKLINE>
+  -- >>> import Text.Regex.Applicative.Common (digit)
+  -- >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ pri @0 (pgt 33)) "234.56xabczzzz"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (4) | only matched 3 of 4 | leftovers=zzzz
+  -- |
+  -- +- FalseP PConst a="zzzz"
+  -- |
+  -- `- only matched 3 of 4 | leftovers=zzzz
+  --    |
+  --    +- i=0 | a=234.56 | used=234.56 | remaining=xabczzzz
+  --    |
+  --    +- i=1 | a='x' | used=x | remaining=abczzzz
+  --    |
+  --    `- i=2 | a="abc" | used=abc | remaining=zzzz
+  -- <BLANKLINE>
   --
-  --   >>> import Text.Regex.Applicative.Common (digit)
-  --   >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ prx (pgt 33)) "234.56xabc7zzzz"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (4) | matched all | leftovers=zzzz
-  --   |
-  --   +- FalseP PFst a={234.56, 'x', "abc", 7} snd="zzzz"
-  --   |  |
-  --   |  `- FalseP PFn prx | a={234.56, 'x', "abc", 7} | b=7
-  --   |     |
-  --   |     `- FalseP 7 > 33
-  --   |
-  --   `- matched all | leftovers=zzzz
-  --      |
-  --      +- i=0 | a=234.56 | used=234.56 | remaining=xabc7zzzz
-  --      |
-  --      +- i=1 | a='x' | used=x | remaining=abc7zzzz
-  --      |
-  --      +- i=2 | a="abc" | used=abc | remaining=7zzzz
-  --      |
-  --      `- i=3 | a=7 | used=7 | remaining=zzzz
-  --   <BLANKLINE>
+  -- >>> import Text.Regex.Applicative.Common (digit)
+  -- >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ prx (pgt 33)) "234.56xabc7zzzz"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (4) | matched all | leftovers=zzzz
+  -- |
+  -- +- FalseP PFst a={234.56, 'x', "abc", 7} snd="zzzz"
+  -- |  |
+  -- |  `- FalseP PFn prx | a={234.56, 'x', "abc", 7} | b=7
+  -- |     |
+  -- |     `- FalseP 7 > 33
+  -- |
+  -- `- matched all | leftovers=zzzz
+  --    |
+  --    +- i=0 | a=234.56 | used=234.56 | remaining=xabc7zzzz
+  --    |
+  --    +- i=1 | a='x' | used=x | remaining=abc7zzzz
+  --    |
+  --    +- i=2 | a="abc" | used=abc | remaining=7zzzz
+  --    |
+  --    `- i=3 | a=7 | used=7 | remaining=zzzz
+  -- <BLANKLINE>
   --
-  --   >>> import Text.Regex.Applicative.Common (digit)
-  --   >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ prx (peq 'y')) "234.56xabc7zzzz"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (4) | matched all | leftovers=zzzz
-  --   |
-  --   +- FalseP PFst a={234.56, 'x', "abc", 7} snd="zzzz"
-  --   |  |
-  --   |  `- FalseP PFn prx | a={234.56, 'x', "abc", 7} | b='x'
-  --   |     |
-  --   |     `- FalseP 'x' == 'y'
-  --   |
-  --   `- matched all | leftovers=zzzz
-  --      |
-  --      +- i=0 | a=234.56 | used=234.56 | remaining=xabc7zzzz
-  --      |
-  --      +- i=1 | a='x' | used=x | remaining=abc7zzzz
-  --      |
-  --      +- i=2 | a="abc" | used=abc | remaining=7zzzz
-  --      |
-  --      `- i=3 | a=7 | used=7 | remaining=zzzz
-  --   <BLANKLINE>
+  -- >>> import Text.Regex.Applicative.Common (digit)
+  -- >>> pe1' (PRegexV (double :& sym 'x' :& string "abc" :& digit :& RNil) 0 $ PFst $ prx (peq 'y')) "234.56xabc7zzzz"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (4) | matched all | leftovers=zzzz
+  -- |
+  -- +- FalseP PFst a={234.56, 'x', "abc", 7} snd="zzzz"
+  -- |  |
+  -- |  `- FalseP PFn prx | a={234.56, 'x', "abc", 7} | b='x'
+  -- |     |
+  -- |     `- FalseP 'x' == 'y'
+  -- |
+  -- `- matched all | leftovers=zzzz
+  --    |
+  --    +- i=0 | a=234.56 | used=234.56 | remaining=xabc7zzzz
+  --    |
+  --    +- i=1 | a='x' | used=x | remaining=abc7zzzz
+  --    |
+  --    +- i=2 | a="abc" | used=abc | remaining=7zzzz
+  --    |
+  --    `- i=3 | a=7 | used=7 | remaining=zzzz
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe1' (PRegexV (ratio :& void spaces1 :& int :& void spaces1 :& word :& RNil) 0 $ PFst $ prx "HELlo" * prx (pgt (9999::Int))) "12367   99  hellx world"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (5) | matched all | leftovers= world
-  --   |
-  --   +- FalseP PFst a={12367 % 1, (), 99, (), "hellx"} snd=" world"
-  --   |  |
-  --   |  `- FalseP PAnd
-  --   |     |
-  --   |     +- FalseP PFn prx | a={12367 % 1, (), 99, (), "hellx"} | b="hellx"
-  --   |     |  |
-  --   |     |  `- FalseP PStringCI "hellx" == "HELlo"
-  --   |     |
-  --   |     `- FalseP PFn prx | a={12367 % 1, (), 99, (), "hellx"} | b=99
-  --   |        |
-  --   |        `- FalseP 99 > 9999
-  --   |
-  --   `- matched all | leftovers= world
-  --      |
-  --      +- i=0 | a=12367 % 1 | used=12367 | remaining=   99  hellx world
-  --      |
-  --      +- i=1 | a=() | used=    | remaining=99  hellx world
-  --      |
-  --      +- i=2 | a=99 | used=99 | remaining=  hellx world
-  --      |
-  --      +- i=3 | a=() | used=   | remaining=hellx world
-  --      |
-  --      `- i=4 | a="hellx" | used=hellx | remaining= world
-  --   <BLANKLINE>
+  -- >>> pe1' (PRegexV (ratio :& void spaces1 :& int :& void spaces1 :& word :& RNil) 0 $ PFst $ prx "HELlo" * prx (pgt (9999::Int))) "12367   99  hellx world"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (5) | matched all | leftovers= world
+  -- |
+  -- +- FalseP PFst a={12367 % 1, (), 99, (), "hellx"} snd=" world"
+  -- |  |
+  -- |  `- FalseP PAnd
+  -- |     |
+  -- |     +- FalseP PFn prx | a={12367 % 1, (), 99, (), "hellx"} | b="hellx"
+  -- |     |  |
+  -- |     |  `- FalseP PStringCI "hellx" == "HELlo"
+  -- |     |
+  -- |     `- FalseP PFn prx | a={12367 % 1, (), 99, (), "hellx"} | b=99
+  -- |        |
+  -- |        `- FalseP 99 > 9999
+  -- |
+  -- `- matched all | leftovers= world
+  --    |
+  --    +- i=0 | a=12367 % 1 | used=12367 | remaining=   99  hellx world
+  --    |
+  --    +- i=1 | a=() | used=    | remaining=99  hellx world
+  --    |
+  --    +- i=2 | a=99 | used=99 | remaining=  hellx world
+  --    |
+  --    +- i=3 | a=() | used=   | remaining=hellx world
+  --    |
+  --    `- i=4 | a="hellx" | used=hellx | remaining= world
+  -- <BLANKLINE>
   --
-  --   >>> :set -XTypeApplications
-  --   >>> :set -XDataKinds
-  --   >>> pe1' (PRegexV (ratio :& void spaces1 :& int :& void spaces1 :& word :& RNil) 0 $ PFst $ prx "HELlo" * pri @2 (pgt 9999)) "12367   99  hellx world"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (5) | matched all | leftovers= world
-  --   |
-  --   +- FalseP PFst a={12367 % 1, (), 99, (), "hellx"} snd=" world"
-  --   |  |
-  --   |  `- FalseP PAnd
-  --   |     |
-  --   |     +- FalseP PFn prx | a={12367 % 1, (), 99, (), "hellx"} | b="hellx"
-  --   |     |  |
-  --   |     |  `- FalseP PStringCI "hellx" == "HELlo"
-  --   |     |
-  --   |     `- FalseP PFn @2 | a={12367 % 1, (), 99, (), "hellx"} | b=99
-  --   |        |
-  --   |        `- FalseP 99 > 9999
-  --   |
-  --   `- matched all | leftovers= world
-  --      |
-  --      +- i=0 | a=12367 % 1 | used=12367 | remaining=   99  hellx world
-  --      |
-  --      +- i=1 | a=() | used=    | remaining=99  hellx world
-  --      |
-  --      +- i=2 | a=99 | used=99 | remaining=  hellx world
-  --      |
-  --      +- i=3 | a=() | used=   | remaining=hellx world
-  --      |
-  --      `- i=4 | a="hellx" | used=hellx | remaining= world
-  --   <BLANKLINE>
+  -- >>> pe1' (PRegexV (ratio :& void spaces1 :& int :& void spaces1 :& word :& RNil) 0 $ PFst $ prx "HELlo" * pri @2 (pgt 9999)) "12367   99  hellx world"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (5) | matched all | leftovers= world
+  -- |
+  -- +- FalseP PFst a={12367 % 1, (), 99, (), "hellx"} snd=" world"
+  -- |  |
+  -- |  `- FalseP PAnd
+  -- |     |
+  -- |     +- FalseP PFn prx | a={12367 % 1, (), 99, (), "hellx"} | b="hellx"
+  -- |     |  |
+  -- |     |  `- FalseP PStringCI "hellx" == "HELlo"
+  -- |     |
+  -- |     `- FalseP PFn @2 | a={12367 % 1, (), 99, (), "hellx"} | b=99
+  -- |        |
+  -- |        `- FalseP 99 > 9999
+  -- |
+  -- `- matched all | leftovers= world
+  --    |
+  --    +- i=0 | a=12367 % 1 | used=12367 | remaining=   99  hellx world
+  --    |
+  --    +- i=1 | a=() | used=    | remaining=99  hellx world
+  --    |
+  --    +- i=2 | a=99 | used=99 | remaining=  hellx world
+  --    |
+  --    +- i=3 | a=() | used=   | remaining=hellx world
+  --    |
+  --    `- i=4 | a="hellx" | used=hellx | remaining= world
+  -- <BLANKLINE>
   --
-  --   >>> import Text.Regex.Applicative.Common (digit)
-  --   >>> pe1' (PRegexV (_d :& ratio :& _w :& ipaddr :& _w :& digit :& RNil) 0 $ PFst $ prx $ (plt 102)) "927.34a27.11.4.33c9junk"
-  --   <BLANKLINE>
-  --   TrueP  PRegexV (6) | matched all | leftovers=junk
-  --   |
-  --   +- TrueP  PFst a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} snd="junk"
-  --   |  |
-  --   |  `- TrueP  PFn prx | a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} | b=9
-  --   |     |
-  --   |     `- TrueP  9 < 102
-  --   |
-  --   `- matched all | leftovers=junk
-  --      |
-  --      +- i=0 | a='9' | used=9 | remaining=27.34a27.11.4.33c9junk
-  --      |
-  --      +- i=1 | a=1367 % 50 | used=27.34 | remaining=a27.11.4.33c9junk
-  --      |
-  --      +- i=2 | a='a' | used=a | remaining=27.11.4.33c9junk
-  --      |
-  --      +- i=3 | a=IP:27.11.4.33 | used=27.11.4.33 | remaining=c9junk
-  --      |
-  --      +- i=4 | a='c' | used=c | remaining=9junk
-  --      |
-  --      `- i=5 | a=9 | used=9 | remaining=junk
-  --   <BLANKLINE>
+  -- >>> import Text.Regex.Applicative.Common (digit)
+  -- >>> pe1' (PRegexV (_d :& ratio :& _w :& ipaddr :& _w :& digit :& RNil) 0 $ PFst $ prx $ (plt 102)) "927.34a27.11.4.33c9junk"
+  -- <BLANKLINE>
+  -- TrueP  PRegexV (6) | matched all | leftovers=junk
+  -- |
+  -- +- TrueP  PFst a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} snd="junk"
+  -- |  |
+  -- |  `- TrueP  PFn prx | a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} | b=9
+  -- |     |
+  -- |     `- TrueP  9 < 102
+  -- |
+  -- `- matched all | leftovers=junk
+  --    |
+  --    +- i=0 | a='9' | used=9 | remaining=27.34a27.11.4.33c9junk
+  --    |
+  --    +- i=1 | a=1367 % 50 | used=27.34 | remaining=a27.11.4.33c9junk
+  --    |
+  --    +- i=2 | a='a' | used=a | remaining=27.11.4.33c9junk
+  --    |
+  --    +- i=3 | a=IP:27.11.4.33 | used=27.11.4.33 | remaining=c9junk
+  --    |
+  --    +- i=4 | a='c' | used=c | remaining=9junk
+  --    |
+  --    `- i=5 | a=9 | used=9 | remaining=junk
+  -- <BLANKLINE>
   --
-  --   >>> :set -XTypeApplications
-  --   >>> pe2' (PRegexV (_d :& word :& gregorian :& "abc" :& RNil) 0 $ PFst $ prx @Day (PView days (pgt 12) * PView years (plt 2000))) "9hello2018-12-22abcXYZ"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (4) | matched all | leftovers=XYZ
-  --   |
-  --   +- FalseP PFst a={'9', "hello", 2018-12-22, "abc"} snd="XYZ"
-  --   |  |
-  --   |  `- FalseP PFn prx | a={'9', "hello", 2018-12-22, "abc"} | b=2018-12-22
-  --   |     |
-  --   |     `- FalseP PAnd
-  --   |        |
-  --   |        +- TrueP  PView s=2018-12-22 a=22
-  --   |        |  |
-  --   |        |  `- TrueP  22 > 12
-  --   |        |
-  --   |        `- FalseP PView s=2018-12-22 a=2018
-  --   |           |
-  --   |           `- FalseP 2018 < 2000
-  --   |
-  --   `- matched all | leftovers=XYZ
-  --      |
-  --      +- i=0 | a='9' | used=9 | remaining=hello2018-12-22abcXYZ
-  --      |
-  --      +- i=1 | a="hello" | used=hello | remaining=2018-12-22abcXYZ
-  --      |
-  --      +- i=2 | a=2018-12-22 | used=2018-12-22 | remaining=abcXYZ
-  --      |
-  --      `- i=3 | a="abc" | used=abc | remaining=XYZ
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexV (_d :& word :& gregorian :& "abc" :& RNil) 0 $ PFst $ prx @Day (PView days (pgt 12) * PView years (plt 2000))) "9hello2018-12-22abcXYZ"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (4) | matched all | leftovers=XYZ
+  -- |
+  -- +- FalseP PFst a={'9', "hello", 2018-12-22, "abc"} snd="XYZ"
+  -- |  |
+  -- |  `- FalseP PFn prx | a={'9', "hello", 2018-12-22, "abc"} | b=2018-12-22
+  -- |     |
+  -- |     `- FalseP PAnd
+  -- |        |
+  -- |        +- TrueP  PView s=2018-12-22 a=22
+  -- |        |  |
+  -- |        |  `- TrueP  22 > 12
+  -- |        |
+  -- |        `- FalseP PView s=2018-12-22 a=2018
+  -- |           |
+  -- |           `- FalseP 2018 < 2000
+  -- |
+  -- `- matched all | leftovers=XYZ
+  --    |
+  --    +- i=0 | a='9' | used=9 | remaining=hello2018-12-22abcXYZ
+  --    |
+  --    +- i=1 | a="hello" | used=hello | remaining=2018-12-22abcXYZ
+  --    |
+  --    +- i=2 | a=2018-12-22 | used=2018-12-22 | remaining=abcXYZ
+  --    |
+  --    `- i=3 | a="abc" | used=abc | remaining=XYZ
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexV ("abc" :& ratio :& _w :& hex :& RNil) 0 1) "abc123.456Za805f__"
-  --   <BLANKLINE>
-  --   TrueP  PRegexV (4) | matched all | leftovers=__
-  --   |
-  --   +- TrueP  PConst a=({"abc", 15432 % 125, 'Z', 688223},"__")
-  --   |
-  --   `- matched all | leftovers=__
-  --      |
-  --      +- i=0 | a="abc" | used=abc | remaining=123.456Za805f__
-  --      |
-  --      +- i=1 | a=15432 % 125 | used=123.456 | remaining=Za805f__
-  --      |
-  --      +- i=2 | a='Z' | used=Z | remaining=a805f__
-  --      |
-  --      `- i=3 | a=688223 | used=a805f | remaining=__
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexV ("abc" :& ratio :& _w :& hex :& RNil) 0 1) "abc123.456Za805f__"
+  -- <BLANKLINE>
+  -- TrueP  PRegexV (4) | matched all | leftovers=__
+  -- |
+  -- +- TrueP  PConst a=({"abc", 15432 % 125, 'Z', 688223},"__")
+  -- |
+  -- `- matched all | leftovers=__
+  --    |
+  --    +- i=0 | a="abc" | used=abc | remaining=123.456Za805f__
+  --    |
+  --    +- i=1 | a=15432 % 125 | used=123.456 | remaining=Za805f__
+  --    |
+  --    +- i=2 | a='Z' | used=Z | remaining=a805f__
+  --    |
+  --    `- i=3 | a=688223 | used=a805f | remaining=__
+  -- <BLANKLINE>
   --
-  --   >>> :set -XTypeApplications
-  --   >>> import Text.Regex.Applicative.Common (digit)
-  --   >>> pe1' (PRegexV (_d :& ratio :& _w :& ipaddr :& _w :& digit :& RNil) 0 $ PFst $ pri @5 (plt 102)) "927.34a27.11.4.33c9junk"
-  --   <BLANKLINE>
-  --   TrueP  PRegexV (6) | matched all | leftovers=junk
-  --   |
-  --   +- TrueP  PFst a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} snd="junk"
-  --   |  |
-  --   |  `- TrueP  PFn @5 | a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} | b=9
-  --   |     |
-  --   |     `- TrueP  9 < 102
-  --   |
-  --   `- matched all | leftovers=junk
-  --      |
-  --      +- i=0 | a='9' | used=9 | remaining=27.34a27.11.4.33c9junk
-  --      |
-  --      +- i=1 | a=1367 % 50 | used=27.34 | remaining=a27.11.4.33c9junk
-  --      |
-  --      +- i=2 | a='a' | used=a | remaining=27.11.4.33c9junk
-  --      |
-  --      +- i=3 | a=IP:27.11.4.33 | used=27.11.4.33 | remaining=c9junk
-  --      |
-  --      +- i=4 | a='c' | used=c | remaining=9junk
-  --      |
-  --      `- i=5 | a=9 | used=9 | remaining=junk
-  --   <BLANKLINE>
+  -- >>> import Text.Regex.Applicative.Common (digit)
+  -- >>> pe1' (PRegexV (_d :& ratio :& _w :& ipaddr :& _w :& digit :& RNil) 0 $ PFst $ pri @5 (plt 102)) "927.34a27.11.4.33c9junk"
+  -- <BLANKLINE>
+  -- TrueP  PRegexV (6) | matched all | leftovers=junk
+  -- |
+  -- +- TrueP  PFst a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} snd="junk"
+  -- |  |
+  -- |  `- TrueP  PFn @5 | a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} | b=9
+  -- |     |
+  -- |     `- TrueP  9 < 102
+  -- |
+  -- `- matched all | leftovers=junk
+  --    |
+  --    +- i=0 | a='9' | used=9 | remaining=27.34a27.11.4.33c9junk
+  --    |
+  --    +- i=1 | a=1367 % 50 | used=27.34 | remaining=a27.11.4.33c9junk
+  --    |
+  --    +- i=2 | a='a' | used=a | remaining=27.11.4.33c9junk
+  --    |
+  --    +- i=3 | a=IP:27.11.4.33 | used=27.11.4.33 | remaining=c9junk
+  --    |
+  --    +- i=4 | a='c' | used=c | remaining=9junk
+  --    |
+  --    `- i=5 | a=9 | used=9 | remaining=junk
+  -- <BLANKLINE>
   --
-  --   >>> import Text.Regex.Applicative.Common (digit)
-  --   >>> pe1' (PRegexV (_d :& ratio :& _w :& ipaddr :& _w :& digit :& RNil) 0 $ PFst $ prx (plt 102)) "927.34a27.11.4.33c9junk"
-  --   <BLANKLINE>
-  --   TrueP  PRegexV (6) | matched all | leftovers=junk
-  --   |
-  --   +- TrueP  PFst a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} snd="junk"
-  --   |  |
-  --   |  `- TrueP  PFn prx | a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} | b=9
-  --   |     |
-  --   |     `- TrueP  9 < 102
-  --   |
-  --   `- matched all | leftovers=junk
-  --      |
-  --      +- i=0 | a='9' | used=9 | remaining=27.34a27.11.4.33c9junk
-  --      |
-  --      +- i=1 | a=1367 % 50 | used=27.34 | remaining=a27.11.4.33c9junk
-  --      |
-  --      +- i=2 | a='a' | used=a | remaining=27.11.4.33c9junk
-  --      |
-  --      +- i=3 | a=IP:27.11.4.33 | used=27.11.4.33 | remaining=c9junk
-  --      |
-  --      +- i=4 | a='c' | used=c | remaining=9junk
-  --      |
-  --      `- i=5 | a=9 | used=9 | remaining=junk
-  --   <BLANKLINE>
+  -- >>> import Text.Regex.Applicative.Common (digit)
+  -- >>> pe1' (PRegexV (_d :& ratio :& _w :& ipaddr :& _w :& digit :& RNil) 0 $ PFst $ prx (plt 102)) "927.34a27.11.4.33c9junk"
+  -- <BLANKLINE>
+  -- TrueP  PRegexV (6) | matched all | leftovers=junk
+  -- |
+  -- +- TrueP  PFst a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} snd="junk"
+  -- |  |
+  -- |  `- TrueP  PFn prx | a={'9', 1367 % 50, 'a', IP:27.11.4.33, 'c', 9} | b=9
+  -- |     |
+  -- |     `- TrueP  9 < 102
+  -- |
+  -- `- matched all | leftovers=junk
+  --    |
+  --    +- i=0 | a='9' | used=9 | remaining=27.34a27.11.4.33c9junk
+  --    |
+  --    +- i=1 | a=1367 % 50 | used=27.34 | remaining=a27.11.4.33c9junk
+  --    |
+  --    +- i=2 | a='a' | used=a | remaining=27.11.4.33c9junk
+  --    |
+  --    +- i=3 | a=IP:27.11.4.33 | used=27.11.4.33 | remaining=c9junk
+  --    |
+  --    +- i=4 | a='c' | used=c | remaining=9junk
+  --    |
+  --    `- i=5 | a=9 | used=9 | remaining=junk
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexV (_d :& word :& gregorian :& "abc":& RNil) 0 $ PFst $ prx @Day (PView days (pgt 12) * PView years (plt 2000))) "9hello2018-12-22abcXYZ"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (4) | matched all | leftovers=XYZ
-  --   |
-  --   +- FalseP PFst a={'9', "hello", 2018-12-22, "abc"} snd="XYZ"
-  --   |  |
-  --   |  `- FalseP PFn prx | a={'9', "hello", 2018-12-22, "abc"} | b=2018-12-22
-  --   |     |
-  --   |     `- FalseP PAnd
-  --   |        |
-  --   |        +- TrueP  PView s=2018-12-22 a=22
-  --   |        |  |
-  --   |        |  `- TrueP  22 > 12
-  --   |        |
-  --   |        `- FalseP PView s=2018-12-22 a=2018
-  --   |           |
-  --   |           `- FalseP 2018 < 2000
-  --   |
-  --   `- matched all | leftovers=XYZ
-  --      |
-  --      +- i=0 | a='9' | used=9 | remaining=hello2018-12-22abcXYZ
-  --      |
-  --      +- i=1 | a="hello" | used=hello | remaining=2018-12-22abcXYZ
-  --      |
-  --      +- i=2 | a=2018-12-22 | used=2018-12-22 | remaining=abcXYZ
-  --      |
-  --      `- i=3 | a="abc" | used=abc | remaining=XYZ
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexV (_d :& word :& gregorian :& "abc":& RNil) 0 $ PFst $ prx @Day (PView days (pgt 12) * PView years (plt 2000))) "9hello2018-12-22abcXYZ"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (4) | matched all | leftovers=XYZ
+  -- |
+  -- +- FalseP PFst a={'9', "hello", 2018-12-22, "abc"} snd="XYZ"
+  -- |  |
+  -- |  `- FalseP PFn prx | a={'9', "hello", 2018-12-22, "abc"} | b=2018-12-22
+  -- |     |
+  -- |     `- FalseP PAnd
+  -- |        |
+  -- |        +- TrueP  PView s=2018-12-22 a=22
+  -- |        |  |
+  -- |        |  `- TrueP  22 > 12
+  -- |        |
+  -- |        `- FalseP PView s=2018-12-22 a=2018
+  -- |           |
+  -- |           `- FalseP 2018 < 2000
+  -- |
+  -- `- matched all | leftovers=XYZ
+  --    |
+  --    +- i=0 | a='9' | used=9 | remaining=hello2018-12-22abcXYZ
+  --    |
+  --    +- i=1 | a="hello" | used=hello | remaining=2018-12-22abcXYZ
+  --    |
+  --    +- i=2 | a=2018-12-22 | used=2018-12-22 | remaining=abcXYZ
+  --    |
+  --    `- i=3 | a="abc" | used=abc | remaining=XYZ
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexV ("abc" :& ratio :& _w :& hex :& RNil) 0 1) "abc123.456Z805f__"
-  --   <BLANKLINE>
-  --   TrueP  PRegexV (4) | matched all | leftovers=__
-  --   |
-  --   +- TrueP  PConst a=({"abc", 15432 % 125, 'Z', 32863},"__")
-  --   |
-  --   `- matched all | leftovers=__
-  --      |
-  --      +- i=0 | a="abc" | used=abc | remaining=123.456Z805f__
-  --      |
-  --      +- i=1 | a=15432 % 125 | used=123.456 | remaining=Z805f__
-  --      |
-  --      +- i=2 | a='Z' | used=Z | remaining=805f__
-  --      |
-  --      `- i=3 | a=32863 | used=805f | remaining=__
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexV ("abc" :& ratio :& _w :& hex :& RNil) 0 1) "abc123.456Z805f__"
+  -- <BLANKLINE>
+  -- TrueP  PRegexV (4) | matched all | leftovers=__
+  -- |
+  -- +- TrueP  PConst a=({"abc", 15432 % 125, 'Z', 32863},"__")
+  -- |
+  -- `- matched all | leftovers=__
+  --    |
+  --    +- i=0 | a="abc" | used=abc | remaining=123.456Z805f__
+  --    |
+  --    +- i=1 | a=15432 % 125 | used=123.456 | remaining=Z805f__
+  --    |
+  --    +- i=2 | a='Z' | used=Z | remaining=805f__
+  --    |
+  --    `- i=3 | a=32863 | used=805f | remaining=__
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexV ("abc" :& ratio :& _w :& hex :& RNil) 0 1) "abc123.456ZG805f__"
-  --   <BLANKLINE>
-  --   FalseP PRegexV (4) | only matched 3 of 4 | leftovers=G805f__
-  --   |
-  --   +- FalseP PConst a="G805f__"
-  --   |
-  --   `- only matched 3 of 4 | leftovers=G805f__
-  --      |
-  --      +- i=0 | a="abc" | used=abc | remaining=123.456ZG805f__
-  --      |
-  --      +- i=1 | a=15432 % 125 | used=123.456 | remaining=ZG805f__
-  --      |
-  --      `- i=2 | a='Z' | used=Z | remaining=G805f__
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexV ("abc" :& ratio :& _w :& hex :& RNil) 0 1) "abc123.456ZG805f__"
+  -- <BLANKLINE>
+  -- FalseP PRegexV (4) | only matched 3 of 4 | leftovers=G805f__
+  -- |
+  -- +- FalseP PConst a="G805f__"
+  -- |
+  -- `- only matched 3 of 4 | leftovers=G805f__
+  --    |
+  --    +- i=0 | a="abc" | used=abc | remaining=123.456ZG805f__
+  --    |
+  --    +- i=1 | a=15432 % 125 | used=123.456 | remaining=ZG805f__
+  --    |
+  --    `- i=2 | a='Z' | used=Z | remaining=G805f__
+  -- <BLANKLINE>
   --
   PRegexV
     ::  (RecordToList rs, ReifyConstraint Show V.Identity rs, RMap rs, RecAll V.Identity rs Show, RecAll RXHolder rs Show) =>
@@ -590,84 +581,78 @@ data Pred z a where
 
   -- | tries to match the given regex using prefix search
   --
-  --   >>> pe1' (PRegex RLong ipaddr 0 $ PFst $ pfn (^.. folded) $ PShow 1) "123.2.11.22xxx"
-  --   <BLANKLINE>
-  --   TrueP  PRegex RLong as="123.2.11.22xxx" b=IP:123.2.11.22 rs="xxx"
-  --   |
-  --   `- TrueP  PFst a=IP:123.2.11.22 snd="xxx"
-  --      |
-  --      `- TrueP  PFn | a=IP:123.2.11.22 | b=[123,2,11,22]
-  --         |
-  --         `- TrueP  PShow
-  --            |
-  --            +- TrueP  PConst a=[123,2,11,22]
-  --            |
-  --            `- ===== PShow =====
-  --               |
-  --               +- i=0 a=123
-  --               |
-  --               +- i=1 a=2
-  --               |
-  --               +- i=2 a=11
-  --               |
-  --               `- i=3 a=22
-  --   <BLANKLINE>
+  -- >>> pe1' (PRegex RLong ipaddr 0 $ PFst $ pfn (^.. folded) $ PShow 1) "123.2.11.22xxx"
+  -- <BLANKLINE>
+  -- TrueP  PRegex RLong as="123.2.11.22xxx" b=IP:123.2.11.22 rs="xxx"
+  -- |
+  -- `- TrueP  PFst a=IP:123.2.11.22 snd="xxx"
+  --    |
+  --    `- TrueP  PFn | a=IP:123.2.11.22 | b=[123,2,11,22]
+  --       |
+  --       `- TrueP  PShow
+  --          |
+  --          +- TrueP  PConst a=[123,2,11,22]
+  --          |
+  --          `- ===== PShow =====
+  --             |
+  --             +- i=0 a=123
+  --             |
+  --             +- i=1 a=2
+  --             |
+  --             +- i=2 a=11
+  --             |
+  --             `- i=3 a=22
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PRegex RLong (intersperseNP 4 "-" int) 0 1) "1-2-3-4"
-  --   <BLANKLINE>
-  --   TrueP  PRegex RLong as="1-2-3-4" b=[1,2,3,4] rs=""
-  --   |
-  --   `- TrueP  PConst a=([1,2,3,4],"")
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (intersperseNP 4 "-" int) 0 1) "1-2-3-4"
+  -- <BLANKLINE>
+  -- TrueP  PRegex RLong as="1-2-3-4" b=[1,2,3,4] rs=""
+  -- |
+  -- `- TrueP  PConst a=([1,2,3,4],"")
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PRegex RLong (intersperseNP 4 "-" int) 0 1) "1-2-3"
-  --   <BLANKLINE>
-  --   FalseP PRegex RLong no regex match | PConst a=()
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (intersperseNP 4 "-" int) 0 1) "1-2-3"
+  -- <BLANKLINE>
+  -- FalseP PRegex RLong no regex match | PConst a=()
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PRegex RLong (intersperseNP 4 "-" int) 0 1) "1-2-3-4-5"
-  --   <BLANKLINE>
-  --   TrueP  PRegex RLong as="1-2-3-4-5" b=[1,2,3,4] rs="-5"
-  --   |
-  --   `- TrueP  PConst a=([1,2,3,4],"-5")
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (intersperseNP 4 "-" int) 0 1) "1-2-3-4-5"
+  -- <BLANKLINE>
+  -- TrueP  PRegex RLong as="1-2-3-4-5" b=[1,2,3,4] rs="-5"
+  -- |
+  -- `- TrueP  PConst a=([1,2,3,4],"-5")
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PRegex RLong (widthExact 4 "x") 0 1) "xx"
-  --   <BLANKLINE>
-  --   FalseP PRegex RLong no regex match | PConst a=()
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (widthExact 4 "x") 0 1) "xx"
+  -- <BLANKLINE>
+  -- FalseP PRegex RLong no regex match | PConst a=()
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PRegex RLong (widthExact 4 "x") 0 1) "xxxx"
-  --   <BLANKLINE>
-  --   TrueP  PRegex RLong as="xxxx" b=["x","x","x","x"] rs=""
-  --   |
-  --   `- TrueP  PConst a=(["x","x","x","x"],"")
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (widthExact 4 "x") 0 1) "xxxx"
+  -- <BLANKLINE>
+  -- TrueP  PRegex RLong as="xxxx" b=["x","x","x","x"] rs=""
+  -- |
+  -- `- TrueP  PConst a=(["x","x","x","x"],"")
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PRegex RLong (widthExact 4 "x") 0 1) "xxxxx"
-  --   <BLANKLINE>
-  --   TrueP  PRegex RLong as="xxxxx" b=["x","x","x","x"] rs="x"
-  --   |
-  --   `- TrueP  PConst a=(["x","x","x","x"],"x")
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (widthExact 4 "x") 0 1) "xxxxx"
+  -- <BLANKLINE>
+  -- TrueP  PRegex RLong as="xxxxx" b=["x","x","x","x"] rs="x"
+  -- |
+  -- `- TrueP  PConst a=(["x","x","x","x"],"x")
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegex RLong (stringCI "abCD") 0 1) "ABcd"
-  --   <BLANKLINE>
-  --   TrueP  PRegex RLong as="ABcd" b="ABcd" rs=""
-  --   |
-  --   `- TrueP  PConst a=("ABcd","")
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (stringCI "abCD") 0 1) "ABcd"
+  -- <BLANKLINE>
+  -- TrueP  PRegex RLong as="ABcd" b="ABcd" rs=""
+  -- |
+  -- `- TrueP  PConst a=("ABcd","")
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegex RLong (stringCI "abCD") 0 1) "xBcd"
-  --   <BLANKLINE>
-  --   FalseP PRegex RLong no regex match | PConst a=()
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegex RLong (stringCI "abCD") 0 1) "xBcd"
+  -- <BLANKLINE>
+  -- FalseP PRegex RLong no regex match | PConst a=()
+  -- <BLANKLINE>
   --
   PRegex      :: (Foldable t, Show a, Show b) =>
          RType
@@ -680,23 +665,23 @@ data Pred z a where
 
   -- | tries to match the given regex using infix search
   --
-  --   >>> pe2' (PRegexI RLong ipaddr 0 $ p_2 $ plift isIPValid) "123.4.4.200"
-  --   <BLANKLINE>
-  --   TrueP  PRegexI RLong as="123.4.4.200" b=IP:123.4.4.200 used="" remaining=""
-  --   |
-  --   `- TrueP  PFn _2 | a=("",IP:123.4.4.200,"") | b=IP:123.4.4.200
-  --      |
-  --      `- TrueP  PLift | a=IP:123.4.4.200
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexI RLong ipaddr 0 $ p_2 $ plift isIPValid) "123.4.4.200"
+  -- <BLANKLINE>
+  -- TrueP  PRegexI RLong as="123.4.4.200" b=IP:123.4.4.200 used="" remaining=""
+  -- |
+  -- `- TrueP  PFn _2 | a=("",IP:123.4.4.200,"") | b=IP:123.4.4.200
+  --    |
+  --    `- TrueP  PLift | a=IP:123.4.4.200
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexI RLong ipaddr 0 $ p_2 $ plift isIPValid) "123.4.4.300"
-  --   <BLANKLINE>
-  --   FalseP PRegexI RLong as="123.4.4.300" b=IP:123.4.4.300 used="" remaining=""
-  --   |
-  --   `- FalseP PFn _2 | a=("",IP:123.4.4.300,"") | b=IP:123.4.4.300
-  --      |
-  --      `- FalseP PLift | a=IP:123.4.4.300
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexI RLong ipaddr 0 $ p_2 $ plift isIPValid) "123.4.4.300"
+  -- <BLANKLINE>
+  -- FalseP PRegexI RLong as="123.4.4.300" b=IP:123.4.4.300 used="" remaining=""
+  -- |
+  -- `- FalseP PFn _2 | a=("",IP:123.4.4.300,"") | b=IP:123.4.4.300
+  --    |
+  --    `- FalseP PLift | a=IP:123.4.4.300
+  -- <BLANKLINE>
   --
   PRegexI :: (Foldable t, Show a, Show b) =>
          RType
@@ -706,111 +691,111 @@ data Pred z a where
       -> Pred z (t a)
 
   -- | matches i,j times: see pregexN1: not sure how useful [Re a b] cos same type
-  --   >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "12x"
-  --   <BLANKLINE>
-  --   FalseP PRegexN {3,5} | only matched 2 of {3,5} | leftovers="x"
-  --   |
-  --   +- FalseP PConst a=((2,3),"x")
-  --   |
-  --   `- only matched 2 of {3,5} | leftovers="x"
-  --      |
-  --      +- i=0 | b='1' | used="1" | remaining="2x"
-  --      |
-  --      `- i=1 | b='2' | used="2" | remaining="x"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "12x"
+  -- <BLANKLINE>
+  -- FalseP PRegexN {3,5} | only matched 2 of {3,5} | leftovers="x"
+  -- |
+  -- +- FalseP PConst a=((2,3),"x")
+  -- |
+  -- `- only matched 2 of {3,5} | leftovers="x"
+  --    |
+  --    +- i=0 | b='1' | used="1" | remaining="2x"
+  --    |
+  --    `- i=1 | b='2' | used="2" | remaining="x"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "1234x"
-  --   <BLANKLINE>
-  --   TrueP  PRegexN {3,5} | matched all(4) | leftovers="x"
-  --   |
-  --   +- TrueP  PConst a=("1234","x")
-  --   |
-  --   `- matched all(4) | leftovers="x"
-  --      |
-  --      +- i=0 | b='1' | used="1" | remaining="234x"
-  --      |
-  --      +- i=1 | b='2' | used="2" | remaining="34x"
-  --      |
-  --      +- i=2 | b='3' | used="3" | remaining="4x"
-  --      |
-  --      `- i=3 | b='4' | used="4" | remaining="x"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "1234x"
+  -- <BLANKLINE>
+  -- TrueP  PRegexN {3,5} | matched all(4) | leftovers="x"
+  -- |
+  -- +- TrueP  PConst a=("1234","x")
+  -- |
+  -- `- matched all(4) | leftovers="x"
+  --    |
+  --    +- i=0 | b='1' | used="1" | remaining="234x"
+  --    |
+  --    +- i=1 | b='2' | used="2" | remaining="34x"
+  --    |
+  --    +- i=2 | b='3' | used="3" | remaining="4x"
+  --    |
+  --    `- i=3 | b='4' | used="4" | remaining="x"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "12345"
-  --   <BLANKLINE>
-  --   TrueP  PRegexN {3,5} | matched all(5) | leftovers=""
-  --   |
-  --   +- TrueP  PConst a=("12345","")
-  --   |
-  --   `- matched all(5) | leftovers=""
-  --      |
-  --      +- i=0 | b='1' | used="1" | remaining="2345"
-  --      |
-  --      +- i=1 | b='2' | used="2" | remaining="345"
-  --      |
-  --      +- i=2 | b='3' | used="3" | remaining="45"
-  --      |
-  --      +- i=3 | b='4' | used="4" | remaining="5"
-  --      |
-  --      `- i=4 | b='5' | used="5" | remaining=""
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "12345"
+  -- <BLANKLINE>
+  -- TrueP  PRegexN {3,5} | matched all(5) | leftovers=""
+  -- |
+  -- +- TrueP  PConst a=("12345","")
+  -- |
+  -- `- matched all(5) | leftovers=""
+  --    |
+  --    +- i=0 | b='1' | used="1" | remaining="2345"
+  --    |
+  --    +- i=1 | b='2' | used="2" | remaining="345"
+  --    |
+  --    +- i=2 | b='3' | used="3" | remaining="45"
+  --    |
+  --    +- i=3 | b='4' | used="4" | remaining="5"
+  --    |
+  --    `- i=4 | b='5' | used="5" | remaining=""
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "123456"
-  --   <BLANKLINE>
-  --   TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
-  --   |
-  --   +- TrueP  PConst a=("12345","6")
-  --   |
-  --   `- matched all(5) | leftovers="6"
-  --      |
-  --      +- i=0 | b='1' | used="1" | remaining="23456"
-  --      |
-  --      +- i=1 | b='2' | used="2" | remaining="3456"
-  --      |
-  --      +- i=2 | b='3' | used="3" | remaining="456"
-  --      |
-  --      +- i=3 | b='4' | used="4" | remaining="56"
-  --      |
-  --      `- i=4 | b='5' | used="5" | remaining="6"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexN (These 3 5) (RLong, _d) 0 1) "123456"
+  -- <BLANKLINE>
+  -- TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
+  -- |
+  -- +- TrueP  PConst a=("12345","6")
+  -- |
+  -- `- matched all(5) | leftovers="6"
+  --    |
+  --    +- i=0 | b='1' | used="1" | remaining="23456"
+  --    |
+  --    +- i=1 | b='2' | used="2" | remaining="3456"
+  --    |
+  --    +- i=2 | b='3' | used="3" | remaining="456"
+  --    |
+  --    +- i=3 | b='4' | used="4" | remaining="56"
+  --    |
+  --    `- i=4 | b='5' | used="5" | remaining="6"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexN (These 3 5) (RLong, spaces *> _d) 0 1) "123456"
-  --   <BLANKLINE>
-  --   TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
-  --   |
-  --   +- TrueP  PConst a=("12345","6")
-  --   |
-  --   `- matched all(5) | leftovers="6"
-  --      |
-  --      +- i=0 | b='1' | used="1" | remaining="23456"
-  --      |
-  --      +- i=1 | b='2' | used="2" | remaining="3456"
-  --      |
-  --      +- i=2 | b='3' | used="3" | remaining="456"
-  --      |
-  --      +- i=3 | b='4' | used="4" | remaining="56"
-  --      |
-  --      `- i=4 | b='5' | used="5" | remaining="6"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexN (These 3 5) (RLong, spaces *> _d) 0 1) "123456"
+  -- <BLANKLINE>
+  -- TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
+  -- |
+  -- +- TrueP  PConst a=("12345","6")
+  -- |
+  -- `- matched all(5) | leftovers="6"
+  --    |
+  --    +- i=0 | b='1' | used="1" | remaining="23456"
+  --    |
+  --    +- i=1 | b='2' | used="2" | remaining="3456"
+  --    |
+  --    +- i=2 | b='3' | used="3" | remaining="456"
+  --    |
+  --    +- i=3 | b='4' | used="4" | remaining="56"
+  --    |
+  --    `- i=4 | b='5' | used="5" | remaining="6"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexN (These 3 5) (RLong, spaces *> _d) 0 1) "12  34   56"
-  --   <BLANKLINE>
-  --   TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
-  --   |
-  --   +- TrueP  PConst a=("12345","6")
-  --   |
-  --   `- matched all(5) | leftovers="6"
-  --      |
-  --      +- i=0 | b='1' | used="1" | remaining="2  34   56"
-  --      |
-  --      +- i=1 | b='2' | used="2" | remaining="  34   56"
-  --      |
-  --      +- i=2 | b='3' | used="  3" | remaining="4   56"
-  --      |
-  --      +- i=3 | b='4' | used="4" | remaining="   56"
-  --      |
-  --      `- i=4 | b='5' | used="   5" | remaining="6"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexN (These 3 5) (RLong, spaces *> _d) 0 1) "12  34   56"
+  -- <BLANKLINE>
+  -- TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
+  -- |
+  -- +- TrueP  PConst a=("12345","6")
+  -- |
+  -- `- matched all(5) | leftovers="6"
+  --    |
+  --    +- i=0 | b='1' | used="1" | remaining="2  34   56"
+  --    |
+  --    +- i=1 | b='2' | used="2" | remaining="  34   56"
+  --    |
+  --    +- i=2 | b='3' | used="  3" | remaining="4   56"
+  --    |
+  --    +- i=3 | b='4' | used="4" | remaining="   56"
+  --    |
+  --    `- i=4 | b='5' | used="   5" | remaining="6"
+  -- <BLANKLINE>
   --
   PRegexN  :: (Foldable t, Eq a, Show a, Show b) =>
          These Int Int
@@ -821,105 +806,105 @@ data Pred z a where
 
   -- | matches i,j times with intersperse
   --
-  --   >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.4xxx"
-  --   <BLANKLINE>
-  --   TrueP  PRegexIP{4} | matched all(4) | leftovers="xxx"
-  --   |
-  --   +- TrueP  PConst a=([444,123,3,4],"xxx")
-  --   |
-  --   `- matched all(4) | leftovers="xxx"
-  --      |
-  --      +- i=0 | b=444 | used="444" | remaining=".123.3.4xxx"
-  --      |
-  --      +- i=1 | b=123 | used=".123" | remaining=".3.4xxx"
-  --      |
-  --      +- i=2 | b=3 | used=".3" | remaining=".4xxx"
-  --      |
-  --      `- i=3 | b=4 | used=".4" | remaining="xxx"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.4xxx"
+  -- <BLANKLINE>
+  -- TrueP  PRegexIP{4} | matched all(4) | leftovers="xxx"
+  -- |
+  -- +- TrueP  PConst a=([444,123,3,4],"xxx")
+  -- |
+  -- `- matched all(4) | leftovers="xxx"
+  --    |
+  --    +- i=0 | b=444 | used="444" | remaining=".123.3.4xxx"
+  --    |
+  --    +- i=1 | b=123 | used=".123" | remaining=".3.4xxx"
+  --    |
+  --    +- i=2 | b=3 | used=".3" | remaining=".4xxx"
+  --    |
+  --    `- i=3 | b=4 | used=".4" | remaining="xxx"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.4xxx"
-  --   <BLANKLINE>
-  --   TrueP  PRegexIP{4} | matched all(4) | leftovers="xxx"
-  --   |
-  --   +- TrueP  PConst a=([444,123,3,4],"xxx")
-  --   |
-  --   `- matched all(4) | leftovers="xxx"
-  --      |
-  --      +- i=0 | b=444 | used="444" | remaining=".123.3.4xxx"
-  --      |
-  --      +- i=1 | b=123 | used=".123" | remaining=".3.4xxx"
-  --      |
-  --      +- i=2 | b=3 | used=".3" | remaining=".4xxx"
-  --      |
-  --      `- i=3 | b=4 | used=".4" | remaining="xxx"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.4xxx"
+  -- <BLANKLINE>
+  -- TrueP  PRegexIP{4} | matched all(4) | leftovers="xxx"
+  -- |
+  -- +- TrueP  PConst a=([444,123,3,4],"xxx")
+  -- |
+  -- `- matched all(4) | leftovers="xxx"
+  --    |
+  --    +- i=0 | b=444 | used="444" | remaining=".123.3.4xxx"
+  --    |
+  --    +- i=1 | b=123 | used=".123" | remaining=".3.4xxx"
+  --    |
+  --    +- i=2 | b=3 | used=".3" | remaining=".4xxx"
+  --    |
+  --    `- i=3 | b=4 | used=".4" | remaining="xxx"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.4.789xxx"
-  --   <BLANKLINE>
-  --   TrueP  PRegexIP{4} | matched all(4) | leftovers=".789xxx"
-  --   |
-  --   +- TrueP  PConst a=([444,123,3,4],".789xxx")
-  --   |
-  --   `- matched all(4) | leftovers=".789xxx"
-  --      |
-  --      +- i=0 | b=444 | used="444" | remaining=".123.3.4.789xxx"
-  --      |
-  --      +- i=1 | b=123 | used=".123" | remaining=".3.4.789xxx"
-  --      |
-  --      +- i=2 | b=3 | used=".3" | remaining=".4.789xxx"
-  --      |
-  --      `- i=3 | b=4 | used=".4" | remaining=".789xxx"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.4.789xxx"
+  -- <BLANKLINE>
+  -- TrueP  PRegexIP{4} | matched all(4) | leftovers=".789xxx"
+  -- |
+  -- +- TrueP  PConst a=([444,123,3,4],".789xxx")
+  -- |
+  -- `- matched all(4) | leftovers=".789xxx"
+  --    |
+  --    +- i=0 | b=444 | used="444" | remaining=".123.3.4.789xxx"
+  --    |
+  --    +- i=1 | b=123 | used=".123" | remaining=".3.4.789xxx"
+  --    |
+  --    +- i=2 | b=3 | used=".3" | remaining=".4.789xxx"
+  --    |
+  --    `- i=3 | b=4 | used=".4" | remaining=".789xxx"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.xxx"
-  --   <BLANKLINE>
-  --   [Error fromInteger: n=3: use 0 or 1] PRegexIP{4} | only matched 3 of {4} | leftovers=".xxx"
-  --   |
-  --   +- [Error fromInteger: n=3: use 0 or 1] PConst a=((2,4),".xxx")
-  --   |
-  --   `- only matched 3 of {4} | leftovers=".xxx"
-  --      |
-  --      +- i=0 | b=444 | used="444" | remaining=".123.3.xxx"
-  --      |
-  --      +- i=1 | b=123 | used=".123" | remaining=".3.xxx"
-  --      |
-  --      `- i=2 | b=3 | used=".3" | remaining=".xxx"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexIP (These 4 4) RLong "." int 3 1) "444.123.3.xxx"
+  -- <BLANKLINE>
+  -- [Error fromInteger: n=3: use 0 or 1] PRegexIP{4} | only matched 3 of {4} | leftovers=".xxx"
+  -- |
+  -- +- [Error fromInteger: n=3: use 0 or 1] PConst a=((2,4),".xxx")
+  -- |
+  -- `- only matched 3 of {4} | leftovers=".xxx"
+  --    |
+  --    +- i=0 | b=444 | used="444" | remaining=".123.3.xxx"
+  --    |
+  --    +- i=1 | b=123 | used=".123" | remaining=".3.xxx"
+  --    |
+  --    `- i=2 | b=3 | used=".3" | remaining=".xxx"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexIP (These 4 5) RLong "." int 3 1) "444.123.3.xxx"
-  --   <BLANKLINE>
-  --   [Error fromInteger: n=3: use 0 or 1] PRegexIP{4,5} | only matched 3 of {4,5} | leftovers=".xxx"
-  --   |
-  --   +- [Error fromInteger: n=3: use 0 or 1] PConst a=((2,4),".xxx")
-  --   |
-  --   `- only matched 3 of {4,5} | leftovers=".xxx"
-  --      |
-  --      +- i=0 | b=444 | used="444" | remaining=".123.3.xxx"
-  --      |
-  --      +- i=1 | b=123 | used=".123" | remaining=".3.xxx"
-  --      |
-  --      `- i=2 | b=3 | used=".3" | remaining=".xxx"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexIP (These 4 5) RLong "." int 3 1) "444.123.3.xxx"
+  -- <BLANKLINE>
+  -- [Error fromInteger: n=3: use 0 or 1] PRegexIP{4,5} | only matched 3 of {4,5} | leftovers=".xxx"
+  -- |
+  -- +- [Error fromInteger: n=3: use 0 or 1] PConst a=((2,4),".xxx")
+  -- |
+  -- `- only matched 3 of {4,5} | leftovers=".xxx"
+  --    |
+  --    +- i=0 | b=444 | used="444" | remaining=".123.3.xxx"
+  --    |
+  --    +- i=1 | b=123 | used=".123" | remaining=".3.xxx"
+  --    |
+  --    `- i=2 | b=3 | used=".3" | remaining=".xxx"
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRegexIP (These 4 5) RLong "." int 3 1) "444.123.3.5.6.xxx"
-  --   <BLANKLINE>
-  --   TrueP  PRegexIP{4,5} | matched all(5) | leftovers=".xxx"
-  --   |
-  --   +- TrueP  PConst a=([444,123,3,5,6],".xxx")
-  --   |
-  --   `- matched all(5) | leftovers=".xxx"
-  --      |
-  --      +- i=0 | b=444 | used="444" | remaining=".123.3.5.6.xxx"
-  --      |
-  --      +- i=1 | b=123 | used=".123" | remaining=".3.5.6.xxx"
-  --      |
-  --      +- i=2 | b=3 | used=".3" | remaining=".5.6.xxx"
-  --      |
-  --      +- i=3 | b=5 | used=".5" | remaining=".6.xxx"
-  --      |
-  --      `- i=4 | b=6 | used=".6" | remaining=".xxx"
-  --   <BLANKLINE>
+  -- >>> pe2' (PRegexIP (These 4 5) RLong "." int 3 1) "444.123.3.5.6.xxx"
+  -- <BLANKLINE>
+  -- TrueP  PRegexIP{4,5} | matched all(5) | leftovers=".xxx"
+  -- |
+  -- +- TrueP  PConst a=([444,123,3,5,6],".xxx")
+  -- |
+  -- `- matched all(5) | leftovers=".xxx"
+  --    |
+  --    +- i=0 | b=444 | used="444" | remaining=".123.3.5.6.xxx"
+  --    |
+  --    +- i=1 | b=123 | used=".123" | remaining=".3.5.6.xxx"
+  --    |
+  --    +- i=2 | b=3 | used=".3" | remaining=".5.6.xxx"
+  --    |
+  --    +- i=3 | b=5 | used=".5" | remaining=".6.xxx"
+  --    |
+  --    `- i=4 | b=6 | used=".6" | remaining=".xxx"
+  -- <BLANKLINE>
   --
   PRegexIP  :: (Foldable t, Eq a, Show a, Show b) =>
          These Int Int
@@ -932,25 +917,25 @@ data Pred z a where
 
   -- | matches on a range of values
   --
-  --   first value is the lower bound and second is the upper bound
+  -- first value is the lower bound and second is the upper bound
   --
-  --   has nicer output than 'PElem'
+  -- has nicer output than 'PElem'
   --
   --
-  --   >>> pe2' (PRange 4 7) 5
-  --   <BLANKLINE>
-  --   TrueP  5 == [4..7]
-  --   <BLANKLINE>
+  -- >>> pe2' (PRange 4 7) 5
+  -- <BLANKLINE>
+  -- TrueP  5 == [4..7]
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRange 4 7) 3
-  --   <BLANKLINE>
-  --   FalseP 3 < 4 (Under)
-  --   <BLANKLINE>
+  -- >>> pe2' (PRange 4 7) 3
+  -- <BLANKLINE>
+  -- FalseP 3 < 4 (Under)
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PRange 4 7) 8
-  --   <BLANKLINE>
-  --   FalseP 8 > 7 (Over)
-  --   <BLANKLINE>
+  -- >>> pe2' (PRange 4 7) 8
+  -- <BLANKLINE>
+  -- FalseP 8 > 7 (Over)
+  -- <BLANKLINE>
   --
   PRange      :: Ord a => a -> a -> Pred z a
   -- | like 'Data.List.elem'
@@ -958,126 +943,123 @@ data Pred z a where
 
   -- | like 'Data.Foldable.length'
   --
-  --   >>> pe1' (PLen (pgt 1)) "abcd"
-  --   <BLANKLINE>
-  --   TrueP  PLen 4 as="abcd"
-  --   |
-  --   `- TrueP  4 > 1
-  --   <BLANKLINE>
+  -- >>> pe1' (PLen (pgt 1)) "abcd"
+  -- <BLANKLINE>
+  -- TrueP  PLen 4 as="abcd"
+  -- |
+  -- `- TrueP  4 > 1
+  -- <BLANKLINE>
   --
   PLen        :: Foldable t => Pred z Int -> Pred z (t a)
   -- works for monomorphic stuff as well as lists and maybes etc  ([],[]) is empty but not null!
   -- | empty predicate which is sometimes different from 'PNull' eg ([],[]) is empty but not null
   --
-  --   >>> pe2' PEmpty [(),()]
-  --   <BLANKLINE>
-  --   FalseP PEmpty s=[(),()]
-  --   <BLANKLINE>
+  -- >>> pe2' PEmpty [(),()]
+  -- <BLANKLINE>
+  -- FalseP PEmpty s=[(),()]
+  -- <BLANKLINE>
   --
-  --   >>> pe2' PEmpty ((),())
-  --   <BLANKLINE>
-  --   TrueP  PEmpty s=((),())
-  --   <BLANKLINE>
+  -- >>> pe2' PEmpty ((),())
+  -- <BLANKLINE>
+  -- TrueP  PEmpty s=((),())
+  -- <BLANKLINE>
   --
-  --   >>> pe2' PEmpty [1..4]
-  --   <BLANKLINE>
-  --   FalseP PEmpty s=[1,2,3,4]
-  --   <BLANKLINE>
+  -- >>> pe2' PEmpty [1..4]
+  -- <BLANKLINE>
+  -- FalseP PEmpty s=[1,2,3,4]
+  -- <BLANKLINE>
   --
-  --   >>> pe2' PEmpty []
-  --   <BLANKLINE>
-  --   TrueP  PEmpty s=[]
-  --   <BLANKLINE>
+  -- >>> pe2' PEmpty []
+  -- <BLANKLINE>
+  -- TrueP  PEmpty s=[]
+  -- <BLANKLINE>
   --
   PEmpty      :: AsEmpty s => Pred z s
   -- not as general cos doesnt work with monomorphic stuff
   -- | like 'Data.Foldable.null'
   --
-  --   >>> pe2' PNull ((),())
-  --   <BLANKLINE>
-  --   FalseP PNull length=1 as=((),())
-  --   <BLANKLINE>
+  -- >>> pe2' PNull ((),())
+  -- <BLANKLINE>
+  -- FalseP PNull length=1 as=((),())
+  -- <BLANKLINE>
   --
-  --   >>> pe2' PNull [1..4]
-  --   <BLANKLINE>
-  --   FalseP PNull length=4 as=[1,2,3,4]
-  --   <BLANKLINE>
+  -- >>> pe2' PNull [1..4]
+  -- <BLANKLINE>
+  -- FalseP PNull length=4 as=[1,2,3,4]
+  -- <BLANKLINE>
   --
-  --   >>> pe2' PNull []
-  --   <BLANKLINE>
-  --   TrueP  PNull length=0 as=[]
-  --   <BLANKLINE>
+  -- >>> pe2' PNull []
+  -- <BLANKLINE>
+  -- TrueP  PNull length=0 as=[]
+  -- <BLANKLINE>
   --
   PNull       :: Foldable t => Pred z (t a)
   -- does PFst and PSnd: use 1 to emulate
   -- | applies a different predicate to each side of a tuple. same as 'PFst' p * 'PSnd' q but has nicer output
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PBoth "abc" (pgt 'x')) ("AbC",'y')
-  --   <BLANKLINE>
-  --   TrueP  PBoth
-  --   |
-  --   +- TrueP  PStringCI "AbC" == "abc"
-  --   |
-  --   `- TrueP  'y' > 'x'
-  --   <BLANKLINE>
+  -- >>> pe2' (PBoth "abc" (pgt 'x')) ("AbC",'y')
+  -- <BLANKLINE>
+  -- TrueP  PBoth
+  -- |
+  -- +- TrueP  PStringCI "AbC" == "abc"
+  -- |
+  -- `- TrueP  'y' > 'x'
+  -- <BLANKLINE>
   --
   PBoth       :: (Show a, Show b) => Pred z a -> Pred z b -> Pred z (a, b)
   -- | applies a predicate to left hand side of a tuple and ignores the right
   --
-  --   >>> pe' (PFst (PRange 4 8)) (9,'x')
-  --   <BLANKLINE>
-  --   FalseP PFst
-  --   |
-  --   `- FalseP 9 > 8 (Over)
-  --   <BLANKLINE>
+  -- >>> pe' (PFst (PRange 4 8)) (9,'x')
+  -- <BLANKLINE>
+  -- FalseP PFst
+  -- |
+  -- `- FalseP 9 > 8 (Over)
+  -- <BLANKLINE>
   --
   PFst        :: (Show a, Show b) => Pred z a -> Pred z (a, b)
   -- | applies a predicate to right hand side of a tuple and ignores the left
   --
-  --   >>> pe' (PSnd (PRange 'm' 'y')) (9,'x')
-  --   <BLANKLINE>
-  --   TrueP  PSnd
-  --   |
-  --   `- TrueP  'x' == ['m'..'y']
-  --   <BLANKLINE>
+  -- >>> pe' (PSnd (PRange 'm' 'y')) (9,'x')
+  -- <BLANKLINE>
+  -- TrueP  PSnd
+  -- |
+  -- `- TrueP  'x' == ['m'..'y']
+  -- <BLANKLINE>
   --
   PSnd        :: (Show a, Show b) => Pred z b -> Pred z (a, b)
 
   -- | swap arguments in a tuple. useful when push everything good to the right
   --
-  --   >>> pe2' (PSwap $ PBoth (peq 4) pid) (True,4)
-  --   <BLANKLINE>
-  --   TrueP  PSwap a,b=(True,4)
-  --   |
-  --   `- TrueP  PBoth
-  --      |
-  --      +- TrueP  4 == 4
-  --      |
-  --      `- TrueP  PLift id | a=True
-  --   <BLANKLINE>
+  -- >>> pe2' (PSwap $ PBoth (peq 4) pid) (True,4)
+  -- <BLANKLINE>
+  -- TrueP  PSwap a,b=(True,4)
+  -- |
+  -- `- TrueP  PBoth
+  --    |
+  --    +- TrueP  4 == 4
+  --    |
+  --    `- TrueP  PLift id | a=True
+  -- <BLANKLINE>
   --
   PSwap       :: (Swapped p, Show (p d c)) => Pred z (p d c) -> Pred z (p c d)
   -- | reverse predicate
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe' (PReverse $ sinfix "zyx") ("pqrstuvwxyz" :: Text)
-  --   <BLANKLINE>
-  --   TrueP  PReverse
-  --   |
-  --   `- TrueP  PStringCI "zyx" `isInfixOf` "zyxwvutsrqp"
-  --   <BLANKLINE>
+  -- >>> pe' (PReverse $ sinfix "zyx") ("pqrstuvwxyz" :: Text)
+  -- <BLANKLINE>
+  -- TrueP  PReverse
+  -- |
+  -- `- TrueP  PStringCI "zyx" `isInfixOf` "zyxwvutsrqp"
+  -- <BLANKLINE>
   --
   PReverse    :: (Reversing t, Show t) => Pred z t -> Pred z t
   -- | like 'Data.List.splitAt', splits a foldable into two
   --
-  --   >>> :set -XTypeApplications
-  --   >>> pe2' (PSplitAt @[] 3 1) "abcdefg"
-  --   <BLANKLINE>
-  --   TrueP  PSplitAt 3 | lhs="abc" rhs="defg"
-  --   |
-  --   `- TrueP  PConst a=("abc","defg")
-  --   <BLANKLINE>
+  -- >>> pe2' (PSplitAt @[] 3 1) "abcdefg"
+  -- <BLANKLINE>
+  -- TrueP  PSplitAt 3 | lhs="abc" rhs="defg"
+  -- |
+  -- `- TrueP  PConst a=("abc","defg")
+  -- <BLANKLINE>
   --
   PSplitAt    :: (Foldable t, Show a) => Int -> Pred z ([a],[a]) -> Pred z (t a)
 --  PTake       :: (Foldable t, Show a) => Int -> Pred z [a] -> Pred z (t a)
@@ -1086,14 +1068,14 @@ data Pred z a where
   -- boolean operators
   -- | conjunction of two predicates
   --
-  --   >>> pe' (PAnd (pgt 4) (plt 10)) 7
-  --   <BLANKLINE>
-  --   TrueP  PAnd
-  --   |
-  --   +- TrueP  7 > 4
-  --   |
-  --   `- TrueP  7 < 10
-  --   <BLANKLINE>
+  -- >>> pe' (PAnd (pgt 4) (plt 10)) 7
+  -- <BLANKLINE>
+  -- TrueP  PAnd
+  -- |
+  -- +- TrueP  7 > 4
+  -- |
+  -- `- TrueP  7 < 10
+  -- <BLANKLINE>
   --
   PAnd        :: Pred z a -> Pred z a -> Pred z a
   POr         :: Pred z a -> Pred z a -> Pred z a
@@ -1101,24 +1083,24 @@ data Pred z a where
   PEquiv      :: Pred z a -> Pred z a -> Pred z a
   -- | implication predicate
   --
-  --   >>> pe' (PImpl (pgt 4) (plt 10)) 3
-  --   <BLANKLINE>
-  --   TrueP  PImpl
-  --   |
-  --   +- FalseP 3 > 4
-  --   |
-  --   `- TrueP  3 < 10
-  --   <BLANKLINE>
+  -- >>> pe' (PImpl (pgt 4) (plt 10)) 3
+  -- <BLANKLINE>
+  -- TrueP  PImpl
+  -- |
+  -- +- FalseP 3 > 4
+  -- |
+  -- `- TrueP  3 < 10
+  -- <BLANKLINE>
   --
   PImpl       :: Pred z a -> Pred z a -> Pred z a
   -- | negation predicate
   --
-  --   >>> pe' (PNot (PMatch SInfix "xyz")) "abcxyzdef"
-  --   <BLANKLINE>
-  --   FalseP PNot
-  --   |
-  --   `- TrueP  PMatch "xyz" `isInfixOf` "abcxyzdef"
-  --   <BLANKLINE>
+  -- >>> pe' (PNot (PMatch SInfix "xyz")) "abcxyzdef"
+  -- <BLANKLINE>
+  -- FalseP PNot
+  -- |
+  -- `- TrueP  PMatch "xyz" `isInfixOf` "abcxyzdef"
+  -- <BLANKLINE>
   --
   PNot        :: Pred z a -> Pred z a
 
@@ -1126,20 +1108,20 @@ data Pred z a where
   -- cheating a bit by blending tacking the results of [Pred z a] onto the end of the nodes of Pred z [Bool]
   -- | applies a list of predicates to a single value and then calls Pred z [Bool] with the results
   --
-  --   >>> pe2' (POps [peq 2, peq 4, pgt 3,peven] $ plift and) 4
-  --   <BLANKLINE>
-  --   FalseP POps | (1,3)
-  --   |
-  --   `- FalseP PLift | a=[False,True,True,True]
-  --      |
-  --      +- FalseP i=0: 4 == 2
-  --      |
-  --      +- TrueP  i=1: 4 == 4
-  --      |
-  --      +- TrueP  i=2: 4 > 3
-  --      |
-  --      `- TrueP  i=3: PLift even | a=4
-  --   <BLANKLINE>
+  -- >>> pe2' (POps [peq 2, peq 4, pgt 3,peven] $ plift and) 4
+  -- <BLANKLINE>
+  -- FalseP POps | (1,3)
+  -- |
+  -- `- FalseP PLift | a=[False,True,True,True]
+  --    |
+  --    +- FalseP i=0: 4 == 2
+  --    |
+  --    +- TrueP  i=1: 4 == 4
+  --    |
+  --    +- TrueP  i=2: 4 > 3
+  --    |
+  --    `- TrueP  i=3: PLift even | a=4
+  -- <BLANKLINE>
   --
   POps        :: [Pred z a] -> Pred z [Bool] -> Pred z a
 --  PAnds       :: [Pred z a] -> Pred z a
@@ -1149,39 +1131,39 @@ data Pred z a where
   -- but this does give nicer tracing so good for demoing
   -- | a predicate for checking that the list is the given order by checking adjacent elements
   --
-  --   >>> pe2' (POrder Le) [1,2,3,3,4]
-  --   <BLANKLINE>
-  --   TrueP  POrder (<=)
-  --   |
-  --   +- TrueP  i=0: 1
-  --   |
-  --   +- TrueP  i=1: 2
-  --   |
-  --   +- TrueP  i=2: 3
-  --   |
-  --   +- TrueP  i=3: 3
-  --   |
-  --   `- TrueP  i=4: 4
-  --   <BLANKLINE>
+  -- >>> pe2' (POrder Le) [1,2,3,3,4]
+  -- <BLANKLINE>
+  -- TrueP  POrder (<=)
+  -- |
+  -- +- TrueP  i=0: 1
+  -- |
+  -- +- TrueP  i=1: 2
+  -- |
+  -- +- TrueP  i=2: 3
+  -- |
+  -- +- TrueP  i=3: 3
+  -- |
+  -- `- TrueP  i=4: 4
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (POrder Le) [1,2,3,3,4,7,1]
-  --   <BLANKLINE>
-  --   FalseP POrder (<=) errs=1 (6,1)
-  --   |
-  --   +- TrueP  i=0: 1
-  --   |
-  --   +- TrueP  i=1: 2
-  --   |
-  --   +- TrueP  i=2: 3
-  --   |
-  --   +- TrueP  i=3: 3
-  --   |
-  --   +- TrueP  i=4: 4
-  --   |
-  --   +- TrueP  i=5: 7
-  --   |
-  --   `- FalseP i=6: 1
-  --   <BLANKLINE>
+  -- >>> pe2' (POrder Le) [1,2,3,3,4,7,1]
+  -- <BLANKLINE>
+  -- FalseP POrder (<=) errs=1 (6,1)
+  -- |
+  -- +- TrueP  i=0: 1
+  -- |
+  -- +- TrueP  i=1: 2
+  -- |
+  -- +- TrueP  i=2: 3
+  -- |
+  -- +- TrueP  i=3: 3
+  -- |
+  -- +- TrueP  i=4: 4
+  -- |
+  -- +- TrueP  i=5: 7
+  -- |
+  -- `- FalseP i=6: 1
+  -- <BLANKLINE>
   --
   POrder      :: (Foldable t, Ord a, Show a) => CmpOperator -> Pred z (t a)
   -- | subset of 'POrder' but works only for (==)
@@ -1202,42 +1184,41 @@ data Pred z a where
   PShow1      :: Show a => Pred z a -> Pred z a
   -- | passthrough predicate for debugging a foldable of values as a list
   --
-  --   >>> :set -XTypeApplications
-  --   >>> pe' (PShow @[] 1) "abcdef"
-  --   <BLANKLINE>
-  --   TrueP  PShow
-  --   |
-  --   +- TrueP
-  --   |
-  --   `- ===== PShow =====
-  --      |
-  --      +- i=0 a='a'
-  --      |
-  --      +- i=1 a='b'
-  --      |
-  --      +- i=2 a='c'
-  --      |
-  --      +- i=3 a='d'
-  --      |
-  --      +- i=4 a='e'
-  --      |
-  --      `- i=5 a='f'
-  --   <BLANKLINE>
+  -- >>> pe' (PShow @[] 1) "abcdef"
+  -- <BLANKLINE>
+  -- TrueP  PShow
+  -- |
+  -- +- TrueP
+  -- |
+  -- `- ===== PShow =====
+  --    |
+  --    +- i=0 a='a'
+  --    |
+  --    +- i=1 a='b'
+  --    |
+  --    +- i=2 a='c'
+  --    |
+  --    +- i=3 a='d'
+  --    |
+  --    +- i=4 a='e'
+  --    |
+  --    `- i=5 a='f'
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PShow 1) ["hello","wor\nld","end"]
-  --   <BLANKLINE>
-  --   TrueP  PShow
-  --   |
-  --   +- TrueP
-  --   |
-  --   `- ===== PShow =====
-  --      |
-  --      +- i=0 a="hello"
-  --      |
-  --      +- i=1 a="wor\nld"
-  --      |
-  --      `- i=2 a="end"
-  --   <BLANKLINE>
+  -- >>> pe' (PShow 1) ["hello","wor\nld","end"]
+  -- <BLANKLINE>
+  -- TrueP  PShow
+  -- |
+  -- +- TrueP
+  -- |
+  -- `- ===== PShow =====
+  --    |
+  --    +- i=0 a="hello"
+  --    |
+  --    +- i=1 a="wor\nld"
+  --    |
+  --    `- i=2 a="end"
+  -- <BLANKLINE>
   --
   PShow       :: (Foldable t, Show a) => Pred z [a] -> Pred z (t a)
 -- for String/Text where we dont want double quotes escaped
@@ -1245,99 +1226,99 @@ data Pred z a where
   PShowS1     :: SConv a => Pred z a -> Pred z a
   -- | passthrough predicate for debugging a foldable of values as a Showable. Nicer output than 'PShow'
   --
-  --   >>> pe' (PShowS 1) ["hello","wor\nld","end"]
-  --   <BLANKLINE>
-  --   TrueP  PShowS
-  --   |
-  --   +- TrueP
-  --   |
-  --   `- ===== PShowS =====
-  --      |
-  --      +- i=0 a=hello
-  --      |
-  --      +- i=1 a=wor
-  --      |  ld
-  --      |
-  --      `- i=2 a=end
-  --   <BLANKLINE>
+  -- >>> pe' (PShowS 1) ["hello","wor\nld","end"]
+  -- <BLANKLINE>
+  -- TrueP  PShowS
+  -- |
+  -- +- TrueP
+  -- |
+  -- `- ===== PShowS =====
+  --    |
+  --    +- i=0 a=hello
+  --    |
+  --    +- i=1 a=wor
+  --    |  ld
+  --    |
+  --    `- i=2 a=end
+  -- <BLANKLINE>
   --
   PShowS      :: (Foldable t, SConv a) => Pred z [a] -> Pred z (t a)
   -- | if given predicate is false then fail with the given message string else let it continue
   --
-  --   >>> pe' (POrDie "oops" (pgt 4)) 5
-  --   <BLANKLINE>
-  --   TrueP  POrDie oops:ok
-  --   |
-  --   `- TrueP  5 > 4
-  --   <BLANKLINE>
+  -- >>> pe' (POrDie "oops" (pgt 4)) 5
+  -- <BLANKLINE>
+  -- TrueP  POrDie oops:ok
+  -- |
+  -- `- TrueP  5 > 4
+  -- <BLANKLINE>
   --
-  --   >>> pe' (POrDie "oops" (pgt 4)) 3
-  --   <BLANKLINE>
-  --   [Error oops] POrDie oops: found False
-  --   |
-  --   `- FalseP 3 > 4
-  --   <BLANKLINE>
+  -- >>> pe' (POrDie "oops" (pgt 4)) 3
+  -- <BLANKLINE>
+  -- [Error oops] POrDie oops: found False
+  -- |
+  -- `- FalseP 3 > 4
+  -- <BLANKLINE>
   --
   POrDie      :: String -> Pred z a -> Pred z a
   -- | catch a failed predicate
   --
-  --   >>> pe' (PCatch 1 (POrDie "xxx" (peq 4))) 5
-  --   <BLANKLINE>
-  --   TrueP  PCatch:Exception caught | xxx
-  --   |
-  --   +- TrueP
-  --   |
-  --   `- [Error xxx] POrDie xxx: found False
-  --      |
-  --      `- FalseP 5 == 4
-  --   <BLANKLINE>
+  -- >>> pe' (PCatch 1 (POrDie "xxx" (peq 4))) 5
+  -- <BLANKLINE>
+  -- TrueP  PCatch:Exception caught | xxx
+  -- |
+  -- +- TrueP
+  -- |
+  -- `- [Error xxx] POrDie xxx: found False
+  --    |
+  --    `- FalseP 5 == 4
+  -- <BLANKLINE>
   --
   PCatch      :: Pred z a -- failure predicate to run if predicate fails
               -> Pred z a -- run this predicate and if it fails run the error predicate above
               -> Pred z a
   -- | prepend an informational message either inline or nested
   --
-  --   >>> pe' (PMsg Nested "extra info" $ pgt 4) 5
-  --   <BLANKLINE>
-  --   TrueP  PMsg:extra info
-  --   |
-  --   `- TrueP  5 > 4
-  --   <BLANKLINE>
+  -- >>> pe' (PMsg Nested "extra info" $ pgt 4) 5
+  -- <BLANKLINE>
+  -- TrueP  PMsg:extra info
+  -- |
+  -- `- TrueP  5 > 4
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PMsg Nested "extra info" $ pgt 4) 4
-  --   <BLANKLINE>
-  --   FalseP PMsg:extra info
-  --   |
-  --   `- FalseP 4 > 4
-  --   <BLANKLINE>
+  -- >>> pe' (PMsg Nested "extra info" $ pgt 4) 4
+  -- <BLANKLINE>
+  -- FalseP PMsg:extra info
+  -- |
+  -- `- FalseP 4 > 4
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PMsg Inline "extra info" $ pgt 4) 5
-  --   <BLANKLINE>
-  --   TrueP  extra info | 5 > 4
-  --   <BLANKLINE>
+  -- >>> pe' (PMsg Inline "extra info" $ pgt 4) 5
+  -- <BLANKLINE>
+  -- TrueP  extra info | 5 > 4
+  -- <BLANKLINE>
   --
   PMsg        :: Inline -> String -> Pred z a -> Pred z a
   -- | depending on the result of Pred a calls the predicates matching 'BoolPE'.
   --
-  --   Nothing means passthru else override: pexc pbad then pgood
+  -- Nothing means passthru else override: pexc pbad then pgood
   --
-  --   >>> pe' (PIf Nothing Nothing (Just $ pgt 45) 1) 44
-  --   <BLANKLINE>
-  --   FalseP PIf <True Branch>
-  --   |
-  --   +- FalseP 44 > 45
-  --   |
-  --   `- TrueP  <override with False>
-  --   <BLANKLINE>
+  -- >>> pe' (PIf Nothing Nothing (Just $ pgt 45) 1) 44
+  -- <BLANKLINE>
+  -- FalseP PIf <True Branch>
+  -- |
+  -- +- FalseP 44 > 45
+  -- |
+  -- `- TrueP  <override with False>
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PIf Nothing Nothing (Just $ pgt 45) 1) 44
-  --   <BLANKLINE>
-  --   FalseP PIf <True Branch>
-  --   |
-  --   +- FalseP 44 > 45
-  --   |
-  --   `- TrueP  <override with False>
-  --   <BLANKLINE>
+  -- >>> pe' (PIf Nothing Nothing (Just $ pgt 45) 1) 44
+  -- <BLANKLINE>
+  -- FalseP PIf <True Branch>
+  -- |
+  -- +- FalseP 44 > 45
+  -- |
+  -- `- TrueP  <override with False>
+  -- <BLANKLINE>
   --
   PIf         :: Maybe (Pred z a) -- on failure ie 'FailP'
               -> Maybe (Pred z a) -- on false ie 'FalseP'
@@ -1351,38 +1332,38 @@ data Pred z a where
 -- need to be able to join 2 predicates back together
   -- | function application
   --
-  --   >>> import Text.Show.Functions
-  --   >>> pe2' (PFn "xx" (*) (PApp 7 1)) 1012
-  --   <BLANKLINE>
-  --   TrueP  PFn xx | a=1012 | b=<function>
-  --   |
-  --   `- TrueP  PApp a=7 b=7084
-  --      |
-  --      `- TrueP  PConst a=7084
-  --   <BLANKLINE>
+  -- >>> import Text.Show.Functions
+  -- >>> pe2' (PFn "xx" (*) (PApp 7 1)) 1012
+  -- <BLANKLINE>
+  -- TrueP  PFn xx | a=1012 | b=<function>
+  -- |
+  -- `- TrueP  PApp a=7 b=7084
+  --    |
+  --    `- TrueP  PConst a=7084
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PApp 5 1) (*)
-  --   <BLANKLINE>
-  --   TrueP  PApp a=5 b=<function>
-  --   |
-  --   `- TrueP  PConst a=<function>
-  --   <BLANKLINE>
+  -- >>> pe2' (PApp 5 1) (*)
+  -- <BLANKLINE>
+  -- TrueP  PApp a=5 b=<function>
+  -- |
+  -- `- TrueP  PConst a=<function>
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PApp 5 (PApp 3 1)) (*)
-  --   <BLANKLINE>
-  --   TrueP  PApp a=5 b=<function>
-  --   |
-  --   `- TrueP  PApp a=3 b=15
-  --      |
-  --      `- TrueP  PConst a=15
-  --   <BLANKLINE>
+  -- >>> pe2' (PApp 5 (PApp 3 1)) (*)
+  -- <BLANKLINE>
+  -- TrueP  PApp a=5 b=<function>
+  -- |
+  -- `- TrueP  PApp a=3 b=15
+  --    |
+  --    `- TrueP  PConst a=15
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PApp 4 1) (*5)
-  --   <BLANKLINE>
-  --   TrueP  PApp a=4 b=20
-  --   |
-  --   `- TrueP  PConst a=20
-  --   <BLANKLINE>
+  -- >>> pe2' (PApp 4 1) (*5)
+  -- <BLANKLINE>
+  -- TrueP  PApp a=4 b=20
+  -- |
+  -- `- TrueP  PConst a=20
+  -- <BLANKLINE>
   --
   PApp        :: (Show a, Show b) => a -> Pred z b -> Pred z (a -> b)
 --  PApp1       :: (Show a, Show b) => Pred z (a -> Pred b ) -> (a -> Pred z b ) -> Pred z a
@@ -1397,14 +1378,14 @@ data Pred z a where
   -- if you want to just run a lens
   -- | lift a 'Control.Lens.Type.Lens' or 'Control.Lens.Type.Prism' or 'Control.Lens.Type.Iso' etc into Pred
   --
-  --   >>> pe1' (PView (_1 . _2) $ PLen $ pgt 3) (('x',"abcd"),True)
-  --   <BLANKLINE>
-  --   TrueP  PView s=(('x',"abcd"),True) a="abcd"
-  --   |
-  --   `- TrueP  PLen 4 as="abcd"
-  --      |
-  --      `- TrueP  4 > 3
-  --   <BLANKLINE>
+  -- >>> pe1' (PView (_1 . _2) $ PLen $ pgt 3) (('x',"abcd"),True)
+  -- <BLANKLINE>
+  -- TrueP  PView s=(('x',"abcd"),True) a="abcd"
+  -- |
+  -- `- TrueP  PLen 4 as="abcd"
+  --    |
+  --    `- TrueP  4 > 3
+  -- <BLANKLINE>
   --
   PView       :: Show a => Getting a s a -> Pred z a -> Pred z s
 
@@ -1416,19 +1397,19 @@ data Pred z a where
 
   -- | monomorphic head predicate - 'PUncons' or 'phead' are more general
   --
-  --   >>> pe' (PHead 0 (peq 'x')) "xbc"
-  --   <BLANKLINE>
-  --   TrueP  PHead 'x'
-  --   |
-  --   `- TrueP  'x' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PHead 0 (peq 'x')) "xbc"
+  -- <BLANKLINE>
+  -- TrueP  PHead 'x'
+  -- |
+  -- `- TrueP  'x' == 'x'
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PHead 0 (peq 'x')) "abc"
-  --   <BLANKLINE>
-  --   FalseP PHead 'a'
-  --   |
-  --   `- FalseP 'a' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PHead 0 (peq 'x')) "abc"
+  -- <BLANKLINE>
+  -- FalseP PHead 'a'
+  -- |
+  -- `- FalseP 'a' == 'x'
+  -- <BLANKLINE>
   --
   PHead       :: Show a => Pred z () -- failure predicate ie list is empty
                         -> Pred z a  -- success predicate ie list has at least one element
@@ -1440,30 +1421,30 @@ data Pred z a where
 
   -- | runs a predicate on exactly one element
   --
-  --   >>> pe' (POne 0 (PBoth (peq 'x') (PLen $ plt 3)) $ peq 'x') "xyzw"
-  --   <BLANKLINE>
-  --   FalseP POne extra values! a='x' s'="yzw"
-  --   |
-  --   `- FalseP PBoth
-  --      |
-  --      +- TrueP  'x' == 'x'
-  --      |
-  --      `- FalseP PLen 3
-  --         |
-  --         `- FalseP 3 < 3
-  --   <BLANKLINE>
+  -- >>> pe' (POne 0 (PBoth (peq 'x') (PLen $ plt 3)) $ peq 'x') "xyzw"
+  -- <BLANKLINE>
+  -- FalseP POne extra values! a='x' s'="yzw"
+  -- |
+  -- `- FalseP PBoth
+  --    |
+  --    +- TrueP  'x' == 'x'
+  --    |
+  --    `- FalseP PLen 3
+  --       |
+  --       `- FalseP 3 < 3
+  -- <BLANKLINE>
   --
-  --   >>> pe' (POne 0 (PBoth (peq 'x') (PLen $ plt 3)) $ peq 'x') "x"
-  --   <BLANKLINE>
-  --   TrueP  POne 'x'
-  --   |
-  --   `- TrueP  'x' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (POne 0 (PBoth (peq 'x') (PLen $ plt 3)) $ peq 'x') "x"
+  -- <BLANKLINE>
+  -- TrueP  POne 'x'
+  -- |
+  -- `- TrueP  'x' == 'x'
+  -- <BLANKLINE>
   --
-  --   >>> pe' (POne 0 (PBoth (peq 'x') (PLen $ plt 3)) $ peq 'x') ""
-  --   <BLANKLINE>
-  --   FalseP POne empty!
-  --   <BLANKLINE>
+  -- >>> pe' (POne 0 (PBoth (peq 'x') (PLen $ plt 3)) $ peq 'x') ""
+  -- <BLANKLINE>
+  -- FalseP POne empty!
+  -- <BLANKLINE>
   --
   POne       :: (AsEmpty s, Cons s s a a, Show a, Show s) =>
             Pred z () -- failure predicate (empty list)
@@ -1478,35 +1459,27 @@ data Pred z a where
 
   -- | uncons
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> :set -XTypeApplications
-  --   >>> pe' (PUncons @String (pfalse' "dude") 1) ""
-  --   <BLANKLINE>
-  --   FalseP PUncons empty | dude
-  --   <BLANKLINE>
+  -- >>> pe' (PUncons @String (pfalse' "dude") 1) ""
+  -- <BLANKLINE>
+  -- FalseP PUncons empty | dude
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> :set -XTypeApplications
-  --   >>> pe1' (PUncons @[_] (pfalse' "dude") 1) ""
-  --   <BLANKLINE>
-  --   FalseP PUncons empty | PConst a=() | dude
-  --   <BLANKLINE>
+  -- >>> pe1' (PUncons @[_] (pfalse' "dude") 1) ""
+  -- <BLANKLINE>
+  -- FalseP PUncons empty | PConst a=() | dude
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> :set -XTypeApplications
-  --   >>> pe1' (PUncons @Text (pfalse' "dude") 1) "abc"
-  --   <BLANKLINE>
-  --   TrueP  PUncons a='a' s="bc"
-  --   |
-  --   `- TrueP  PConst a=('a',"bc")
-  --   <BLANKLINE>
+  -- >>> pe1' (PUncons @Text (pfalse' "dude") 1) "abc"
+  -- <BLANKLINE>
+  -- TrueP  PUncons a='a' s="bc"
+  -- |
+  -- `- TrueP  PConst a=('a',"bc")
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> :set -XTypeApplications
-  --   >>> pe1' (PUncons @Text (pfalse' "dude") 1) ""
-  --   <BLANKLINE>
-  --   FalseP PUncons empty | PConst a=() | dude
-  --   <BLANKLINE>
+  -- >>> pe1' (PUncons @Text (pfalse' "dude") 1) ""
+  -- <BLANKLINE>
+  -- FalseP PUncons empty | PConst a=() | dude
+  -- <BLANKLINE>
   --
   PUncons    :: (Show s, Cons s s a a, Show a) =>
        Pred z () -- failure predicate ie empty
@@ -1514,14 +1487,14 @@ data Pred z a where
     -> Pred z s
   -- | unsnoc
   --
-  --   >>> pe1' (PUnsnoc 0 (PSnd (peq 'x'))) "xyz"
-  --   <BLANKLINE>
-  --   FalseP PUnsnoc a='z' s="xy"
-  --   |
-  --   `- FalseP PSnd a='z' fst="xy"
-  --      |
-  --      `- FalseP 'z' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe1' (PUnsnoc 0 (PSnd (peq 'x'))) "xyz"
+  -- <BLANKLINE>
+  -- FalseP PUnsnoc a='z' s="xy"
+  -- |
+  -- `- FalseP PSnd a='z' fst="xy"
+  --    |
+  --    `- FalseP 'z' == 'x'
+  -- <BLANKLINE>
   --
   PUnsnoc    :: (Snoc s s a a, Show a, Show s) =>
        Pred z () -- failure predicate ie empty
@@ -1530,31 +1503,23 @@ data Pred z a where
 
 -- works with monomorphic stuff too!! eg pe (PIx 1 0 1) ("ab"::Text)
   -- | index into a structure
-  --
-  {-   >>> :{
-        :set -XOverloadedStrings
-        :set -XFlexibleContexts
-        let zzz = PIx "glossary" 0
-                . PIx "GlossDiv" 0
-                . PIx "GlossList" 0
-                . PIx "GlossEntry" 0
-                . PIx "GlossSee" 0
-        pe' (zzz $ scs "mARkup") json1
-        :}
-  -}
-  --   <BLANKLINE>
-  --   FalseP PIx "glossary" Object (fromList [("GlossDiv",Object (fromLi...
-  --   |
-  --   `- FalseP PIx "GlossDiv" Object (fromList [("title",String "S"),("...
-  --      |
-  --      `- FalseP PIx "GlossList" Object (fromList [("GlossEntry",Objec...
-  --         |
-  --         `- FalseP PIx "GlossEntry" Object (fromList [("GlossSee",Str...
-  --            |
-  --            `- FalseP PIx "GlossSee" String "markup"
-  --               |
-  --               `- FalseP PStringCS String "markup" == String "mARkup"
-  --   <BLANKLINE>
+  -- >>> :set -XFlexibleContexts
+  -- >>> :set -XGADTs
+  -- >>> let zzz = PIx "glossary" 0 . PIx "GlossDiv" 0 . PIx "GlossList" 0 . PIx "GlossEntry" 0 . PIx "GlossSee" 0
+  -- >>> pe' (zzz $ scs "mARkup") json1
+  -- <BLANKLINE>
+  -- FalseP PIx "glossary" Object (fromList [("GlossDiv",Object (fromLi...
+  -- |
+  -- `- FalseP PIx "GlossDiv" Object (fromList [("title",String "S"),("...
+  --    |
+  --    `- FalseP PIx "GlossList" Object (fromList [("GlossEntry",Objec...
+  --       |
+  --       `- FalseP PIx "GlossEntry" Object (fromList [("GlossSee",Str...
+  --          |
+  --          `- FalseP PIx "GlossSee" String "markup"
+  --             |
+  --             `- FalseP PStringCS String "markup" == String "mARkup"
+  -- <BLANKLINE>
   --
   PIx         :: (Eq (Index s), Show s, Show (IxValue s), Show (Index s), Ixed s) =>
                     Index s -- index into the structure
@@ -1564,101 +1529,97 @@ data Pred z a where
 
   -- | intersection of two lists:
   --
-  --   calls a predicate with lists for left only, both and right only
+  -- calls a predicate with lists for left only, both and right only
   --
-  --   >>> pe1' (PISect 1) ("abc","daaef":: String)
-  --   <BLANKLINE>
-  --   TrueP  PISect left="bc" isect="a" right="adef"
-  --   |
-  --   `- TrueP  PConst a=("bc","a","adef")
-  --   <BLANKLINE>
+  -- >>> pe1' (PISect 1) ("abc","daaef":: String)
+  -- <BLANKLINE>
+  -- TrueP  PISect left="bc" isect="a" right="adef"
+  -- |
+  -- `- TrueP  PConst a=("bc","a","adef")
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PISect 1) ("abc","daaaef":: String)
-  --   <BLANKLINE>
-  --   TrueP  PISect left="bc" isect="a" right="aadef"
-  --   |
-  --   `- TrueP  PConst a=("bc","a","aadef")
-  --   <BLANKLINE>
+  -- >>> pe1' (PISect 1) ("abc","daaaef":: String)
+  -- <BLANKLINE>
+  -- TrueP  PISect left="bc" isect="a" right="aadef"
+  -- |
+  -- `- TrueP  PConst a=("bc","a","aadef")
+  -- <BLANKLINE>
   --
   PISect :: (Foldable t, Ord a, Show a) => Pred z ([a], [a], [a]) -> Pred z (t a, t a)
 
   -- | intersection of a list. use 'PISect' if only using two values
   --
-  --   'PISect' will give you stuff in left both and right
+  -- 'PISect' will give you stuff in left both and right
   --
-  --   >>> :set -XTypeApplications
-  --   >>> pe1' (PISectList @[] 1) $ reverse ["abdbc","defbba","bbbbd"]
-  --   <BLANKLINE>
-  --   TrueP  PISectList unmatched="bbaefc" matched="bbd"
-  --   |
-  --   `- TrueP  PConst a=("bbaefc","bbd")
-  --   <BLANKLINE>
+  -- >>> pe1' (PISectList @[] 1) $ reverse ["abdbc","defbba","bbbbd"]
+  -- <BLANKLINE>
+  -- TrueP  PISectList unmatched="bbaefc" matched="bbd"
+  -- |
+  -- `- TrueP  PConst a=("bbaefc","bbd")
+  -- <BLANKLINE>
   --
-  --   >>> :set -XTypeApplications
-  --   >>> pe1' (PISectList @[] 1) $ reverse ["abdc","defba","bd"]
-  --   <BLANKLINE>
-  --   TrueP  PISectList unmatched="aefc" matched="bd"
-  --   |
-  --   `- TrueP  PConst a=("aefc","bd")
-  --   <BLANKLINE>
+  -- >>> pe1' (PISectList @[] 1) $ reverse ["abdc","defba","bd"]
+  -- <BLANKLINE>
+  -- TrueP  PISectList unmatched="aefc" matched="bd"
+  -- |
+  -- `- TrueP  PConst a=("aefc","bd")
+  -- <BLANKLINE>
   --
-  --   >>> :set -XTypeApplications
-  --   >>> pe1' (PISectList @[] 1) ["abdc","defba","bd"]
-  --   <BLANKLINE>
-  --   TrueP  PISectList unmatched="acaef" matched="bd"
-  --   |
-  --   `- TrueP  PConst a=("acaef","bd")
-  --   <BLANKLINE>
+  -- >>> pe1' (PISectList @[] 1) ["abdc","defba","bd"]
+  -- <BLANKLINE>
+  -- TrueP  PISectList unmatched="acaef" matched="bd"
+  -- |
+  -- `- TrueP  PConst a=("acaef","bd")
+  -- <BLANKLINE>
   --
-  --   >>> :set -XTypeApplications
-  --   >>> pe1' (PISectList @[] 1) ["abdc","defa","bd"]
-  --   <BLANKLINE>
-  --   TrueP  PISectList unmatched="abcaefb" matched="d"
-  --   |
-  --   `- TrueP  PConst a=("abcaefb","d")
-  --   <BLANKLINE>
+  -- >>> pe1' (PISectList @[] 1) ["abdc","defa","bd"]
+  -- <BLANKLINE>
+  -- TrueP  PISectList unmatched="abcaefb" matched="d"
+  -- |
+  -- `- TrueP  PConst a=("abcaefb","d")
+  -- <BLANKLINE>
   --
   PISectList :: (Foldable t, Foldable u, Ord a, Show a) => Pred z ([a], [a]) -> Pred z (u (t a))
 
   -- | divides a list into two with not matching on the left and transformed on the right
   --
-  --   >>> pe1' (PMorph (^? _Left . to show) 1) [Left 1,Left 10,Left 12]
-  --   <BLANKLINE>
-  --   TrueP  PMorph bad=[] good=["1","10","12"]
-  --   |
-  --   `- TrueP  PConst a=([],["1","10","12"])
-  --   <BLANKLINE>
+  -- >>> pe1' (PMorph (^? _Left . to show) 1) [Left 1,Left 10,Left 12]
+  -- <BLANKLINE>
+  -- TrueP  PMorph bad=[] good=["1","10","12"]
+  -- |
+  -- `- TrueP  PConst a=([],["1","10","12"])
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PMorph (^? _Left . to show) 1) [Left 1,Left 10,Left 12,Right 'a']
-  --   <BLANKLINE>
-  --   TrueP  PMorph bad=[Right 'a'] good=["1","10","12"]
-  --   |
-  --   `- TrueP  PConst a=([Right 'a'],["1","10","12"])
-  --   <BLANKLINE>
+  -- >>> pe1' (PMorph (^? _Left . to show) 1) [Left 1,Left 10,Left 12,Right 'a']
+  -- <BLANKLINE>
+  -- TrueP  PMorph bad=[Right 'a'] good=["1","10","12"]
+  -- |
+  -- `- TrueP  PConst a=([Right 'a'],["1","10","12"])
+  -- <BLANKLINE>
   --
   PMorph      :: (Foldable t, Show a, Show b) => (a -> Maybe b) -> Pred z ([a],[b]) -> Pred z (t a)
 
 -- PEither and PMaybe can replace a lot if not all of the PFnPartial stuff: can use PFn to bust it down into PEither
   -- | deconstructs 'Maybe'
   --
-  --   >>> pe' (PMaybe 0 (peq 'x')) Nothing
-  --   <BLANKLINE>
-  --   FalseP PMaybe (Nothing)
-  --   <BLANKLINE>
+  -- >>> pe' (PMaybe 0 (peq 'x')) Nothing
+  -- <BLANKLINE>
+  -- FalseP PMaybe (Nothing)
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PMaybe 0 (peq 'x')) (Just 'y')
-  --   <BLANKLINE>
-  --   FalseP PMaybe (Just) 'y'
-  --   |
-  --   `- FalseP 'y' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PMaybe 0 (peq 'x')) (Just 'y')
+  -- <BLANKLINE>
+  -- FalseP PMaybe (Just) 'y'
+  -- |
+  -- `- FalseP 'y' == 'x'
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PMaybe 0 (peq 'x')) (Just 'x')
-  --   <BLANKLINE>
-  --   TrueP  PMaybe (Just) 'x'
-  --   |
-  --   `- TrueP  'x' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PMaybe 0 (peq 'x')) (Just 'x')
+  -- <BLANKLINE>
+  -- TrueP  PMaybe (Just) 'x'
+  -- |
+  -- `- TrueP  'x' == 'x'
+  -- <BLANKLINE>
   --
   PMaybe      :: Show a =>
        Pred z () -- Nothing case
@@ -1667,33 +1628,33 @@ data Pred z a where
   -- prism1 == pfalse prism2 == pfail msg
   -- | deconstructs 'Either'
   --
-  --   >>> pe' (PEither (peq 'x') (-pid)) (Left 'x')
-  --   <BLANKLINE>
-  --   TrueP  PEither (Left) 'x'
-  --   |
-  --   `- TrueP  'x' == 'x'
-  --   <BLANKLINE>
+  -- >>> pe' (PEither (peq 'x') (-pid)) (Left 'x')
+  -- <BLANKLINE>
+  -- TrueP  PEither (Left) 'x'
+  -- |
+  -- `- TrueP  'x' == 'x'
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PEither (peq 'x') (-pid)) (Right False)
-  --   <BLANKLINE>
-  --   TrueP  PEither (Right) False
-  --   |
-  --   `- TrueP  PNot
-  --      |
-  --      `- FalseP PLift id
-  --   <BLANKLINE>
+  -- >>> pe' (PEither (peq 'x') (-pid)) (Right False)
+  -- <BLANKLINE>
+  -- TrueP  PEither (Right) False
+  -- |
+  -- `- TrueP  PNot
+  --    |
+  --    `- FalseP PLift id
+  -- <BLANKLINE>
   --
   PEither     :: (Show a, Show b) => Pred z a -> Pred z b -> Pred z (Either a b)
   -- | deconstructs 'Data.These.These'
   --
-  --   >>> pe' (PThese (peq 'x') (pgt 4) $ pfn (first $ \a -> ord 'z' - ord a) pgt2) (These 'x' 4)
-  --   <BLANKLINE>
-  --   FalseP PThese (These) a='x' b=4
-  --   |
-  --   `- FalseP PFn | a=('x',4) | b=(2,4)
-  --      |
-  --      `- FalseP PCmp2 2 > 4
-  --   <BLANKLINE>
+  -- >>> pe' (PThese (peq 'x') (pgt 4) $ pfn (first $ \a -> ord 'z' - ord a) pgt2) (These 'x' 4)
+  -- <BLANKLINE>
+  -- FalseP PThese (These) a='x' b=4
+  -- |
+  -- `- FalseP PFn | a=('x',4) | b=(2,4)
+  --    |
+  --    `- FalseP PCmp2 2 > 4
+  -- <BLANKLINE>
   --
   PThese      :: (Show a, Show b) =>
        Pred z a -- This predicate
@@ -1710,14 +1671,14 @@ data Pred z a where
 
   -- | lift a maybe over a tuple on lhs
   --
-  --   >>> pe1' (PPrismL "dude" (^? _Left) 0 (PFn "zz" (first (succ.succ)) 1)) (Left 'x',True)
-  --   <BLANKLINE>
-  --   TrueP  PPrismL (Just) [dude] 'x'
-  --   |
-  --   `- TrueP  PFn zz | a=('x',True) | b=('z',True)
-  --      |
-  --      `- TrueP  PConst a=('z',True)
-  --   <BLANKLINE>
+  -- >>> pe1' (PPrismL "dude" (^? _Left) 0 (PFn "zz" (first (succ.succ)) 1)) (Left 'x',True)
+  -- <BLANKLINE>
+  -- TrueP  PPrismL (Just) [dude] 'x'
+  -- |
+  -- `- TrueP  PFn zz | a=('x',True) | b=('z',True)
+  --    |
+  --    `- TrueP  PConst a=('z',True)
+  -- <BLANKLINE>
   --
   PPrismL     :: (Show x, Show a, Show b) => String -> (a -> Maybe b) -> Pred z x -> Pred z (b, x) -> Pred z (a, x)
   PPrismR     :: (Show x, Show a, Show b) => String -> (a -> Maybe b) -> Pred z x -> Pred z (x, b) -> Pred z (x, a)
@@ -1729,150 +1690,150 @@ data Pred z a where
 
   -- | matches predicates to values (order is not important)
   --
-  --   a value is not allowed to be matched by more than one predicate
+  -- a value is not allowed to be matched by more than one predicate
   --
-  --   see 'preq' 'popt' etc
+  -- see 'preq' 'popt' etc
   --
-  --   >>> pe1' (PLinear Rigid [preq (peq 'x'), preq (peq 'y'),preq (peq 'w')]) "yxxxxo"
-  --   <BLANKLINE>
-  --   FalseP PLinear Failed Pred [Int] | errors(1): NoMatch 5
-  --   |
-  --   +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(2,1)
-  --   |  |
-  --   |  `- FalseP PLift and | a=[False,True,False]
-  --   |     |
-  --   |     +- FalseP i=0
-  --   |     |  |
-  --   |     |  +- FalseP 4 > 1 (Over)
-  --   |     |  |
-  --   |     |  `- a == 'x'
-  --   |     |
-  --   |     +- TrueP  i=1
-  --   |     |  |
-  --   |     |  +- TrueP  1 == 1
-  --   |     |  |
-  --   |     |  `- a == 'y'
-  --   |     |
-  --   |     `- FalseP i=2
-  --   |        |
-  --   |        +- FalseP 0 < 1 (Under)
-  --   |        |
-  --   |        `- a == 'w'
-  --   |
-  --   +- TrueP  PLinear | OneMatch 0 a='y' cnt=1 (i=1, a='y')
-  --   |  |
-  --   |  +- FalseP i=0: 'y' == 'x'
-  --   |  |
-  --   |  +- TrueP  i=1: 'y' == 'y'
-  --   |  |
-  --   |  `- FalseP i=2: 'y' == 'w'
-  --   |
-  --   +- TrueP  PLinear | OneMatch 1 a='x' cnt=1 (i=0, a='x')
-  --   |  |
-  --   |  +- TrueP  i=0: 'x' == 'x'
-  --   |  |
-  --   |  +- FalseP i=1: 'x' == 'y'
-  --   |  |
-  --   |  `- FalseP i=2: 'x' == 'w'
-  --   |
-  --   +- TrueP  PLinear | OneMatch 2 a='x' cnt=1 (i=0, a='x')
-  --   |  |
-  --   |  +- TrueP  i=0: 'x' == 'x'
-  --   |  |
-  --   |  +- FalseP i=1: 'x' == 'y'
-  --   |  |
-  --   |  `- FalseP i=2: 'x' == 'w'
-  --   |
-  --   +- TrueP  PLinear | OneMatch 3 a='x' cnt=1 (i=0, a='x')
-  --   |  |
-  --   |  +- TrueP  i=0: 'x' == 'x'
-  --   |  |
-  --   |  +- FalseP i=1: 'x' == 'y'
-  --   |  |
-  --   |  `- FalseP i=2: 'x' == 'w'
-  --   |
-  --   +- TrueP  PLinear | OneMatch 4 a='x' cnt=1 (i=0, a='x')
-  --   |  |
-  --   |  +- TrueP  i=0: 'x' == 'x'
-  --   |  |
-  --   |  +- FalseP i=1: 'x' == 'y'
-  --   |  |
-  --   |  `- FalseP i=2: 'x' == 'w'
-  --   |
-  --   `- FalseP PLinear NoMatch 5 a='o'
-  --      |
-  --      +- FalseP i=0: 'o' == 'x'
-  --      |
-  --      +- FalseP i=1: 'o' == 'y'
-  --      |
-  --      `- FalseP i=2: 'o' == 'w'
-  --   <BLANKLINE>
+  -- >>> pe1' (PLinear Rigid [preq (peq 'x'), preq (peq 'y'),preq (peq 'w')]) "yxxxxo"
+  -- <BLANKLINE>
+  -- FalseP PLinear Failed Pred [Int] | errors(1): NoMatch 5
+  -- |
+  -- +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(2,1)
+  -- |  |
+  -- |  `- FalseP PLift and | a=[False,True,False]
+  -- |     |
+  -- |     +- FalseP i=0
+  -- |     |  |
+  -- |     |  +- FalseP 4 > 1 (Over)
+  -- |     |  |
+  -- |     |  `- a == 'x'
+  -- |     |
+  -- |     +- TrueP  i=1
+  -- |     |  |
+  -- |     |  +- TrueP  1 == 1
+  -- |     |  |
+  -- |     |  `- a == 'y'
+  -- |     |
+  -- |     `- FalseP i=2
+  -- |        |
+  -- |        +- FalseP 0 < 1 (Under)
+  -- |        |
+  -- |        `- a == 'w'
+  -- |
+  -- +- TrueP  PLinear | OneMatch 0 a='y' cnt=1 (i=1, a='y')
+  -- |  |
+  -- |  +- FalseP i=0: 'y' == 'x'
+  -- |  |
+  -- |  +- TrueP  i=1: 'y' == 'y'
+  -- |  |
+  -- |  `- FalseP i=2: 'y' == 'w'
+  -- |
+  -- +- TrueP  PLinear | OneMatch 1 a='x' cnt=1 (i=0, a='x')
+  -- |  |
+  -- |  +- TrueP  i=0: 'x' == 'x'
+  -- |  |
+  -- |  +- FalseP i=1: 'x' == 'y'
+  -- |  |
+  -- |  `- FalseP i=2: 'x' == 'w'
+  -- |
+  -- +- TrueP  PLinear | OneMatch 2 a='x' cnt=1 (i=0, a='x')
+  -- |  |
+  -- |  +- TrueP  i=0: 'x' == 'x'
+  -- |  |
+  -- |  +- FalseP i=1: 'x' == 'y'
+  -- |  |
+  -- |  `- FalseP i=2: 'x' == 'w'
+  -- |
+  -- +- TrueP  PLinear | OneMatch 3 a='x' cnt=1 (i=0, a='x')
+  -- |  |
+  -- |  +- TrueP  i=0: 'x' == 'x'
+  -- |  |
+  -- |  +- FalseP i=1: 'x' == 'y'
+  -- |  |
+  -- |  `- FalseP i=2: 'x' == 'w'
+  -- |
+  -- +- TrueP  PLinear | OneMatch 4 a='x' cnt=1 (i=0, a='x')
+  -- |  |
+  -- |  +- TrueP  i=0: 'x' == 'x'
+  -- |  |
+  -- |  +- FalseP i=1: 'x' == 'y'
+  -- |  |
+  -- |  `- FalseP i=2: 'x' == 'w'
+  -- |
+  -- `- FalseP PLinear NoMatch 5 a='o'
+  --    |
+  --    +- FalseP i=0: 'o' == 'x'
+  --    |
+  --    +- FalseP i=1: 'o' == 'y'
+  --    |
+  --    `- FalseP i=2: 'o' == 'w'
+  -- <BLANKLINE>
   --
-  --   >>> let m = M.fromList $ zip ['a'..] [12..15]
-  --   >>> pe1' (pilist $ PLinear Rigid [preq (PFst (peq 'a')),preq (PFst (peq 'b'))]) m
-  --   <BLANKLINE>
-  --   FalseP PLinear | errors(2): NoMatch 2 | NoMatch 3
-  --   |
-  --   +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,2)
-  --   |  |
-  --   |  `- TrueP  PLift and | a=[True,True]
-  --   |     |
-  --   |     +- TrueP  i=0
-  --   |     |  |
-  --   |     |  +- TrueP  1 == 1
-  --   |     |  |
-  --   |     |  `- PFst
-  --   |     |     |
-  --   |     |     `- a == 'a'
-  --   |     |
-  --   |     `- TrueP  i=1
-  --   |        |
-  --   |        +- TrueP  1 == 1
-  --   |        |
-  --   |        `- PFst
-  --   |           |
-  --   |           `- a == 'b'
-  --   |
-  --   +- TrueP  PLinear | OneMatch 0 a=('a',12) cnt=1 (i=0, a=('a',12))
-  --   |  |
-  --   |  +- TrueP  i=0: PFst a='a' snd=12
-  --   |  |  |
-  --   |  |  `- TrueP  'a' == 'a'
-  --   |  |
-  --   |  `- FalseP i=1: PFst a='a' snd=12
-  --   |     |
-  --   |     `- FalseP 'a' == 'b'
-  --   |
-  --   +- TrueP  PLinear | OneMatch 1 a=('b',13) cnt=1 (i=1, a=('b',13))
-  --   |  |
-  --   |  +- FalseP i=0: PFst a='b' snd=13
-  --   |  |  |
-  --   |  |  `- FalseP 'b' == 'a'
-  --   |  |
-  --   |  `- TrueP  i=1: PFst a='b' snd=13
-  --   |     |
-  --   |     `- TrueP  'b' == 'b'
-  --   |
-  --   +- FalseP PLinear NoMatch 2 a=('c',14)
-  --   |  |
-  --   |  +- FalseP i=0: PFst a='c' snd=14
-  --   |  |  |
-  --   |  |  `- FalseP 'c' == 'a'
-  --   |  |
-  --   |  `- FalseP i=1: PFst a='c' snd=14
-  --   |     |
-  --   |     `- FalseP 'c' == 'b'
-  --   |
-  --   `- FalseP PLinear NoMatch 3 a=('d',15)
-  --      |
-  --      +- FalseP i=0: PFst a='d' snd=15
-  --      |  |
-  --      |  `- FalseP 'd' == 'a'
-  --      |
-  --      `- FalseP i=1: PFst a='d' snd=15
-  --         |
-  --         `- FalseP 'd' == 'b'
-  --   <BLANKLINE>
+  -- >>> let m = M.fromList $ zip ['a'..] [12..15]
+  -- >>> pe1' (pilist $ PLinear Rigid [preq (PFst (peq 'a')),preq (PFst (peq 'b'))]) m
+  -- <BLANKLINE>
+  -- FalseP PLinear | errors(2): NoMatch 2 | NoMatch 3
+  -- |
+  -- +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,2)
+  -- |  |
+  -- |  `- TrueP  PLift and | a=[True,True]
+  -- |     |
+  -- |     +- TrueP  i=0
+  -- |     |  |
+  -- |     |  +- TrueP  1 == 1
+  -- |     |  |
+  -- |     |  `- PFst
+  -- |     |     |
+  -- |     |     `- a == 'a'
+  -- |     |
+  -- |     `- TrueP  i=1
+  -- |        |
+  -- |        +- TrueP  1 == 1
+  -- |        |
+  -- |        `- PFst
+  -- |           |
+  -- |           `- a == 'b'
+  -- |
+  -- +- TrueP  PLinear | OneMatch 0 a=('a',12) cnt=1 (i=0, a=('a',12))
+  -- |  |
+  -- |  +- TrueP  i=0: PFst a='a' snd=12
+  -- |  |  |
+  -- |  |  `- TrueP  'a' == 'a'
+  -- |  |
+  -- |  `- FalseP i=1: PFst a='a' snd=12
+  -- |     |
+  -- |     `- FalseP 'a' == 'b'
+  -- |
+  -- +- TrueP  PLinear | OneMatch 1 a=('b',13) cnt=1 (i=1, a=('b',13))
+  -- |  |
+  -- |  +- FalseP i=0: PFst a='b' snd=13
+  -- |  |  |
+  -- |  |  `- FalseP 'b' == 'a'
+  -- |  |
+  -- |  `- TrueP  i=1: PFst a='b' snd=13
+  -- |     |
+  -- |     `- TrueP  'b' == 'b'
+  -- |
+  -- +- FalseP PLinear NoMatch 2 a=('c',14)
+  -- |  |
+  -- |  +- FalseP i=0: PFst a='c' snd=14
+  -- |  |  |
+  -- |  |  `- FalseP 'c' == 'a'
+  -- |  |
+  -- |  `- FalseP i=1: PFst a='c' snd=14
+  -- |     |
+  -- |     `- FalseP 'c' == 'b'
+  -- |
+  -- `- FalseP PLinear NoMatch 3 a=('d',15)
+  --    |
+  --    +- FalseP i=0: PFst a='d' snd=15
+  --    |  |
+  --    |  `- FalseP 'd' == 'a'
+  --    |
+  --    `- FalseP i=1: PFst a='d' snd=15
+  --       |
+  --       `- FalseP 'd' == 'b'
+  -- <BLANKLINE>
   --
   PLinear     :: (Foldable t, Show a) =>
        Rigid -- if 'Rigid' then each value have to match a predicate
@@ -1881,80 +1842,80 @@ data Pred z a where
 
   -- | runs the predicate against all the values and expects all to succeed. see 'pquantifier' and 'PPartition'
   --
-  --   >>> pe1' (PForAll (PLen (peq 3) * PHead 0 (peq 'f'))) ["foo","ab","fghi","fxx",""]
-  --   <BLANKLINE>
-  --   FalseP PForAll | cnt=3 (i=1, a="ab")
-  --   |
-  --   +- TrueP  i=0: PAnd
-  --   |  |
-  --   |  +- TrueP  PLen 3 as="foo"
-  --   |  |  |
-  --   |  |  `- TrueP  3 == 3
-  --   |  |
-  --   |  `- TrueP  PHead 'f'
-  --   |     |
-  --   |     `- TrueP  'f' == 'f'
-  --   |
-  --   +- FalseP i=1: PAnd
-  --   |  |
-  --   |  +- FalseP PLen 2 as="ab"
-  --   |  |  |
-  --   |  |  `- FalseP 2 == 3
-  --   |  |
-  --   |  `- FalseP PHead 'a'
-  --   |     |
-  --   |     `- FalseP 'a' == 'f'
-  --   |
-  --   +- FalseP i=2: PAnd
-  --   |  |
-  --   |  +- FalseP PLen 4 as="fghi"
-  --   |  |  |
-  --   |  |  `- FalseP 4 == 3
-  --   |  |
-  --   |  `- TrueP  PHead 'f'
-  --   |     |
-  --   |     `- TrueP  'f' == 'f'
-  --   |
-  --   +- TrueP  i=3: PAnd
-  --   |  |
-  --   |  +- TrueP  PLen 3 as="fxx"
-  --   |  |  |
-  --   |  |  `- TrueP  3 == 3
-  --   |  |
-  --   |  `- TrueP  PHead 'f'
-  --   |     |
-  --   |     `- TrueP  'f' == 'f'
-  --   |
-  --   `- FalseP i=4: PAnd
-  --      |
-  --      +- FalseP PLen 0 as=""
-  --      |  |
-  --      |  `- FalseP 0 == 3
-  --      |
-  --      `- FalseP PHead empty | PConst a=()
-  --   <BLANKLINE>
+  -- >>> pe1' (PForAll (PLen (peq 3) * PHead 0 (peq 'f'))) ["foo","ab","fghi","fxx",""]
+  -- <BLANKLINE>
+  -- FalseP PForAll | cnt=3 (i=1, a="ab")
+  -- |
+  -- +- TrueP  i=0: PAnd
+  -- |  |
+  -- |  +- TrueP  PLen 3 as="foo"
+  -- |  |  |
+  -- |  |  `- TrueP  3 == 3
+  -- |  |
+  -- |  `- TrueP  PHead 'f'
+  -- |     |
+  -- |     `- TrueP  'f' == 'f'
+  -- |
+  -- +- FalseP i=1: PAnd
+  -- |  |
+  -- |  +- FalseP PLen 2 as="ab"
+  -- |  |  |
+  -- |  |  `- FalseP 2 == 3
+  -- |  |
+  -- |  `- FalseP PHead 'a'
+  -- |     |
+  -- |     `- FalseP 'a' == 'f'
+  -- |
+  -- +- FalseP i=2: PAnd
+  -- |  |
+  -- |  +- FalseP PLen 4 as="fghi"
+  -- |  |  |
+  -- |  |  `- FalseP 4 == 3
+  -- |  |
+  -- |  `- TrueP  PHead 'f'
+  -- |     |
+  -- |     `- TrueP  'f' == 'f'
+  -- |
+  -- +- TrueP  i=3: PAnd
+  -- |  |
+  -- |  +- TrueP  PLen 3 as="fxx"
+  -- |  |  |
+  -- |  |  `- TrueP  3 == 3
+  -- |  |
+  -- |  `- TrueP  PHead 'f'
+  -- |     |
+  -- |     `- TrueP  'f' == 'f'
+  -- |
+  -- `- FalseP i=4: PAnd
+  --    |
+  --    +- FalseP PLen 0 as=""
+  --    |  |
+  --    |  `- FalseP 0 == 3
+  --    |
+  --    `- FalseP PHead empty | PConst a=()
+  -- <BLANKLINE>
   --
   PForAll     :: (Foldable t, Show a) => Pred z a -> Pred z (t a)
   -- | runs the predicate against all the values and expects at least one to succeed. see 'pquantifier' and 'PPartition'
   --
-  --   >>> pe' (PExists (peq 4)) [1..7]
-  --   <BLANKLINE>
-  --   TrueP  PExists | cnt=1 (i=3, a=4)
-  --   |
-  --   +- FalseP i=0: 1 == 4
-  --   |
-  --   +- FalseP i=1: 2 == 4
-  --   |
-  --   +- FalseP i=2: 3 == 4
-  --   |
-  --   +- TrueP  i=3: 4 == 4
-  --   |
-  --   +- FalseP i=4: 5 == 4
-  --   |
-  --   +- FalseP i=5: 6 == 4
-  --   |
-  --   `- FalseP i=6: 7 == 4
-  --   <BLANKLINE>
+  -- >>> pe' (PExists (peq 4)) [1..7]
+  -- <BLANKLINE>
+  -- TrueP  PExists | cnt=1 (i=3, a=4)
+  -- |
+  -- +- FalseP i=0: 1 == 4
+  -- |
+  -- +- FalseP i=1: 2 == 4
+  -- |
+  -- +- FalseP i=2: 3 == 4
+  -- |
+  -- +- TrueP  i=3: 4 == 4
+  -- |
+  -- +- FalseP i=4: 5 == 4
+  -- |
+  -- +- FalseP i=5: 6 == 4
+  -- |
+  -- `- FalseP i=6: 7 == 4
+  -- <BLANKLINE>
   --
   PExists     :: (Foldable t, Show a) => Pred z a -> Pred z (t a)
 
@@ -1963,50 +1924,49 @@ data Pred z a where
 -- strict so if not exact length preds with length as then calls error predicate with those lengths
   -- | matches exact number of predicates with values. see 'PSeq'
   --
-  --   >>> pe2' (PZipExact [plift isDigit,plift isAlpha,plift isDigit] 0 1) "9b8"
-  --   <BLANKLINE>
-  --   TrueP  PZipExact | as="9b8" | (bad,good)=(0,3)
-  --   |
-  --   `- TrueP  PConst a=[True,True,True]
-  --      |
-  --      +- TrueP  i=0: PLift | a='9'
-  --      |
-  --      +- TrueP  i=1: PLift | a='b'
-  --      |
-  --      `- TrueP  i=2: PLift | a='8'
-  --   <BLANKLINE>
+  -- >>> pe2' (PZipExact [plift isDigit,plift isAlpha,plift isDigit] 0 1) "9b8"
+  -- <BLANKLINE>
+  -- TrueP  PZipExact | as="9b8" | (bad,good)=(0,3)
+  -- |
+  -- `- TrueP  PConst a=[True,True,True]
+  --    |
+  --    +- TrueP  i=0: PLift | a='9'
+  --    |
+  --    +- TrueP  i=1: PLift | a='b'
+  --    |
+  --    `- TrueP  i=2: PLift | a='8'
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PZipExact [plift isDigit,plift isAlpha,plift isDigit] 0 1) "9bb"
-  --   <BLANKLINE>
-  --   TrueP  PZipExact | as="9bb" | (bad,good)=(1,2)
-  --   |
-  --   `- TrueP  PConst a=[True,True,False]
-  --      |
-  --      +- TrueP  i=0: PLift | a='9'
-  --      |
-  --      +- TrueP  i=1: PLift | a='b'
-  --      |
-  --      `- FalseP i=2: PLift | a='b'
-  --   <BLANKLINE>
+  -- >>> pe2' (PZipExact [plift isDigit,plift isAlpha,plift isDigit] 0 1) "9bb"
+  -- <BLANKLINE>
+  -- TrueP  PZipExact | as="9bb" | (bad,good)=(1,2)
+  -- |
+  -- `- TrueP  PConst a=[True,True,False]
+  --    |
+  --    +- TrueP  i=0: PLift | a='9'
+  --    |
+  --    +- TrueP  i=1: PLift | a='b'
+  --    |
+  --    `- FalseP i=2: PLift | a='b'
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PZipExact [plift isDigit,plift isAlpha,plift isDigit] 0 1) "9b"
-  --   <BLANKLINE>
-  --   FalseP PZipExact |  length ps 3 /= length as 2
-  --   |
-  --   `- FalseP PConst a=(3,2)
-  --   <BLANKLINE>
+  -- >>> pe2' (PZipExact [plift isDigit,plift isAlpha,plift isDigit] 0 1) "9b"
+  -- <BLANKLINE>
+  -- FalseP PZipExact |  length ps 3 /= length as 2
+  -- |
+  -- `- FalseP PConst a=(3,2)
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PZipExact ["abc",sinfix "xyz"] 0 1) ["AbC", "aaaaxyzbbb"]
-  --   <BLANKLINE>
-  --   TrueP  PZipExact | as=["AbC","aaaaxyzbbb"] | (bad,good)=(0,2)
-  --   |
-  --   `- TrueP  PConst a=[True,True]
-  --      |
-  --      +- TrueP  i=0: PStringCI "AbC" == "abc"
-  --      |
-  --      `- TrueP  i=1: PStringCI "xyz" `isInfixOf` "aaaaxyzbbb"
-  --   <BLANKLINE>
+  -- >>> pe2' (PZipExact ["abc",sinfix "xyz"] 0 1) ["AbC", "aaaaxyzbbb"]
+  -- <BLANKLINE>
+  -- TrueP  PZipExact | as=["AbC","aaaaxyzbbb"] | (bad,good)=(0,2)
+  -- |
+  -- `- TrueP  PConst a=[True,True]
+  --    |
+  --    +- TrueP  i=0: PStringCI "AbC" == "abc"
+  --    |
+  --    `- TrueP  i=1: PStringCI "xyz" `isInfixOf` "aaaaxyzbbb"
+  -- <BLANKLINE>
   --
   PZipExact   ::  (Foldable t, Show a) =>
          [Pred z a] -- has to match the number of values in the foldable list
@@ -2020,55 +1980,49 @@ data Pred z a where
   -- | run all the predicates against the values and retain the leftovers
   -- | for a stricter version see 'PZipExact'
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe2' (PSeq [pregex _d 1] $ PSnd $ PSeq ["DudE","xx"] 1) ["9","dude"]
-  --   <BLANKLINE>
-  --   TrueP  PSeq | length ps 1 /= length as 2  | as=["9","dude"] | (0,1)
-  --   |
-  --   `- TrueP  PSnd a=["dude"] fst=[True]
-  --      |
-  --      +- TrueP  i=0: PRegex RLong as="9" b='9' rs=""
-  --      |  |
-  --      |  `- TrueP  PConst a=('9',"")
-  --      |
-  --      `- TrueP  PSeq | length ps 2 /= length as 1  | as=["dude"] | (0,1)
-  --         |
-  --         `- TrueP  PConst a=([True],[])
-  --            |
-  --            `- TrueP  i=0: PStringCI "dude" == "DudE"
-  --   <BLANKLINE>
+  -- >>> pe2' (PSeq [pregex _d 1] $ PSnd $ PSeq ["DudE","xx"] 1) ["9","dude"]
+  -- <BLANKLINE>
+  -- TrueP  PSeq | length ps 1 /= length as 2  | as=["9","dude"] | (0,1)
+  -- |
+  -- `- TrueP  PSnd a=["dude"] fst=[True]
+  --    |
+  --    +- TrueP  i=0: PRegex RLong as="9" b='9' rs=""
+  --    |  |
+  --    |  `- TrueP  PConst a=('9',"")
+  --    |
+  --    `- TrueP  PSeq | length ps 2 /= length as 1  | as=["dude"] | (0,1)
+  --       |
+  --       `- TrueP  PConst a=([True],[])
+  --          |
+  --          `- TrueP  i=0: PStringCI "dude" == "DudE"
+  -- <BLANKLINE>
   --
-  {-   >>> :{
-        pe2' (PSeq [peq 1,peq 4] $ PBoth (plift or)
-            $ PSeq [peq 111,peq 2] $ PBoth (plift or)
-            $ PSeq [peq 11] 1) [2,4,21,111]
-           :}
-  -}
-  --   <BLANKLINE>
-  --   FalseP PSeq | length ps 2 /= length as 4  | as=[2,4,21,111] | (1,1)
-  --   |
-  --   `- FalseP PBoth
-  --      |
-  --      +- FalseP i=0: 2 == 1
-  --      |
-  --      +- TrueP  i=1: 4 == 4
-  --      |
-  --      +- TrueP  PLift | a=[False,True]
-  --      |
-  --      `- FalseP PSeq | as=[21,111] | (2,0)
-  --         |
-  --         `- FalseP PBoth
-  --            |
-  --            +- FalseP i=0: 21 == 111
-  --            |
-  --            +- FalseP i=1: 111 == 2
-  --            |
-  --            +- FalseP PLift | a=[False,False]
-  --            |
-  --            `- TrueP  PSeq | length ps 1 /= length as 0  | as=[] | (0,0)
-  --               |
-  --               `- TrueP  PConst a=([],[])
-  --   <BLANKLINE>
+  -- >>> pe2' (PSeq [peq 1,peq 4] $ PBoth (plift or) $ PSeq [peq 111,peq 2] $ PBoth (plift or) $ PSeq [peq 11] 1) [2,4,21,111]
+  -- <BLANKLINE>
+  -- FalseP PSeq | length ps 2 /= length as 4  | as=[2,4,21,111] | (1,1)
+  -- |
+  -- `- FalseP PBoth
+  --    |
+  --    +- FalseP i=0: 2 == 1
+  --    |
+  --    +- TrueP  i=1: 4 == 4
+  --    |
+  --    +- TrueP  PLift | a=[False,True]
+  --    |
+  --    `- FalseP PSeq | as=[21,111] | (2,0)
+  --       |
+  --       `- FalseP PBoth
+  --          |
+  --          +- FalseP i=0: 21 == 111
+  --          |
+  --          +- FalseP i=1: 111 == 2
+  --          |
+  --          +- FalseP PLift | a=[False,False]
+  --          |
+  --          `- TrueP  PSeq | length ps 1 /= length as 0  | as=[] | (0,0)
+  --             |
+  --             `- TrueP  PConst a=([],[])
+  -- <BLANKLINE>
   --
   PSeq        ::  (Foldable t, Show a) =>
           [Pred z a] -- extra predicates are just ignored
@@ -2077,83 +2031,83 @@ data Pred z a where
 
   -- | 'Data.List.partition' except failures are on the left and successes on the right
   --
-  --   >>> pe2' (PPartition peven $ (PFn "***" (sum *** sum)) pgt2) [1..10]
-  --   <BLANKLINE>
-  --   FalseP PPartition | lefts=5 (0,1) | rights=5 (1,2)
-  --   |
-  --   +- FalseP PPartition Predicate
-  --   |  |
-  --   |  `- FalseP PFn *** | a=([1,3,5,7,9],[2,4,6,8,10]) | b=(25,30)
-  --   |     |
-  --   |     `- FalseP PCmp2 25 > 30
-  --   |
-  --   `- PPartition debugging info
-  --      |
-  --      +- FalseP i=0: PLift even | a=1
-  --      |
-  --      +- TrueP  i=1: PLift even | a=2
-  --      |
-  --      +- FalseP i=2: PLift even | a=3
-  --      |
-  --      +- TrueP  i=3: PLift even | a=4
-  --      |
-  --      +- FalseP i=4: PLift even | a=5
-  --      |
-  --      +- TrueP  i=5: PLift even | a=6
-  --      |
-  --      +- FalseP i=6: PLift even | a=7
-  --      |
-  --      +- TrueP  i=7: PLift even | a=8
-  --      |
-  --      +- FalseP i=8: PLift even | a=9
-  --      |
-  --      `- TrueP  i=9: PLift even | a=10
-  --   <BLANKLINE>
+  -- >>> pe2' (PPartition peven $ (PFn "***" (sum *** sum)) pgt2) [1..10]
+  -- <BLANKLINE>
+  -- FalseP PPartition | lefts=5 (0,1) | rights=5 (1,2)
+  -- |
+  -- +- FalseP PPartition Predicate
+  -- |  |
+  -- |  `- FalseP PFn *** | a=([1,3,5,7,9],[2,4,6,8,10]) | b=(25,30)
+  -- |     |
+  -- |     `- FalseP PCmp2 25 > 30
+  -- |
+  -- `- PPartition debugging info
+  --    |
+  --    +- FalseP i=0: PLift even | a=1
+  --    |
+  --    +- TrueP  i=1: PLift even | a=2
+  --    |
+  --    +- FalseP i=2: PLift even | a=3
+  --    |
+  --    +- TrueP  i=3: PLift even | a=4
+  --    |
+  --    +- FalseP i=4: PLift even | a=5
+  --    |
+  --    +- TrueP  i=5: PLift even | a=6
+  --    |
+  --    +- FalseP i=6: PLift even | a=7
+  --    |
+  --    +- TrueP  i=7: PLift even | a=8
+  --    |
+  --    +- FalseP i=8: PLift even | a=9
+  --    |
+  --    `- TrueP  i=9: PLift even | a=10
+  -- <BLANKLINE>
   --
-  --   >>> let xs = [10,3,4,8,7,1,2,3,4,5,6,7,100,220,22]
-  --   >>> pe1' (PPartition (pgt 7) $ PBoth (PLen (pgt 3)) (PShow 1 * PIx 4 0 (peq 999))) xs
-  --   <BLANKLINE>
-  --   FalseP PPartition | lefts=10 (1,3) | rights=5 (0,10)
-  --   |
-  --   `- FalseP PPartition Predicate
-  --      |
-  --      `- FalseP PBoth
-  --         |
-  --         +- TrueP  PLen 10 as=[3,4,7,1,2,3,4,5,6,7]
-  --         |  |
-  --         |  `- TrueP  10 > 3
-  --         |
-  --         `- FalseP PAnd
-  --            |
-  --            +- TrueP  PShow
-  --            |  |
-  --            |  +- TrueP  PConst a=[10,8,100,220,22]
-  --            |  |
-  --            |  `- ===== PShow =====
-  --            |     |
-  --            |     +- i=0 a=10
-  --            |     |
-  --            |     +- i=1 a=8
-  --            |     |
-  --            |     +- i=2 a=100
-  --            |     |
-  --            |     +- i=3 a=220
-  --            |     |
-  --            |     `- i=4 a=22
-  --            |
-  --            `- FalseP PIx 4 22
-  --               |
-  --               `- FalseP 22 == 999
-  --   <BLANKLINE>
+  -- >>> let xs = [10,3,4,8,7,1,2,3,4,5,6,7,100,220,22]
+  -- >>> pe1' (PPartition (pgt 7) $ PBoth (PLen (pgt 3)) (PShow 1 * PIx 4 0 (peq 999))) xs
+  -- <BLANKLINE>
+  -- FalseP PPartition | lefts=10 (1,3) | rights=5 (0,10)
+  -- |
+  -- `- FalseP PPartition Predicate
+  --    |
+  --    `- FalseP PBoth
+  --       |
+  --       +- TrueP  PLen 10 as=[3,4,7,1,2,3,4,5,6,7]
+  --       |  |
+  --       |  `- TrueP  10 > 3
+  --       |
+  --       `- FalseP PAnd
+  --          |
+  --          +- TrueP  PShow
+  --          |  |
+  --          |  +- TrueP  PConst a=[10,8,100,220,22]
+  --          |  |
+  --          |  `- ===== PShow =====
+  --          |     |
+  --          |     +- i=0 a=10
+  --          |     |
+  --          |     +- i=1 a=8
+  --          |     |
+  --          |     +- i=2 a=100
+  --          |     |
+  --          |     +- i=3 a=220
+  --          |     |
+  --          |     `- i=4 a=22
+  --          |
+  --          `- FalseP PIx 4 22
+  --             |
+  --             `- FalseP 22 == 999
+  -- <BLANKLINE>
   --
-  --   >>> pe1' (PPartition (pgt 7) 1) [10,3,4,8,7,1,2,3,4,5,6,7,100,220,22]
-  --   <BLANKLINE>
-  --   TrueP  PPartition | lefts=10 (1,3) | rights=5 (0,10)
-  --   |
-  --   `- TrueP  PPartition Predicate
-  --      |
-  --      `- TrueP  PConst a=([3,4,7,1,2,3,4,5,6,7],[10,8,100,220,22])
-  --   <BLANKLINE>
+  -- >>> pe1' (PPartition (pgt 7) 1) [10,3,4,8,7,1,2,3,4,5,6,7,100,220,22]
+  -- <BLANKLINE>
+  -- TrueP  PPartition | lefts=10 (1,3) | rights=5 (0,10)
+  -- |
+  -- `- TrueP  PPartition Predicate
+  --    |
+  --    `- TrueP  PConst a=([3,4,7,1,2,3,4,5,6,7],[10,8,100,220,22])
+  -- <BLANKLINE>
   --
   PPartition  :: (Foldable t, Show a) =>
         Pred z a -- run a predicate on each value
@@ -2161,41 +2115,41 @@ data Pred z a where
      -> Pred z (t a)
   -- | see 'Data.List.break'
   --
-  --   >>> pe1' (pilist $ PBreak (PSnd (peq 'e')) 1) ['c'..'h']
-  --   <BLANKLINE>
-  --   TrueP  PBreak | lefts=2 | rights=4 pivot=(2,(2,'e'))
-  --   |
-  --   `- TrueP  PBreak Predicate
-  --      |
-  --      `- TrueP  PConst a=([(0,'c'),(1,'d')],[(2,'e'),(3,'f'),(4,'g'),(5,'h')])
-  --   <BLANKLINE>
+  -- >>> pe1' (pilist $ PBreak (PSnd (peq 'e')) 1) ['c'..'h']
+  -- <BLANKLINE>
+  -- TrueP  PBreak | lefts=2 | rights=4 pivot=(2,(2,'e'))
+  -- |
+  -- `- TrueP  PBreak Predicate
+  --    |
+  --    `- TrueP  PConst a=([(0,'c'),(1,'d')],[(2,'e'),(3,'f'),(4,'g'),(5,'h')])
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PBreak (pgt 4) (PFn "x" (join (***) length) pgt2)) [-1..8]
-  --   <BLANKLINE>
-  --   TrueP  PBreak | lefts=6 | rights=4 pivot=(6,5)
-  --   |
-  --   +- TrueP  PBreak Predicate
-  --   |  |
-  --   |  `- TrueP  PFn x | a=([-1,0,1,2,3,4],[5,6,7,8]) | b=(6,4)
-  --   |     |
-  --   |     `- TrueP  PCmp2 6 > 4
-  --   |
-  --   `- PBreak debugging info
-  --      |
-  --      +- FalseP i=0: -1 > 4
-  --      |
-  --      +- FalseP i=1: 0 > 4
-  --      |
-  --      +- FalseP i=2: 1 > 4
-  --      |
-  --      +- FalseP i=3: 2 > 4
-  --      |
-  --      +- FalseP i=4: 3 > 4
-  --      |
-  --      +- FalseP i=5: 4 > 4
-  --      |
-  --      `- TrueP  i=6: 5 > 4
-  --   <BLANKLINE>
+  -- >>> pe2' (PBreak (pgt 4) (PFn "x" (join (***) length) pgt2)) [-1..8]
+  -- <BLANKLINE>
+  -- TrueP  PBreak | lefts=6 | rights=4 pivot=(6,5)
+  -- |
+  -- +- TrueP  PBreak Predicate
+  -- |  |
+  -- |  `- TrueP  PFn x | a=([-1,0,1,2,3,4],[5,6,7,8]) | b=(6,4)
+  -- |     |
+  -- |     `- TrueP  PCmp2 6 > 4
+  -- |
+  -- `- PBreak debugging info
+  --    |
+  --    +- FalseP i=0: -1 > 4
+  --    |
+  --    +- FalseP i=1: 0 > 4
+  --    |
+  --    +- FalseP i=2: 1 > 4
+  --    |
+  --    +- FalseP i=3: 2 > 4
+  --    |
+  --    +- FalseP i=4: 3 > 4
+  --    |
+  --    +- FalseP i=5: 4 > 4
+  --    |
+  --    `- TrueP  i=6: 5 > 4
+  -- <BLANKLINE>
   --
   PBreak      :: (Foldable t, Show a) =>
         Pred z a -- run a predicate on each value until predicate succeeds
@@ -2209,38 +2163,38 @@ data Pred z a where
 
   -- | json visitor where you determine the targets
   --
-  --   see 'matchArrays' 'matchIndex' 'matchNumber' etc
+  -- see 'matchArrays' 'matchIndex' 'matchNumber' etc
   --
-  --   or 'PJsonKey' if matching on key
+  -- or 'PJsonKey' if matching on key
   --
-  --   >>> pe1' (PJson (matchStringP (sinfix "a")) $ psnds $ PShow 1) json1
-  --   <BLANKLINE>
-  --   TrueP  PJson
-  --   |
-  --   +- TrueP  PShow
-  --   |  |
-  --   |  +- TrueP  PConst a=["markup","Standard Generalized Markup Language",...
-  --   |  |
-  --   |  `- ===== PShow =====
-  --   |     |
-  --   |     +- i=0 a="markup"
-  --   |     |
-  --   |     +- i=1 a="Standard Generalized Markup Language"
-  --   |     |
-  --   |     +- i=2 a="A meta-markup language, used to create markup languages ...
-  --   |     |
-  --   |     `- i=3 a="example glossary"
-  --   |
-  --   `- Debugging jpaths
-  --      |
-  --      +- i=0 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "...
-  --      |
-  --      +- i=1 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "...
-  --      |
-  --      +- i=2 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "...
-  --      |
-  --      `- i=3 | [JPKey "glossary",JPKey "title",JPValue (String "example glo...
-  --   <BLANKLINE>
+  -- >>> pe1' (PJson (matchStringP (sinfix "a")) $ psnds $ PShow 1) json1
+  -- <BLANKLINE>
+  -- TrueP  PJson
+  -- |
+  -- +- TrueP  PShow
+  -- |  |
+  -- |  +- TrueP  PConst a=["markup","Standard Generalized Markup Language",...
+  -- |  |
+  -- |  `- ===== PShow =====
+  -- |     |
+  -- |     +- i=0 a="markup"
+  -- |     |
+  -- |     +- i=1 a="Standard Generalized Markup Language"
+  -- |     |
+  -- |     +- i=2 a="A meta-markup language, used to create markup languages ...
+  -- |     |
+  -- |     `- i=3 a="example glossary"
+  -- |
+  -- `- Debugging jpaths
+  --    |
+  --    +- i=0 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "...
+  --    |
+  --    +- i=1 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "...
+  --    |
+  --    +- i=2 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "...
+  --    |
+  --    `- i=3 | [JPKey "glossary",JPKey "title",JPValue (String "example glo...
+  -- <BLANKLINE>
   --
   PJson       :: Show a =>
        ((NonEmpty JPath, Value) -> Maybe a)
@@ -2249,162 +2203,160 @@ data Pred z a where
 
   -- | matches on the key using the string predicate
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe1' (PJsonKey "abbrev" (-PNull)) json1
-  --   <BLANKLINE>
-  --   TrueP  PJsonKey
-  --   |
-  --   +- TrueP  PNot
-  --   |  |
-  --   |  `- FalseP PNull length=1 as=[(JPKey "Abbrev" :| [JPKey "GlossEntry",JPKey "Gloss...
-  --   |
-  --   `- Debugging jpaths
-  --      |
-  --      `- i=0 | key=Abbrev | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey...
-  --   <BLANKLINE>
+  -- >>> pe1' (PJsonKey "abbrev" (-PNull)) json1
+  -- <BLANKLINE>
+  -- TrueP  PJsonKey
+  -- |
+  -- +- TrueP  PNot
+  -- |  |
+  -- |  `- FalseP PNull length=1 as=[(JPKey "Abbrev" :| [JPKey "GlossEntry",JPKey "Gloss...
+  -- |
+  -- `- Debugging jpaths
+  --    |
+  --    `- i=0 | key=Abbrev | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey...
+  -- <BLANKLINE>
   --
-  --   >>> let fn = PSnd $ jarray 0 $ PLinear Rigid [preq "c#",preq "haskell", preq "rust"]
-  --   >>> pe1' (PJsonKey "langs" (PLen (peq 1) * PHead 0 fn * (psnds $ pone $ jarray 3 $ PShow 1))) json0
-  --   <BLANKLINE>
-  --   FalseP PJsonKey
-  --   |
-  --   +- FalseP PAnd
-  --   |  |
-  --   |  +- FalseP PAnd
-  --   |  |  |
-  --   |  |  +- TrueP  PLen 1 as=[(JPKey "langs" :| [],Array [String "c#",String "rusxt",String "haskell"])]
-  --   |  |  |  |
-  --   |  |  |  `- TrueP  1 == 1
-  --   |  |  |
-  --   |  |  `- FalseP PHead (JPKey "langs" :| [],Array [String "c#",String "rusxt",String "haskell"])
-  --   |  |     |
-  --   |  |     `- FalseP PSnd a=Array [String "c#",String "rusxt",String "haskell"] fst=JPKey "langs" :| []
-  --   |  |        |
-  --   |  |        `- FalseP PPrism (Just) [jarray] [String "c#",String "rusxt",String "haskell"]
-  --   |  |           |
-  --   |  |           `- FalseP PLinear Failed Pred [Int] | errors(1): NoMatch 1
-  --   |  |              |
-  --   |  |              +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(1,2)
-  --   |  |              |  |
-  --   |  |              |  `- FalseP PLift and | a=[True,True,False]
-  --   |  |              |     |
-  --   |  |              |     +- TrueP  i=0
-  --   |  |              |     |  |
-  --   |  |              |     |  +- TrueP  1 == 1
-  --   |  |              |     |  |
-  --   |  |              |     |  `- PStringCI a == String "c#"
-  --   |  |              |     |
-  --   |  |              |     +- TrueP  i=1
-  --   |  |              |     |  |
-  --   |  |              |     |  +- TrueP  1 == 1
-  --   |  |              |     |  |
-  --   |  |              |     |  `- PStringCI a == String "haskell"
-  --   |  |              |     |
-  --   |  |              |     `- FalseP i=2
-  --   |  |              |        |
-  --   |  |              |        +- FalseP 0 < 1 (Under)
-  --   |  |              |        |
-  --   |  |              |        `- PStringCI a == String "rust"
-  --   |  |              |
-  --   |  |              +- TrueP  PLinear | OneMatch 0 a=String "c#" cnt=1 (i=0, a=String "c#")
-  --   |  |              |  |
-  --   |  |              |  +- TrueP  i=0: PStringCI String "c#" == String "c#"
-  --   |  |              |  |
-  --   |  |              |  +- FalseP i=1: PStringCI String "c#" == String "haskell"
-  --   |  |              |  |
-  --   |  |              |  `- FalseP i=2: PStringCI String "c#" == String "rust"
-  --   |  |              |
-  --   |  |              +- FalseP PLinear NoMatch 1 a=String "rusxt"
-  --   |  |              |  |
-  --   |  |              |  +- FalseP i=0: PStringCI String "rusxt" == String "c#"
-  --   |  |              |  |
-  --   |  |              |  +- FalseP i=1: PStringCI String "rusxt" == String "haskell"
-  --   |  |              |  |
-  --   |  |              |  `- FalseP i=2: PStringCI String "rusxt" == String "rust"
-  --   |  |              |
-  --   |  |              `- TrueP  PLinear | OneMatch 2 a=String "haskell" cnt=1 (i=1, a=String "haskell")
-  --   |  |                 |
-  --   |  |                 +- FalseP i=0: PStringCI String "haskell" == String "c#"
-  --   |  |                 |
-  --   |  |                 +- TrueP  i=1: PStringCI String "haskell" == String "haskell"
-  --   |  |                 |
-  --   |  |                 `- FalseP i=2: PStringCI String "haskell" == String "rust"
-  --   |  |
-  --   |  `- TrueP  POne Array [String "c#",String "rusxt",String "haskell"]
-  --   |     |
-  --   |     `- TrueP  PPrism (Just) [jarray] [String "c#",String "rusxt",String "haskell"]
-  --   |        |
-  --   |        `- TrueP  PShow
-  --   |           |
-  --   |           +- TrueP  PConst a=[String "c#",String "rusxt",String "haskell"]
-  --   |           |
-  --   |           `- ===== PShow =====
-  --   |              |
-  --   |              +- i=0 a=String "c#"
-  --   |              |
-  --   |              +- i=1 a=String "rusxt"
-  --   |              |
-  --   |              `- i=2 a=String "haskell"
-  --   |
-  --   `- Debugging jpaths
-  --      |
-  --      `- i=0 | key=langs | [JPKey "langs"]
-  --   <BLANKLINE>
+  -- >>> let fn = PSnd $ jarray 0 $ PLinear Rigid [preq "c#",preq "haskell", preq "rust"]
+  -- >>> pe1' (PJsonKey "langs" (PLen (peq 1) * PHead 0 fn * (psnds $ pone $ jarray 3 $ PShow 1))) json0
+  -- <BLANKLINE>
+  -- FalseP PJsonKey
+  -- |
+  -- +- FalseP PAnd
+  -- |  |
+  -- |  +- FalseP PAnd
+  -- |  |  |
+  -- |  |  +- TrueP  PLen 1 as=[(JPKey "langs" :| [],Array [String "c#",String "rusxt",String "haskell"])]
+  -- |  |  |  |
+  -- |  |  |  `- TrueP  1 == 1
+  -- |  |  |
+  -- |  |  `- FalseP PHead (JPKey "langs" :| [],Array [String "c#",String "rusxt",String "haskell"])
+  -- |  |     |
+  -- |  |     `- FalseP PSnd a=Array [String "c#",String "rusxt",String "haskell"] fst=JPKey "langs" :| []
+  -- |  |        |
+  -- |  |        `- FalseP PPrism (Just) [jarray] [String "c#",String "rusxt",String "haskell"]
+  -- |  |           |
+  -- |  |           `- FalseP PLinear Failed Pred [Int] | errors(1): NoMatch 1
+  -- |  |              |
+  -- |  |              +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(1,2)
+  -- |  |              |  |
+  -- |  |              |  `- FalseP PLift and | a=[True,True,False]
+  -- |  |              |     |
+  -- |  |              |     +- TrueP  i=0
+  -- |  |              |     |  |
+  -- |  |              |     |  +- TrueP  1 == 1
+  -- |  |              |     |  |
+  -- |  |              |     |  `- PStringCI a == String "c#"
+  -- |  |              |     |
+  -- |  |              |     +- TrueP  i=1
+  -- |  |              |     |  |
+  -- |  |              |     |  +- TrueP  1 == 1
+  -- |  |              |     |  |
+  -- |  |              |     |  `- PStringCI a == String "haskell"
+  -- |  |              |     |
+  -- |  |              |     `- FalseP i=2
+  -- |  |              |        |
+  -- |  |              |        +- FalseP 0 < 1 (Under)
+  -- |  |              |        |
+  -- |  |              |        `- PStringCI a == String "rust"
+  -- |  |              |
+  -- |  |              +- TrueP  PLinear | OneMatch 0 a=String "c#" cnt=1 (i=0, a=String "c#")
+  -- |  |              |  |
+  -- |  |              |  +- TrueP  i=0: PStringCI String "c#" == String "c#"
+  -- |  |              |  |
+  -- |  |              |  +- FalseP i=1: PStringCI String "c#" == String "haskell"
+  -- |  |              |  |
+  -- |  |              |  `- FalseP i=2: PStringCI String "c#" == String "rust"
+  -- |  |              |
+  -- |  |              +- FalseP PLinear NoMatch 1 a=String "rusxt"
+  -- |  |              |  |
+  -- |  |              |  +- FalseP i=0: PStringCI String "rusxt" == String "c#"
+  -- |  |              |  |
+  -- |  |              |  +- FalseP i=1: PStringCI String "rusxt" == String "haskell"
+  -- |  |              |  |
+  -- |  |              |  `- FalseP i=2: PStringCI String "rusxt" == String "rust"
+  -- |  |              |
+  -- |  |              `- TrueP  PLinear | OneMatch 2 a=String "haskell" cnt=1 (i=1, a=String "haskell")
+  -- |  |                 |
+  -- |  |                 +- FalseP i=0: PStringCI String "haskell" == String "c#"
+  -- |  |                 |
+  -- |  |                 +- TrueP  i=1: PStringCI String "haskell" == String "haskell"
+  -- |  |                 |
+  -- |  |                 `- FalseP i=2: PStringCI String "haskell" == String "rust"
+  -- |  |
+  -- |  `- TrueP  POne Array [String "c#",String "rusxt",String "haskell"]
+  -- |     |
+  -- |     `- TrueP  PPrism (Just) [jarray] [String "c#",String "rusxt",String "haskell"]
+  -- |        |
+  -- |        `- TrueP  PShow
+  -- |           |
+  -- |           +- TrueP  PConst a=[String "c#",String "rusxt",String "haskell"]
+  -- |           |
+  -- |           `- ===== PShow =====
+  -- |              |
+  -- |              +- i=0 a=String "c#"
+  -- |              |
+  -- |              +- i=1 a=String "rusxt"
+  -- |              |
+  -- |              `- i=2 a=String "haskell"
+  -- |
+  -- `- Debugging jpaths
+  --    |
+  --    `- i=0 | key=langs | [JPKey "langs"]
+  -- <BLANKLINE>
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> let xx = jarray 0 $ PLinear Rigid [preq "xml",preq "gml",preq "abc"]
-  --   >>> pe1' (PJsonKey (sinfix "seealso") $ psnds $ PHead 0 xx) json1
-  --   <BLANKLINE>
-  --   FalseP PJsonKey
-  --   |
-  --   +- FalseP PHead Array [String "GML",String "XML"]
-  --   |  |
-  --   |  `- FalseP PPrism (Just) [jarray] [String "GML",String "XML"]
-  --   |     |
-  --   |     `- FalseP PLinear Failed Pred [Int]
-  --   |        |
-  --   |        +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(1,2)
-  --   |        |  |
-  --   |        |  `- FalseP PLift and | a=[True,True,False]
-  --   |        |     |
-  --   |        |     +- TrueP  i=0
-  --   |        |     |  |
-  --   |        |     |  +- TrueP  1 == 1
-  --   |        |     |  |
-  --   |        |     |  `- PStringCI a == String "xml"
-  --   |        |     |
-  --   |        |     +- TrueP  i=1
-  --   |        |     |  |
-  --   |        |     |  +- TrueP  1 == 1
-  --   |        |     |  |
-  --   |        |     |  `- PStringCI a == String "gml"
-  --   |        |     |
-  --   |        |     `- FalseP i=2
-  --   |        |        |
-  --   |        |        +- FalseP 0 < 1 (Under)
-  --   |        |        |
-  --   |        |        `- PStringCI a == String "abc"
-  --   |        |
-  --   |        +- TrueP  PLinear | OneMatch 0 a=String "GML" cnt=1 (i=1, a=String "GML")
-  --   |        |  |
-  --   |        |  +- FalseP i=0: PStringCI String "GML" == String "xml"
-  --   |        |  |
-  --   |        |  +- TrueP  i=1: PStringCI String "GML" == String "gml"
-  --   |        |  |
-  --   |        |  `- FalseP i=2: PStringCI String "GML" == String "abc"
-  --   |        |
-  --   |        `- TrueP  PLinear | OneMatch 1 a=String "XML" cnt=1 (i=0, a=String "XML")
-  --   |           |
-  --   |           +- TrueP  i=0: PStringCI String "XML" == String "xml"
-  --   |           |
-  --   |           +- FalseP i=1: PStringCI String "XML" == String "gml"
-  --   |           |
-  --   |           `- FalseP i=2: PStringCI String "XML" == String "abc"
-  --   |
-  --   `- Debugging jpaths
-  --      |
-  --      `- i=0 | key=GlossSeeAlso | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList"...
-  --   <BLANKLINE>
+  -- >>> let xx = jarray 0 $ PLinear Rigid [preq "xml",preq "gml",preq "abc"]
+  -- >>> pe1' (PJsonKey (sinfix "seealso") $ psnds $ PHead 0 xx) json1
+  -- <BLANKLINE>
+  -- FalseP PJsonKey
+  -- |
+  -- +- FalseP PHead Array [String "GML",String "XML"]
+  -- |  |
+  -- |  `- FalseP PPrism (Just) [jarray] [String "GML",String "XML"]
+  -- |     |
+  -- |     `- FalseP PLinear Failed Pred [Int]
+  -- |        |
+  -- |        +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(1,2)
+  -- |        |  |
+  -- |        |  `- FalseP PLift and | a=[True,True,False]
+  -- |        |     |
+  -- |        |     +- TrueP  i=0
+  -- |        |     |  |
+  -- |        |     |  +- TrueP  1 == 1
+  -- |        |     |  |
+  -- |        |     |  `- PStringCI a == String "xml"
+  -- |        |     |
+  -- |        |     +- TrueP  i=1
+  -- |        |     |  |
+  -- |        |     |  +- TrueP  1 == 1
+  -- |        |     |  |
+  -- |        |     |  `- PStringCI a == String "gml"
+  -- |        |     |
+  -- |        |     `- FalseP i=2
+  -- |        |        |
+  -- |        |        +- FalseP 0 < 1 (Under)
+  -- |        |        |
+  -- |        |        `- PStringCI a == String "abc"
+  -- |        |
+  -- |        +- TrueP  PLinear | OneMatch 0 a=String "GML" cnt=1 (i=1, a=String "GML")
+  -- |        |  |
+  -- |        |  +- FalseP i=0: PStringCI String "GML" == String "xml"
+  -- |        |  |
+  -- |        |  +- TrueP  i=1: PStringCI String "GML" == String "gml"
+  -- |        |  |
+  -- |        |  `- FalseP i=2: PStringCI String "GML" == String "abc"
+  -- |        |
+  -- |        `- TrueP  PLinear | OneMatch 1 a=String "XML" cnt=1 (i=0, a=String "XML")
+  -- |           |
+  -- |           +- TrueP  i=0: PStringCI String "XML" == String "xml"
+  -- |           |
+  -- |           +- FalseP i=1: PStringCI String "XML" == String "gml"
+  -- |           |
+  -- |           `- FalseP i=2: PStringCI String "XML" == String "abc"
+  -- |
+  -- `- Debugging jpaths
+  --    |
+  --    `- i=0 | key=GlossSeeAlso | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList"...
+  -- <BLANKLINE>
   --
   PJsonKey    ::
        Pred z String
@@ -2415,94 +2367,93 @@ data Pred z a where
   -- PJsonP creates a nested tree until it stops or is successful with 'Value' at then end
   -- | given a json path will get the json value at that path
   --
-  --   >>> :set -XOverloadedStrings
-  --   >>> pe1' (PJsonP [JPIndex 2,JPKey "age",JPValue (Number 33),JPValue ""] 0 1) json2
-  --   <BLANKLINE>
-  --   FalseP PJsonP path=nth 2.key "age"._Number._String
-  --   |
-  --   +- FalseP Number 33.0 /= Number 45.0 | matched up to=nth 2.key "age" | PConst a=()
-  --   |
-  --   `- nth 2 | value=Object (fromList [("lastName",String "Doe"),("age",Number 45.0),("firstName",...
-  --      |
-  --      `- key "age" | value=Number 45.0
-  --         |
-  --         `- match failed on _Number | Number 33.0 /= Number 45.0 | partial match=nth 2.key "age"
-  --   <BLANKLINE>
+  -- >>> pe1' (PJsonP [JPIndex 2,JPKey "age",JPValue (Number 33),JPValue ""] 0 1) json2
+  -- <BLANKLINE>
+  -- FalseP PJsonP path=nth 2.key "age"._Number._String
+  -- |
+  -- +- FalseP Number 33.0 /= Number 45.0 | matched up to=nth 2.key "age" | PConst a=()
+  -- |
+  -- `- nth 2 | value=Object (fromList [("lastName",String "Doe"),("age",Number 45.0),("firstName",...
+  --    |
+  --    `- key "age" | value=Number 45.0
+  --       |
+  --       `- match failed on _Number | Number 33.0 /= Number 45.0 | partial match=nth 2.key "age"
+  -- <BLANKLINE>
   --
-  --   >>> let zzz = [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "GlossEntry",JPKey "GlossDef",JPKey "para"]
-  --   >>> pe' (PJsonP zzz 0 $ PString CI SInfix "docbook") json1
-  --   <BLANKLINE>
-  --   TrueP  PJsonP
-  --   |
-  --   +- TrueP  matched | PStringCI String "docbook" `isInfixOf` String "A meta-markup...
-  --   |
-  --   `- key "glossary"
-  --      |
-  --      `- key "GlossDiv"
-  --         |
-  --         `- key "GlossList"
-  --            |
-  --            `- key "GlossEntry"
-  --               |
-  --               `- key "GlossDef"
-  --                  |
-  --                  `- key "para"
-  --                     |
-  --                     `- TrueP  matched complete path
-  --   <BLANKLINE>
+  -- >>> let zzz = [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "GlossEntry",JPKey "GlossDef",JPKey "para"]
+  -- >>> pe' (PJsonP zzz 0 $ PString CI SInfix "docbook") json1
+  -- <BLANKLINE>
+  -- TrueP  PJsonP
+  -- |
+  -- +- TrueP  matched | PStringCI String "docbook" `isInfixOf` String "A meta-markup...
+  -- |
+  -- `- key "glossary"
+  --    |
+  --    `- key "GlossDiv"
+  --       |
+  --       `- key "GlossList"
+  --          |
+  --          `- key "GlossEntry"
+  --             |
+  --             `- key "GlossDef"
+  --                |
+  --                `- key "para"
+  --                   |
+  --                   `- TrueP  matched complete path
+  -- <BLANKLINE>
   --
-  --   >>> let zzz = map JPKey ["glossary","GlossDiv","GlossList","GlossEntry","GlossTerm"]
-  --   >>> pe' (PJsonP zzz 0 $ PShow1 $ sinfix "marku" * ssuffix "uaxge") json1
-  --   <BLANKLINE>
-  --   FalseP PJsonP
-  --   |
-  --   +- FalseP matched | PShow1
-  --   |  |
-  --   |  +- FalseP PAnd
-  --   |  |  |
-  --   |  |  +- TrueP  PStringCI String "marku" `isInfixOf` String "Standard Generalized Markup Language"
-  --   |  |  |
-  --   |  |  `- FalseP PStringCI String "uaxge" `isSuffixOf` String "Standard Generalized Markup Language"
-  --   |  |
-  --   |  `- a=String "Standard Generalized Markup Language"
-  --   |
-  --   `- key "glossary"
-  --      |
-  --      `- key "GlossDiv"
-  --         |
-  --         `- key "GlossList"
-  --            |
-  --            `- key "GlossEntry"
-  --               |
-  --               `- key "GlossTerm"
-  --                  |
-  --                  `- TrueP  matched complete path
-  --   <BLANKLINE>
+  -- >>> let zzz = map JPKey ["glossary","GlossDiv","GlossList","GlossEntry","GlossTerm"]
+  -- >>> pe' (PJsonP zzz 0 $ PShow1 $ sinfix "marku" * ssuffix "uaxge") json1
+  -- <BLANKLINE>
+  -- FalseP PJsonP
+  -- |
+  -- +- FalseP matched | PShow1
+  -- |  |
+  -- |  +- FalseP PAnd
+  -- |  |  |
+  -- |  |  +- TrueP  PStringCI String "marku" `isInfixOf` String "Standard Generalized Markup Language"
+  -- |  |  |
+  -- |  |  `- FalseP PStringCI String "uaxge" `isSuffixOf` String "Standard Generalized Markup Language"
+  -- |  |
+  -- |  `- a=String "Standard Generalized Markup Language"
+  -- |
+  -- `- key "glossary"
+  --    |
+  --    `- key "GlossDiv"
+  --       |
+  --       `- key "GlossList"
+  --          |
+  --          `- key "GlossEntry"
+  --             |
+  --             `- key "GlossTerm"
+  --                |
+  --                `- TrueP  matched complete path
+  -- <BLANKLINE>
   --
-  --   >>> pe' (PJsonP [JPIndex 2] 0 $ jobjectList 0 $ PShow 1) json2
-  --   <BLANKLINE>
-  --   TrueP  PJsonP
-  --   |
-  --   +- TrueP  matched | PPrism (Just) [jobjectList]
-  --   |  |
-  --   |  `- TrueP  PShow
-  --   |     |
-  --   |     +- TrueP
-  --   |     |
-  --   |     `- ===== PShow =====
-  --   |        |
-  --   |        +- i=0 a=("lastName",String "Doe")
-  --   |        |
-  --   |        +- i=1 a=("age",Number 45.0)
-  --   |        |
-  --   |        +- i=2 a=("firstName",String "John")
-  --   |        |
-  --   |        `- i=3 a=("likesPizza",Bool False)
-  --   |
-  --   `- nth 2
-  --      |
-  --      `- TrueP  matched complete path
-  --   <BLANKLINE>
+  -- >>> pe' (PJsonP [JPIndex 2] 0 $ jobjectList 0 $ PShow 1) json2
+  -- <BLANKLINE>
+  -- TrueP  PJsonP
+  -- |
+  -- +- TrueP  matched | PPrism (Just) [jobjectList]
+  -- |  |
+  -- |  `- TrueP  PShow
+  -- |     |
+  -- |     +- TrueP
+  -- |     |
+  -- |     `- ===== PShow =====
+  -- |        |
+  -- |        +- i=0 a=("lastName",String "Doe")
+  -- |        |
+  -- |        +- i=1 a=("age",Number 45.0)
+  -- |        |
+  -- |        +- i=2 a=("firstName",String "John")
+  -- |        |
+  -- |        `- i=3 a=("likesPizza",Bool False)
+  -- |
+  -- `- nth 2
+  --    |
+  --    `- TrueP  matched complete path
+  -- <BLANKLINE>
   --
   PJsonP      :: [JPath] -- list of jpaths to get you to the json 'Value'
               -> Pred z () -- failure predicate ie no match
@@ -2512,158 +2463,125 @@ data Pred z a where
 -- only used by PredState -- else wrapped with plog/pstate not implemented
   -- | passthrough predicate which allows you to log using current value and state
   --
-  --   >>> :set -XTypeApplications
-  --   >>> import Data.Semigroup (Sum(..))
-  --   >>> pe2' (PLog (These show show) $ PForAll (PState @(Sum _) (That (<>)) 1)) [1,5,3,7]
-  --   <BLANKLINE>
-  --   TrueP  PLog-+ a=[Sum {getSum = 1},Sum {getSum = 5},Sum {getSum = 3},Sum {getSum = 7}]
-  --   |
-  --   +- PLog- ([Sum {getSum = 1},Sum {getSum = 5},Sum {getSum = 3},Sum {getSum = 7}],Sum {getSum = 0}) state=Sum {getSum = 0}
-  --   |
-  --   +- TrueP  PForAll
-  --   |  |
-  --   |  +- TrueP  i=0: PState+ a=Sum {getSum = 1}
-  --   |  |  |
-  --   |  |  +- TrueP  PConst a=Sum {getSum = 1}
-  --   |  |  |
-  --   |  |  `- PState+ old state=Sum {getSum = 0} new state=Sum {getSum = 1}
-  --   |  |
-  --   |  +- TrueP  i=1: PState+ a=Sum {getSum = 5}
-  --   |  |  |
-  --   |  |  +- TrueP  PConst a=Sum {getSum = 5}
-  --   |  |  |
-  --   |  |  `- PState+ old state=Sum {getSum = 1} new state=Sum {getSum = 6}
-  --   |  |
-  --   |  +- TrueP  i=2: PState+ a=Sum {getSum = 3}
-  --   |  |  |
-  --   |  |  +- TrueP  PConst a=Sum {getSum = 3}
-  --   |  |  |
-  --   |  |  `- PState+ old state=Sum {getSum = 6} new state=Sum {getSum = 9}
-  --   |  |
-  --   |  `- TrueP  i=3: PState+ a=Sum {getSum = 7}
-  --   |     |
-  --   |     +- TrueP  PConst a=Sum {getSum = 7}
-  --   |     |
-  --   |     `- PState+ old state=Sum {getSum = 9} new state=Sum {getSum = 16}
-  --   |
-  --   `- PLog+ ([Sum {getSum = 1},Sum {getSum = 5},Sum {getSum = 3},Sum {getSum = 7}],Sum {getSum = 16}) state=Sum {getSum = 16}
-  --   <BLANKLINE>
+  -- >>> import Data.Semigroup (Sum(..))
+  -- >>> pe2' (PLog (These show show) $ PForAll (PState @(Sum _) (That (<>)) 1)) [1,5,3,7]
+  -- <BLANKLINE>
+  -- TrueP  PLog-+ a=[Sum {getSum = 1},Sum {getSum = 5},Sum {getSum = 3},Sum {getSum = 7}]
+  -- |
+  -- +- PLog- ([Sum {getSum = 1},Sum {getSum = 5},Sum {getSum = 3},Sum {getSum = 7}],Sum {getSum = 0}) state=Sum {getSum = 0}
+  -- |
+  -- +- TrueP  PForAll
+  -- |  |
+  -- |  +- TrueP  i=0: PState+ a=Sum {getSum = 1}
+  -- |  |  |
+  -- |  |  +- TrueP  PConst a=Sum {getSum = 1}
+  -- |  |  |
+  -- |  |  `- PState+ old state=Sum {getSum = 0} new state=Sum {getSum = 1}
+  -- |  |
+  -- |  +- TrueP  i=1: PState+ a=Sum {getSum = 5}
+  -- |  |  |
+  -- |  |  +- TrueP  PConst a=Sum {getSum = 5}
+  -- |  |  |
+  -- |  |  `- PState+ old state=Sum {getSum = 1} new state=Sum {getSum = 6}
+  -- |  |
+  -- |  +- TrueP  i=2: PState+ a=Sum {getSum = 3}
+  -- |  |  |
+  -- |  |  +- TrueP  PConst a=Sum {getSum = 3}
+  -- |  |  |
+  -- |  |  `- PState+ old state=Sum {getSum = 6} new state=Sum {getSum = 9}
+  -- |  |
+  -- |  `- TrueP  i=3: PState+ a=Sum {getSum = 7}
+  -- |     |
+  -- |     +- TrueP  PConst a=Sum {getSum = 7}
+  -- |     |
+  -- |     `- PState+ old state=Sum {getSum = 9} new state=Sum {getSum = 16}
+  -- |
+  -- `- PLog+ ([Sum {getSum = 1},Sum {getSum = 5},Sum {getSum = 3},Sum {getSum = 7}],Sum {getSum = 16}) state=Sum {getSum = 16}
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PLog (These (("LHS:"++) . show) (("RHS:"++).show)) 1) ()
-  --   <BLANKLINE>
-  --   TrueP  PLog-+ a=()
-  --   |
-  --   +- PLog- LHS:((),()) state=()
-  --   |
-  --   +- TrueP  PConst a=()
-  --   |
-  --   `- PLog+ RHS:((),()) state=()
-  --   <BLANKLINE>
+  -- >>> pe2' (PLog (These (("LHS:"++) . show) (("RHS:"++).show)) 1) ()
+  -- <BLANKLINE>
+  -- TrueP  PLog-+ a=()
+  -- |
+  -- +- PLog- LHS:((),()) state=()
+  -- |
+  -- +- TrueP  PConst a=()
+  -- |
+  -- `- PLog+ RHS:((),()) state=()
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PLog (This (("LHS:"++) . show)) 1) ()
-  --   <BLANKLINE>
-  --   TrueP  PLog- a=()
-  --   |
-  --   +- PLog- LHS:((),()) state=()
-  --   |
-  --   `- TrueP  PConst a=()
-  --   <BLANKLINE>
+  -- >>> pe2' (PLog (This (("LHS:"++) . show)) 1) ()
+  -- <BLANKLINE>
+  -- TrueP  PLog- a=()
+  -- |
+  -- +- PLog- LHS:((),()) state=()
+  -- |
+  -- `- TrueP  PConst a=()
+  -- <BLANKLINE>
   --
-  --   >>> pe2' (PLog (That (("RHS:"++) . show)) 1) ()
-  --   <BLANKLINE>
-  --   TrueP  PLog+ a=()
-  --   |
-  --   +- TrueP  PConst a=()
-  --   |
-  --   `- PLog+ RHS:((),()) state=()
-  --   <BLANKLINE>
+  -- >>> pe2' (PLog (That (("RHS:"++) . show)) 1) ()
+  -- <BLANKLINE>
+  -- TrueP  PLog+ a=()
+  -- |
+  -- +- TrueP  PConst a=()
+  -- |
+  -- `- PLog+ RHS:((),()) state=()
+  -- <BLANKLINE>
   --
   PLog :: (Show a, Show z) => These ((a, z) -> String) ((a, z) -> String) -> Pred z a -> Pred z a
   -- does logging before running the predicate
   -- | passthrough predicate which allows you to modify state using the current value and state
   --
-  --   >>> import Data.Semigroup (Sum(..))
-  --   >>> pe1' (PState (These (<>) (<>)) 1) (Sum 4)
-  --   <BLANKLINE>
-  --   TrueP  PState-+ a=Sum {getSum = 4}
-  --   |
-  --   +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 4}
-  --   |
-  --   +- TrueP  PConst a=Sum {getSum = 4}
-  --   |
-  --   `- PState+ old state=Sum {getSum = 4} new state=Sum {getSum = 8}
-  --   <BLANKLINE>
+  -- >>> import Data.Semigroup (Sum(..))
+  -- >>> pe1' (PState (These (<>) (<>)) 1) (Sum 4)
+  -- <BLANKLINE>
+  -- TrueP  PState-+ a=Sum {getSum = 4}
+  -- |
+  -- +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 4}
+  -- |
+  -- +- TrueP  PConst a=Sum {getSum = 4}
+  -- |
+  -- `- PState+ old state=Sum {getSum = 4} new state=Sum {getSum = 8}
+  -- <BLANKLINE>
   --
-  --   >>> import Data.Semigroup (Sum(..))
-  --   >>> pe1' (pput (Sum 14) $ PState (These (<>) (<>)) 1) 4
-  --   <BLANKLINE>
-  --   TrueP  PState- a=Sum {getSum = 4}
-  --   |
-  --   +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 14}
-  --   |
-  --   `- TrueP  PState-+ a=Sum {getSum = 4}
-  --      |
-  --      +- PState- old state=Sum {getSum = 14} new state=Sum {getSum = 18}
-  --      |
-  --      +- TrueP  PConst a=Sum {getSum = 4}
-  --      |
-  --      `- PState+ old state=Sum {getSum = 18} new state=Sum {getSum = 22}
-  --   <BLANKLINE>
+  -- >>> import Data.Semigroup (Sum(..))
+  -- >>> pe1' (pput (Sum 14) $ PState (These (<>) (<>)) 1) 4
+  -- <BLANKLINE>
+  -- TrueP  PState- a=Sum {getSum = 4}
+  -- |
+  -- +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 14}
+  -- |
+  -- `- TrueP  PState-+ a=Sum {getSum = 4}
+  --    |
+  --    +- PState- old state=Sum {getSum = 14} new state=Sum {getSum = 18}
+  --    |
+  --    +- TrueP  PConst a=Sum {getSum = 4}
+  --    |
+  --    `- PState+ old state=Sum {getSum = 18} new state=Sum {getSum = 22}
+  -- <BLANKLINE>
   --
-  --   >>> import Data.Semigroup (Sum(..))
-  --   >>> pe1' (PState (These (const2 (Sum 19)) (<>)) $ PLog (These show show) 1) 14
-  --   <BLANKLINE>
-  --   TrueP  PState-+ a=Sum {getSum = 14}
-  --   |
-  --   +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 19}
-  --   |
-  --   +- TrueP  PLog-+ a=Sum {getSum = 14}
-  --   |  |
-  --   |  +- PLog- (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
-  --   |  |
-  --   |  +- TrueP  PConst a=Sum {getSum = 14}
-  --   |  |
-  --   |  `- PLog+ (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
-  --   |
-  --   `- PState+ old state=Sum {getSum = 19} new state=Sum {getSum = 33}
-  --   <BLANKLINE>
+  -- >>> import Data.Semigroup (Sum(..))
+  -- >>> pe1' (PState (These (const2 (Sum 19)) (<>)) $ PLog (These show show) 1) 14
+  -- <BLANKLINE>
+  -- TrueP  PState-+ a=Sum {getSum = 14}
+  -- |
+  -- +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 19}
+  -- |
+  -- +- TrueP  PLog-+ a=Sum {getSum = 14}
+  -- |  |
+  -- |  +- PLog- (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
+  -- |  |
+  -- |  +- TrueP  PConst a=Sum {getSum = 14}
+  -- |  |
+  -- |  `- PLog+ (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
+  -- |
+  -- `- PState+ old state=Sum {getSum = 19} new state=Sum {getSum = 33}
+  -- <BLANKLINE>
   --
   PState :: (Show a, Show z) => These (a -> z -> z) (a -> z -> z) -> Pred z a -> Pred z a
   -- | decorate predicate with current state
   PGet   :: (Show a, Show z) => Pred z (z,a) -> Pred z a
-{-
-  -- | set the state
-  --
-  --   >>> import Data.Semigroup (Sum(..))
-  --   >>> pe1' (PPut (Sum 4) * PGet (PFst (pgt 4))) ()
-  --   <BLANKLINE>
-  --   FalseP PAnd
-  --   |
-  --   +- TrueP  PPut a=() oldstate=Sum {getSum = 0}
-  --   |
-  --   `- FalseP PGet a=() state=Sum {getSum = 4}
-  --      |
-  --      `- FalseP PFst a=Sum {getSum = 4} snd=()
-  --         |
-  --         `- FalseP Sum {getSum = 4} > Sum {getSum = 4}
-  --   <BLANKLINE>
-  --
-  --   >>> import Data.Semigroup (Sum(..))
-  --   >>> pe1' (PPut (Sum 4) * PGet (PFst (pgt 3))) ()
-  --   <BLANKLINE>
-  --   TrueP  PAnd
-  --   |
-  --   +- TrueP  PPut a=() oldstate=Sum {getSum = 0}
-  --   |
-  --   `- TrueP  PGet a=() state=Sum {getSum = 4}
-  --      |
-  --      `- TrueP  PFst a=Sum {getSum = 4} snd=()
-  --         |
-  --         `- TrueP  Sum {getSum = 4} > Sum {getSum = 3}
-  --   <BLANKLINE>
-  --
-  PPut   :: (Eq z, Show a, Show z) => z -> Pred z a
--}
+
 -- | equivalent to take using 'PSplitAt' but using one side of the tuple
 ptake, pdrop :: (Foldable t, Show a) => Int -> Pred z [a] -> Pred z (t a)
 ptake i = PMsg Inline "PTake" . PSplitAt i . phide . PFst
@@ -2672,69 +2590,69 @@ pdrop i = PMsg Inline "PDrop" . PSplitAt i . phide . PSnd
 -- not sure how useful this is? can use PIx to get at particular keyvalues or can just pilist to get it as a big list of tuples
 -- | convert a predicate on a foldable to predicate on a map grouped by key
 --
---   >>> pe2' (pgroup (between 3 7) $ PIx GT 0 1) [11,5,2,4,12]
---   <BLANKLINE>
---   TrueP  PFn pgroup | a=[11,5,2,4,12] | b=fromList [(LT,[2]),(EQ,[5,4]),(GT,[11,12])]
---   |
---   `- TrueP  PIx GT [11,12]
---      |
---      `- TrueP  PConst a=[11,12]
---   <BLANKLINE>
+-- >>> pe2' (pgroup (between 3 7) $ PIx GT 0 1) [11,5,2,4,12]
+-- <BLANKLINE>
+-- TrueP  PFn pgroup | a=[11,5,2,4,12] | b=fromList [(LT,[2]),(EQ,[5,4]),(GT,[11,12])]
+-- |
+-- `- TrueP  PIx GT [11,12]
+--    |
+--    `- TrueP  PConst a=[11,12]
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroup (between 3 7) $ PIx EQ 0 $ PLen (peq 2)) [11,5,2,4,12,14,11,11,12]
---   <BLANKLINE>
---   TrueP  PFn pgroup | a=[11,5,2,4,12,14,11,11,12] | b=fromList [(LT,[2]),(EQ,[5,4]),(GT,[11,12,14,11,11,12])]
---   |
---   `- TrueP  PIx EQ [5,4]
---      |
---      `- TrueP  PLen 2 as=[5,4]
---         |
---         `- TrueP  2 == 2
---   <BLANKLINE>
+-- >>> pe2' (pgroup (between 3 7) $ PIx EQ 0 $ PLen (peq 2)) [11,5,2,4,12,14,11,11,12]
+-- <BLANKLINE>
+-- TrueP  PFn pgroup | a=[11,5,2,4,12,14,11,11,12] | b=fromList [(LT,[2]),(EQ,[5,4]),(GT,[11,12,14,11,11,12])]
+-- |
+-- `- TrueP  PIx EQ [5,4]
+--    |
+--    `- TrueP  PLen 2 as=[5,4]
+--       |
+--       `- TrueP  2 == 2
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroup (between 3 7) $ PIx GT 0 $ PLen (peq 2)) [11,5,2,4,12,14,11,11,12]
---   <BLANKLINE>
---   FalseP PFn pgroup | a=[11,5,2,4,12,14,11,11,12] | b=fromList [(LT,[2]),(EQ,[5,4])...
---   |
---   `- FalseP PIx GT [11,12,14,11,11,12]
---      |
---      `- FalseP PLen 6 as=[11,12,14,11,11,12]
---         |
---         `- FalseP 6 == 2
---   <BLANKLINE>
+-- >>> pe2' (pgroup (between 3 7) $ PIx GT 0 $ PLen (peq 2)) [11,5,2,4,12,14,11,11,12]
+-- <BLANKLINE>
+-- FalseP PFn pgroup | a=[11,5,2,4,12,14,11,11,12] | b=fromList [(LT,[2]),(EQ,[5,4])...
+-- |
+-- `- FalseP PIx GT [11,12,14,11,11,12]
+--    |
+--    `- FalseP PLen 6 as=[11,12,14,11,11,12]
+--       |
+--       `- FalseP 6 == 2
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroup (compare 'd') (PIx GT 0 (PLen (peq 4)))) ("adcxdza"::String)
---   <BLANKLINE>
---   FalseP PFn pgroup | a="adcxdza" | b=fromList [(LT,"xz"),(EQ,"dd"),(GT,"aca")]
---   |
---   `- FalseP PIx GT "aca"
---      |
---      `- FalseP PLen 3 as="aca"
---         |
---         `- FalseP 3 == 4
---   <BLANKLINE>
+-- >>> pe2' (pgroup (compare 'd') (PIx GT 0 (PLen (peq 4)))) ("adcxdza"::String)
+-- <BLANKLINE>
+-- FalseP PFn pgroup | a="adcxdza" | b=fromList [(LT,"xz"),(EQ,"dd"),(GT,"aca")]
+-- |
+-- `- FalseP PIx GT "aca"
+--    |
+--    `- FalseP PLen 3 as="aca"
+--       |
+--       `- FalseP 3 == 4
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroup (compare 'd') (PIx EQ 0 (PLen (peq 4)))) ("adcxdza"::String)
---   <BLANKLINE>
---   FalseP PFn pgroup | a="adcxdza" | b=fromList [(LT,"xz"),(EQ,"dd"),(GT,"aca")]
---   |
---   `- FalseP PIx EQ "dd"
---      |
---      `- FalseP PLen 2 as="dd"
---         |
---         `- FalseP 2 == 4
---   <BLANKLINE>
+-- >>> pe2' (pgroup (compare 'd') (PIx EQ 0 (PLen (peq 4)))) ("adcxdza"::String)
+-- <BLANKLINE>
+-- FalseP PFn pgroup | a="adcxdza" | b=fromList [(LT,"xz"),(EQ,"dd"),(GT,"aca")]
+-- |
+-- `- FalseP PIx EQ "dd"
+--    |
+--    `- FalseP PLen 2 as="dd"
+--       |
+--       `- FalseP 2 == 4
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroup (compare 'd') (PIx EQ 0 (PLen (peq 2)))) ("adcxdza"::String)
---   <BLANKLINE>
---   TrueP  PFn pgroup | a="adcxdza" | b=fromList [(LT,"xz"),(EQ,"dd"),(GT,"aca")]
---   |
---   `- TrueP  PIx EQ "dd"
---      |
---      `- TrueP  PLen 2 as="dd"
---         |
---         `- TrueP  2 == 2
---   <BLANKLINE>
+-- >>> pe2' (pgroup (compare 'd') (PIx EQ 0 (PLen (peq 2)))) ("adcxdza"::String)
+-- <BLANKLINE>
+-- TrueP  PFn pgroup | a="adcxdza" | b=fromList [(LT,"xz"),(EQ,"dd"),(GT,"aca")]
+-- |
+-- `- TrueP  PIx EQ "dd"
+--    |
+--    `- TrueP  PLen 2 as="dd"
+--       |
+--       `- TrueP  2 == 2
+-- <BLANKLINE>
 --
 pgroup :: (Foldable t, Show k, Ord k, Show a) => (a -> k) -> Pred z (Map k [a]) -> Pred z (t a)
 pgroup ak = PFn "pgroup" (M.fromListWith (flip (<>)) . map (ak &&& (:[])) . toList)
@@ -2759,52 +2677,52 @@ pgroupEq ak = PFn "pgroupEq" (H.fromListWith (flip (<>)) . map (ak &&& (:[])) . 
 -- this is useful can emulate POrder and more eg pgroupBy ((==) . succ) off by exactly one or pgroupBy (on (==) even odd) xor on evenness
 -- | a better 'groupBy' that checks adjacent elements. good replacement and more powerful version of 'POrder'
 --
---   >>> pe2' (pgroupBy (<=) $ PLen $ plt 3) [1,4,5,7,11,3,4]
---   <BLANKLINE>
---   TrueP  PFn pgroupBy | a=[1,4,5,7,11,3,4] | b=[[1,4,5,7,11],[3,4]]
---   |
---   `- TrueP  PLen 2 as=[[1,4,5,7,11],[3,4]]
---      |
---      `- TrueP  2 < 3
---   <BLANKLINE>
+-- >>> pe2' (pgroupBy (<=) $ PLen $ plt 3) [1,4,5,7,11,3,4]
+-- <BLANKLINE>
+-- TrueP  PFn pgroupBy | a=[1,4,5,7,11,3,4] | b=[[1,4,5,7,11],[3,4]]
+-- |
+-- `- TrueP  PLen 2 as=[[1,4,5,7,11],[3,4]]
+--    |
+--    `- TrueP  2 < 3
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroupBy (on (/=) even) 1) [1,4,5,10,11,9]
---   <BLANKLINE>
---   TrueP  PFn pgroupBy | a=[1,4,5,10,11,9] | b=[[1,4,5,10,11],[9]]
---   |
---   `- TrueP  PConst a=[[1,4,5,10,11],[9]]
---   <BLANKLINE>
+-- >>> pe2' (pgroupBy (on (/=) even) 1) [1,4,5,10,11,9]
+-- <BLANKLINE>
+-- TrueP  PFn pgroupBy | a=[1,4,5,10,11,9] | b=[[1,4,5,10,11],[9]]
+-- |
+-- `- TrueP  PConst a=[[1,4,5,10,11],[9]]
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroupBy ((((<=2) . abs) .) . subtract) 1) [1,4,5,7,11,9]
---   <BLANKLINE>
---   TrueP  PFn pgroupBy | a=[1,4,5,7,11,9] | b=[[1],[4,5,7],[11,9]]
---   |
---   `- TrueP  PConst a=[[1],[4,5,7],[11,9]]
---   <BLANKLINE>
+-- >>> pe2' (pgroupBy ((((<=2) . abs) .) . subtract) 1) [1,4,5,7,11,9]
+-- <BLANKLINE>
+-- TrueP  PFn pgroupBy | a=[1,4,5,7,11,9] | b=[[1],[4,5,7],[11,9]]
+-- |
+-- `- TrueP  PConst a=[[1],[4,5,7],[11,9]]
+-- <BLANKLINE>
 --
---   >>> pe2' (pgroupBy (<) $ PLen (pgt 2) * PHead 0 (PLen $ pgt 6)) [1,3,4,6,6,9,3,4]
---   <BLANKLINE>
---   FalseP PFn pgroupBy | a=[1,3,4,6,6,9,3,4] | b=[[1,3,4,6],[6,9],[3,4]]
---   |
---   `- FalseP PAnd
---      |
---      +- TrueP  PLen 3 as=[[1,3,4,6],[6,9],[3,4]]
---      |  |
---      |  `- TrueP  3 > 2
---      |
---      `- FalseP PHead [1,3,4,6]
---         |
---         `- FalseP PLen 4 as=[1,3,4,6]
---            |
---            `- FalseP 4 > 6
---   <BLANKLINE>
+-- >>> pe2' (pgroupBy (<) $ PLen (pgt 2) * PHead 0 (PLen $ pgt 6)) [1,3,4,6,6,9,3,4]
+-- <BLANKLINE>
+-- FalseP PFn pgroupBy | a=[1,3,4,6,6,9,3,4] | b=[[1,3,4,6],[6,9],[3,4]]
+-- |
+-- `- FalseP PAnd
+--    |
+--    +- TrueP  PLen 3 as=[[1,3,4,6],[6,9],[3,4]]
+--    |  |
+--    |  `- TrueP  3 > 2
+--    |
+--    `- FalseP PHead [1,3,4,6]
+--       |
+--       `- FalseP PLen 4 as=[1,3,4,6]
+--          |
+--          `- FalseP 4 > 6
+-- <BLANKLINE>
 --
---   >>> pe1' (pgroupBy (<=) 1) ([1..10] ++ [1..4] ++ [1..6])
---   <BLANKLINE>
---   TrueP  PFn pgroupBy | a=[1,2,3,4,5,6,7,8,9,10,1,2,3,4,1,2,3,4,5,6] | b=[[1,2,3,4,5,6,7,8,9,10],[1,2,3,4],[1,2,3,4,5,6]]
---   |
---   `- TrueP  PConst a=[[1,2,3,4,5,6,7,8,9,10],[1,2,3,4],[1,2,3,4,5,6]]
---   <BLANKLINE>
+-- >>> pe1' (pgroupBy (<=) 1) ([1..10] ++ [1..4] ++ [1..6])
+-- <BLANKLINE>
+-- TrueP  PFn pgroupBy | a=[1,2,3,4,5,6,7,8,9,10,1,2,3,4,1,2,3,4,5,6] | b=[[1,2,3,4,5,6,7,8,9,10],[1,2,3,4],[1,2,3,4,5,6]]
+-- |
+-- `- TrueP  PConst a=[[1,2,3,4,5,6,7,8,9,10],[1,2,3,4],[1,2,3,4,5,6]]
+-- <BLANKLINE>
 --
 pgroupBy :: (Foldable t, Show a) => (a -> a -> Bool) -> Pred z [[a]] -> Pred z (t a)
 pgroupBy f = PFn "pgroupBy" (groupBy' f . toList)
@@ -2821,68 +2739,68 @@ pilist = phide . PFn "itoList" itoList
 
 -- | logging
 --
---   >>> import Data.Semigroup (Sum(..))
---   >>> pe1' (plog show $ PState (That ((+) . Sum . sum)) $ PPartition peven 1) [1..10]
---   <BLANKLINE>
---   TrueP  PLog-+ a=[1,2,3,4,5,6,7,8,9,10]
---   |
---   +- PLog- ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 0}) state=Sum {getSum = 0}
---   |
---   +- TrueP  PState+ a=[1,2,3,4,5,6,7,8,9,10]
---   |  |
---   |  +- TrueP  PPartition | lefts=5 (0,1) | rights=5 (1,2)
---   |  |  |
---   |  |  `- TrueP  PPartition Predicate
---   |  |     |
---   |  |     `- TrueP  PConst a=([1,3,5,7,9],[2,4,6,8,10])
---   |  |
---   |  `- PState+ old state=Sum {getSum = 0} new state=Sum {getSum = 55}
---   |
---   `- PLog+ ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 55}) state=Sum {getSum = 55}
---   <BLANKLINE>
+-- >>> import Data.Semigroup (Sum(..))
+-- >>> pe1' (plog show $ PState (That ((+) . Sum . sum)) $ PPartition peven 1) [1..10]
+-- <BLANKLINE>
+-- TrueP  PLog-+ a=[1,2,3,4,5,6,7,8,9,10]
+-- |
+-- +- PLog- ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 0}) state=Sum {getSum = 0}
+-- |
+-- +- TrueP  PState+ a=[1,2,3,4,5,6,7,8,9,10]
+-- |  |
+-- |  +- TrueP  PPartition | lefts=5 (0,1) | rights=5 (1,2)
+-- |  |  |
+-- |  |  `- TrueP  PPartition Predicate
+-- |  |     |
+-- |  |     `- TrueP  PConst a=([1,3,5,7,9],[2,4,6,8,10])
+-- |  |
+-- |  `- PState+ old state=Sum {getSum = 0} new state=Sum {getSum = 55}
+-- |
+-- `- PLog+ ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 55}) state=Sum {getSum = 55}
+-- <BLANKLINE>
 --
---   >>> import Data.Semigroup (Sum(..))
---   >>> pe3' (plog show $ PState (That ((+) . Sum . sum)) $ PPartition peven 1) [1..10]
---   <BLANKLINE>
---   TrueP  PLog-+ a=[1,2,3,4,5,6,7,8,9,10]
---   |
---   +- PLog- ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 0}) state=Sum {getSum = 0}
---   |
---   +- TrueP  PState+ a=[1,2,3,4,5,6,7,8,9,10]
---   |  |
---   |  +- TrueP  PPartition | lefts=5 (0,1) | rights=5 (1,2)
---   |  |  |
---   |  |  +- TrueP  PPartition Predicate
---   |  |  |  |
---   |  |  |  `- TrueP  PConst a=([1,3,5,7,9],[2,4,6,8,10])
---   |  |  |
---   |  |  `- PPartition debugging info
---   |  |     |
---   |  |     +- FalseP i=0: PLift even | a=1
---   |  |     |
---   |  |     +- TrueP  i=1: PLift even | a=2
---   |  |     |
---   |  |     +- FalseP i=2: PLift even | a=3
---   |  |     |
---   |  |     +- TrueP  i=3: PLift even | a=4
---   |  |     |
---   |  |     +- FalseP i=4: PLift even | a=5
---   |  |     |
---   |  |     +- TrueP  i=5: PLift even | a=6
---   |  |     |
---   |  |     +- FalseP i=6: PLift even | a=7
---   |  |     |
---   |  |     +- TrueP  i=7: PLift even | a=8
---   |  |     |
---   |  |     +- FalseP i=8: PLift even | a=9
---   |  |     |
---   |  |     `- TrueP  i=9: PLift even | a=10
---   |  |
---   |  `- PState+ old state=Sum {getSum = 0} new state=Sum {getSum = 55}
---   |
---   `- PLog+ ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 55}) state=Sum {getSum = 55}
---   <BLANKLINE>
---   Config {_cLog = fromList ["-([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 0})","+([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 55})"], _cZ = Sum {getSum = 55}, _cCnt = fromList [("PConst",1),("PLift even",10),("PLog-+",1),("PPartition",1),("PState+",1)]}
+-- >>> import Data.Semigroup (Sum(..))
+-- >>> pe3' (plog show $ PState (That ((+) . Sum . sum)) $ PPartition peven 1) [1..10]
+-- <BLANKLINE>
+-- TrueP  PLog-+ a=[1,2,3,4,5,6,7,8,9,10]
+-- |
+-- +- PLog- ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 0}) state=Sum {getSum = 0}
+-- |
+-- +- TrueP  PState+ a=[1,2,3,4,5,6,7,8,9,10]
+-- |  |
+-- |  +- TrueP  PPartition | lefts=5 (0,1) | rights=5 (1,2)
+-- |  |  |
+-- |  |  +- TrueP  PPartition Predicate
+-- |  |  |  |
+-- |  |  |  `- TrueP  PConst a=([1,3,5,7,9],[2,4,6,8,10])
+-- |  |  |
+-- |  |  `- PPartition debugging info
+-- |  |     |
+-- |  |     +- FalseP i=0: PLift even | a=1
+-- |  |     |
+-- |  |     +- TrueP  i=1: PLift even | a=2
+-- |  |     |
+-- |  |     +- FalseP i=2: PLift even | a=3
+-- |  |     |
+-- |  |     +- TrueP  i=3: PLift even | a=4
+-- |  |     |
+-- |  |     +- FalseP i=4: PLift even | a=5
+-- |  |     |
+-- |  |     +- TrueP  i=5: PLift even | a=6
+-- |  |     |
+-- |  |     +- FalseP i=6: PLift even | a=7
+-- |  |     |
+-- |  |     +- TrueP  i=7: PLift even | a=8
+-- |  |     |
+-- |  |     +- FalseP i=8: PLift even | a=9
+-- |  |     |
+-- |  |     `- TrueP  i=9: PLift even | a=10
+-- |  |
+-- |  `- PState+ old state=Sum {getSum = 0} new state=Sum {getSum = 55}
+-- |
+-- `- PLog+ ([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 55}) state=Sum {getSum = 55}
+-- <BLANKLINE>
+-- Config {_cLog = fromList ["-([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 0})","+([1,2,3,4,5,6,7,8,9,10],Sum {getSum = 55})"], _cZ = Sum {getSum = 55}, _cCnt = fromList [("PConst",1),("PLift even",10),("PLog-+",1),("PPartition",1),("PState+",1)]}
 --
 plog, plogA, plogB :: (Show z, Show a) => ((a, z) -> String) -> Pred z a -> Pred z a
 plog f = PLog (These f f)
@@ -2897,163 +2815,163 @@ pstateBA = (PState .) . These
 
 -- | set the state
 --
---   >>> import Data.Semigroup (Sum(..))
---   >>> pe1' (pput (Sum 19) $ PState (That (<>)) $ PLog (These show show) 1) 14
---   <BLANKLINE>
---   TrueP  PState- a=Sum {getSum = 14}
---   |
---   +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 19}
---   |
---   `- TrueP  PState+ a=Sum {getSum = 14}
---      |
---      +- TrueP  PLog-+ a=Sum {getSum = 14}
---      |  |
---      |  +- PLog- (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
---      |  |
---      |  +- TrueP  PConst a=Sum {getSum = 14}
---      |  |
---      |  `- PLog+ (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
---      |
---      `- PState+ old state=Sum {getSum = 19} new state=Sum {getSum = 33}
---   <BLANKLINE>
+-- >>> import Data.Semigroup (Sum(..))
+-- >>> pe1' (pput (Sum 19) $ PState (That (<>)) $ PLog (These show show) 1) 14
+-- <BLANKLINE>
+-- TrueP  PState- a=Sum {getSum = 14}
+-- |
+-- +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 19}
+-- |
+-- `- TrueP  PState+ a=Sum {getSum = 14}
+--    |
+--    +- TrueP  PLog-+ a=Sum {getSum = 14}
+--    |  |
+--    |  +- PLog- (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
+--    |  |
+--    |  +- TrueP  PConst a=Sum {getSum = 14}
+--    |  |
+--    |  `- PLog+ (Sum {getSum = 14},Sum {getSum = 19}) state=Sum {getSum = 19}
+--    |
+--    `- PState+ old state=Sum {getSum = 19} new state=Sum {getSum = 33}
+-- <BLANKLINE>
 --
---   >>> pe1' (pput (Sum 19) $ PForAll (PState (That (<>)) $ PLog (These show show) 1)) (map Sum [7,24,3,1,-8])
---   <BLANKLINE>
---   TrueP  PState- a=[Sum {getSum = 7},Sum {getSum = 24},Sum {getSum = 3},Sum {getSum = 1},Sum {getSum = -8}]
---   |
---   +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 19}
---   |
---   `- TrueP  PForAll
---      |
---      +- TrueP  i=0: PState+ a=Sum {getSum = 7}
---      |  |
---      |  +- TrueP  PLog-+ a=Sum {getSum = 7}
---      |  |  |
---      |  |  +- PLog- (Sum {getSum = 7},Sum {getSum = 19}) state=Sum {getSum = 19}
---      |  |  |
---      |  |  +- TrueP  PConst a=Sum {getSum = 7}
---      |  |  |
---      |  |  `- PLog+ (Sum {getSum = 7},Sum {getSum = 19}) state=Sum {getSum = 19}
---      |  |
---      |  `- PState+ old state=Sum {getSum = 19} new state=Sum {getSum = 26}
---      |
---      +- TrueP  i=1: PState+ a=Sum {getSum = 24}
---      |  |
---      |  +- TrueP  PLog-+ a=Sum {getSum = 24}
---      |  |  |
---      |  |  +- PLog- (Sum {getSum = 24},Sum {getSum = 26}) state=Sum {getSum = 26}
---      |  |  |
---      |  |  +- TrueP  PConst a=Sum {getSum = 24}
---      |  |  |
---      |  |  `- PLog+ (Sum {getSum = 24},Sum {getSum = 26}) state=Sum {getSum = 26}
---      |  |
---      |  `- PState+ old state=Sum {getSum = 26} new state=Sum {getSum = 50}
---      |
---      +- TrueP  i=2: PState+ a=Sum {getSum = 3}
---      |  |
---      |  +- TrueP  PLog-+ a=Sum {getSum = 3}
---      |  |  |
---      |  |  +- PLog- (Sum {getSum = 3},Sum {getSum = 50}) state=Sum {getSum = 50}
---      |  |  |
---      |  |  +- TrueP  PConst a=Sum {getSum = 3}
---      |  |  |
---      |  |  `- PLog+ (Sum {getSum = 3},Sum {getSum = 50}) state=Sum {getSum = 50}
---      |  |
---      |  `- PState+ old state=Sum {getSum = 50} new state=Sum {getSum = 53}
---      |
---      +- TrueP  i=3: PState+ a=Sum {getSum = 1}
---      |  |
---      |  +- TrueP  PLog-+ a=Sum {getSum = 1}
---      |  |  |
---      |  |  +- PLog- (Sum {getSum = 1},Sum {getSum = 53}) state=Sum {getSum = 53}
---      |  |  |
---      |  |  +- TrueP  PConst a=Sum {getSum = 1}
---      |  |  |
---      |  |  `- PLog+ (Sum {getSum = 1},Sum {getSum = 53}) state=Sum {getSum = 53}
---      |  |
---      |  `- PState+ old state=Sum {getSum = 53} new state=Sum {getSum = 54}
---      |
---      `- TrueP  i=4: PState+ a=Sum {getSum = -8}
---         |
---         +- TrueP  PLog-+ a=Sum {getSum = -8}
---         |  |
---         |  +- PLog- (Sum {getSum = -8},Sum {getSum = 54}) state=Sum {getSum = 54}
---         |  |
---         |  +- TrueP  PConst a=Sum {getSum = -8}
---         |  |
---         |  `- PLog+ (Sum {getSum = -8},Sum {getSum = 54}) state=Sum {getSum = 54}
---         |
---         `- PState+ old state=Sum {getSum = 54} new state=Sum {getSum = 46}
---   <BLANKLINE>
+-- >>> pe1' (pput (Sum 19) $ PForAll (PState (That (<>)) $ PLog (These show show) 1)) (map Sum [7,24,3,1,-8])
+-- <BLANKLINE>
+-- TrueP  PState- a=[Sum {getSum = 7},Sum {getSum = 24},Sum {getSum = 3},Sum {getSum = 1},Sum {getSum = -8}]
+-- |
+-- +- PState- old state=Sum {getSum = 0} new state=Sum {getSum = 19}
+-- |
+-- `- TrueP  PForAll
+--    |
+--    +- TrueP  i=0: PState+ a=Sum {getSum = 7}
+--    |  |
+--    |  +- TrueP  PLog-+ a=Sum {getSum = 7}
+--    |  |  |
+--    |  |  +- PLog- (Sum {getSum = 7},Sum {getSum = 19}) state=Sum {getSum = 19}
+--    |  |  |
+--    |  |  +- TrueP  PConst a=Sum {getSum = 7}
+--    |  |  |
+--    |  |  `- PLog+ (Sum {getSum = 7},Sum {getSum = 19}) state=Sum {getSum = 19}
+--    |  |
+--    |  `- PState+ old state=Sum {getSum = 19} new state=Sum {getSum = 26}
+--    |
+--    +- TrueP  i=1: PState+ a=Sum {getSum = 24}
+--    |  |
+--    |  +- TrueP  PLog-+ a=Sum {getSum = 24}
+--    |  |  |
+--    |  |  +- PLog- (Sum {getSum = 24},Sum {getSum = 26}) state=Sum {getSum = 26}
+--    |  |  |
+--    |  |  +- TrueP  PConst a=Sum {getSum = 24}
+--    |  |  |
+--    |  |  `- PLog+ (Sum {getSum = 24},Sum {getSum = 26}) state=Sum {getSum = 26}
+--    |  |
+--    |  `- PState+ old state=Sum {getSum = 26} new state=Sum {getSum = 50}
+--    |
+--    +- TrueP  i=2: PState+ a=Sum {getSum = 3}
+--    |  |
+--    |  +- TrueP  PLog-+ a=Sum {getSum = 3}
+--    |  |  |
+--    |  |  +- PLog- (Sum {getSum = 3},Sum {getSum = 50}) state=Sum {getSum = 50}
+--    |  |  |
+--    |  |  +- TrueP  PConst a=Sum {getSum = 3}
+--    |  |  |
+--    |  |  `- PLog+ (Sum {getSum = 3},Sum {getSum = 50}) state=Sum {getSum = 50}
+--    |  |
+--    |  `- PState+ old state=Sum {getSum = 50} new state=Sum {getSum = 53}
+--    |
+--    +- TrueP  i=3: PState+ a=Sum {getSum = 1}
+--    |  |
+--    |  +- TrueP  PLog-+ a=Sum {getSum = 1}
+--    |  |  |
+--    |  |  +- PLog- (Sum {getSum = 1},Sum {getSum = 53}) state=Sum {getSum = 53}
+--    |  |  |
+--    |  |  +- TrueP  PConst a=Sum {getSum = 1}
+--    |  |  |
+--    |  |  `- PLog+ (Sum {getSum = 1},Sum {getSum = 53}) state=Sum {getSum = 53}
+--    |  |
+--    |  `- PState+ old state=Sum {getSum = 53} new state=Sum {getSum = 54}
+--    |
+--    `- TrueP  i=4: PState+ a=Sum {getSum = -8}
+--       |
+--       +- TrueP  PLog-+ a=Sum {getSum = -8}
+--       |  |
+--       |  +- PLog- (Sum {getSum = -8},Sum {getSum = 54}) state=Sum {getSum = 54}
+--       |  |
+--       |  +- TrueP  PConst a=Sum {getSum = -8}
+--       |  |
+--       |  `- PLog+ (Sum {getSum = -8},Sum {getSum = 54}) state=Sum {getSum = 54}
+--       |
+--       `- PState+ old state=Sum {getSum = 54} new state=Sum {getSum = 46}
+-- <BLANKLINE>
 --
---   >>> pe1' (pput [999] $ PForAll (PState (That (flip (<>) . (:[]))) $ PLog (These show show) 1)) [7,24,3,1,-8]
---   <BLANKLINE>
---   TrueP  PState- a=[7,24,3,1,-8]
---   |
---   +- PState- old state=[] new state=[999]
---   |
---   `- TrueP  PForAll
---      |
---      +- TrueP  i=0: PState+ a=7
---      |  |
---      |  +- TrueP  PLog-+ a=7
---      |  |  |
---      |  |  +- PLog- (7,[999]) state=[999]
---      |  |  |
---      |  |  +- TrueP  PConst a=7
---      |  |  |
---      |  |  `- PLog+ (7,[999]) state=[999]
---      |  |
---      |  `- PState+ old state=[999] new state=[999,7]
---      |
---      +- TrueP  i=1: PState+ a=24
---      |  |
---      |  +- TrueP  PLog-+ a=24
---      |  |  |
---      |  |  +- PLog- (24,[999,7]) state=[999,7]
---      |  |  |
---      |  |  +- TrueP  PConst a=24
---      |  |  |
---      |  |  `- PLog+ (24,[999,7]) state=[999,7]
---      |  |
---      |  `- PState+ old state=[999,7] new state=[999,7,24]
---      |
---      +- TrueP  i=2: PState+ a=3
---      |  |
---      |  +- TrueP  PLog-+ a=3
---      |  |  |
---      |  |  +- PLog- (3,[999,7,24]) state=[999,7,24]
---      |  |  |
---      |  |  +- TrueP  PConst a=3
---      |  |  |
---      |  |  `- PLog+ (3,[999,7,24]) state=[999,7,24]
---      |  |
---      |  `- PState+ old state=[999,7,24] new state=[999,7,24,3]
---      |
---      +- TrueP  i=3: PState+ a=1
---      |  |
---      |  +- TrueP  PLog-+ a=1
---      |  |  |
---      |  |  +- PLog- (1,[999,7,24,3]) state=[999,7,24,3]
---      |  |  |
---      |  |  +- TrueP  PConst a=1
---      |  |  |
---      |  |  `- PLog+ (1,[999,7,24,3]) state=[999,7,24,3]
---      |  |
---      |  `- PState+ old state=[999,7,24,3] new state=[999,7,24,3,1]
---      |
---      `- TrueP  i=4: PState+ a=-8
---         |
---         +- TrueP  PLog-+ a=-8
---         |  |
---         |  +- PLog- (-8,[999,7,24,3,1]) state=[999,7,24,3,1]
---         |  |
---         |  +- TrueP  PConst a=-8
---         |  |
---         |  `- PLog+ (-8,[999,7,24,3,1]) state=[999,7,24,3,1]
---         |
---         `- PState+ old state=[999,7,24,3,1] new state=[999,7,24,3,1,-8]
---   <BLANKLINE>
+-- >>> pe1' (pput [999] $ PForAll (PState (That (flip (<>) . (:[]))) $ PLog (These show show) 1)) [7,24,3,1,-8]
+-- <BLANKLINE>
+-- TrueP  PState- a=[7,24,3,1,-8]
+-- |
+-- +- PState- old state=[] new state=[999]
+-- |
+-- `- TrueP  PForAll
+--    |
+--    +- TrueP  i=0: PState+ a=7
+--    |  |
+--    |  +- TrueP  PLog-+ a=7
+--    |  |  |
+--    |  |  +- PLog- (7,[999]) state=[999]
+--    |  |  |
+--    |  |  +- TrueP  PConst a=7
+--    |  |  |
+--    |  |  `- PLog+ (7,[999]) state=[999]
+--    |  |
+--    |  `- PState+ old state=[999] new state=[999,7]
+--    |
+--    +- TrueP  i=1: PState+ a=24
+--    |  |
+--    |  +- TrueP  PLog-+ a=24
+--    |  |  |
+--    |  |  +- PLog- (24,[999,7]) state=[999,7]
+--    |  |  |
+--    |  |  +- TrueP  PConst a=24
+--    |  |  |
+--    |  |  `- PLog+ (24,[999,7]) state=[999,7]
+--    |  |
+--    |  `- PState+ old state=[999,7] new state=[999,7,24]
+--    |
+--    +- TrueP  i=2: PState+ a=3
+--    |  |
+--    |  +- TrueP  PLog-+ a=3
+--    |  |  |
+--    |  |  +- PLog- (3,[999,7,24]) state=[999,7,24]
+--    |  |  |
+--    |  |  +- TrueP  PConst a=3
+--    |  |  |
+--    |  |  `- PLog+ (3,[999,7,24]) state=[999,7,24]
+--    |  |
+--    |  `- PState+ old state=[999,7,24] new state=[999,7,24,3]
+--    |
+--    +- TrueP  i=3: PState+ a=1
+--    |  |
+--    |  +- TrueP  PLog-+ a=1
+--    |  |  |
+--    |  |  +- PLog- (1,[999,7,24,3]) state=[999,7,24,3]
+--    |  |  |
+--    |  |  +- TrueP  PConst a=1
+--    |  |  |
+--    |  |  `- PLog+ (1,[999,7,24,3]) state=[999,7,24,3]
+--    |  |
+--    |  `- PState+ old state=[999,7,24,3] new state=[999,7,24,3,1]
+--    |
+--    `- TrueP  i=4: PState+ a=-8
+--       |
+--       +- TrueP  PLog-+ a=-8
+--       |  |
+--       |  +- PLog- (-8,[999,7,24,3,1]) state=[999,7,24,3,1]
+--       |  |
+--       |  +- TrueP  PConst a=-8
+--       |  |
+--       |  `- PLog+ (-8,[999,7,24,3,1]) state=[999,7,24,3,1]
+--       |
+--       `- PState+ old state=[999,7,24,3,1] new state=[999,7,24,3,1,-8]
+-- <BLANKLINE>
 --
 pput :: (Show z, Show a) => z -> Pred z a -> Pred z a
 pput z = PState (This (const2 z))
@@ -3072,103 +2990,103 @@ pput z = PState (This (const2 z))
 
 -- | roughly equivalent to 'divide' in 'Divisible'
 --
---   >>> pe2' (pdivide id (PLen (pgt 4)) (pgt 10)) (['a'..'h'],9)
---   <BLANKLINE>
---   FalseP PFn divide | a=("abcdefgh",9) | b=("abcdefgh",9)
---   |
---   `- FalseP PBoth
---      |
---      +- TrueP  PLen 8 as="abcdefgh"
---      |  |
---      |  `- TrueP  8 > 4
---      |
---      `- FalseP 9 > 10
---   <BLANKLINE>
+-- >>> pe2' (pdivide id (PLen (pgt 4)) (pgt 10)) (['a'..'h'],9)
+-- <BLANKLINE>
+-- FalseP PFn divide | a=("abcdefgh",9) | b=("abcdefgh",9)
+-- |
+-- `- FalseP PBoth
+--    |
+--    +- TrueP  PLen 8 as="abcdefgh"
+--    |  |
+--    |  `- TrueP  8 > 4
+--    |
+--    `- FalseP 9 > 10
+-- <BLANKLINE>
 --
 pdivide :: (Show b, Show c) => (a -> (b, c)) -> Pred z b -> Pred z c -> Pred z a
 pdivide abc pb pc = PFn "divide" abc (PBoth pb pc)
 
 -- | roughly equivalent to 'choose' in 'Decidable'
 --
---   >>> pe2' (pchoose id (PLen (pgt 4)) (pgt 10)) (Left ['a'..'h'])
---   <BLANKLINE>
---   TrueP  PFn choose | a=Left "abcdefgh" | b=Left "abcdefgh"
---   |
---   `- TrueP  PEither (Left) "abcdefgh"
---      |
---      `- TrueP  PLen 8 as="abcdefgh"
---         |
---         `- TrueP  8 > 4
---   <BLANKLINE>
+-- >>> pe2' (pchoose id (PLen (pgt 4)) (pgt 10)) (Left ['a'..'h'])
+-- <BLANKLINE>
+-- TrueP  PFn choose | a=Left "abcdefgh" | b=Left "abcdefgh"
+-- |
+-- `- TrueP  PEither (Left) "abcdefgh"
+--    |
+--    `- TrueP  PLen 8 as="abcdefgh"
+--       |
+--       `- TrueP  8 > 4
+-- <BLANKLINE>
 --
---   >>> pe2' (pchoose id (PLen (pgt 4)) (pgt 10)) (Right 9)
---   <BLANKLINE>
---   FalseP PFn choose | a=Right 9 | b=Right 9
---   |
---   `- FalseP PEither (Right) 9
---      |
---      `- FalseP 9 > 10
---   <BLANKLINE>
+-- >>> pe2' (pchoose id (PLen (pgt 4)) (pgt 10)) (Right 9)
+-- <BLANKLINE>
+-- FalseP PFn choose | a=Right 9 | b=Right 9
+-- |
+-- `- FalseP PEither (Right) 9
+--    |
+--    `- FalseP 9 > 10
+-- <BLANKLINE>
 --
 pchoose :: (Show b, Show c) => (a -> Either b c) -> Pred z b -> Pred z c -> Pred z a
 pchoose abc pb pc = PFn "choose" abc (PEither pb pc)
 
 -- | unzip a list
 --
---   >>> pe1' (PJsonKey "aGE" $ punzip (pfn (map showJPathsNE) $ PShowS 1) (jnumbers' $ PShow 1)) json2
---   <BLANKLINE>
---   TrueP  PJsonKey
---   |
---   +- TrueP  PFn punzip | a=[(JPKey "age" :| [JPIndex 0],Number 24.0),(JPKey "age" :| [JPIndex 1],Number 39.0),(JPKey "age" :| [JPIndex 2],Number 45 ... | b=([JPKey "age" :| [JPIndex 0],JPKey "age" :| [JPIndex 1],JPKey "age" :| [JPIndex 2],JPKey "age" :| [JPIndex 3]],[Number 2 ...
---   |  |
---   |  `- TrueP  PBoth
---   |     |
---   |     +- TrueP  PFn | a=[JPKey "age" :| [JPIndex 0],JPKey "age" :| [JPIndex 1],JPKey "age" :| [JPIndex 2],JPKey "age" :| [JPIndex 3]] | b=["nth 0.key \"age\"","nth 1.key \"age\"","nth 2.key \"age\"","nth 3.key \"age\""]
---   |     |  |
---   |     |  `- TrueP  PShowS
---   |     |     |
---   |     |     +- TrueP  PConst a=["nth 0.key \"age\"","nth 1.key \"age\"","nth 2.key \"age\"","nth 3.key \"age\""]
---   |     |     |
---   |     |     `- ===== PShowS =====
---   |     |        |
---   |     |        +- i=0 a=nth 0.key "age"
---   |     |        |
---   |     |        +- i=1 a=nth 1.key "age"
---   |     |        |
---   |     |        +- i=2 a=nth 2.key "age"
---   |     |        |
---   |     |        `- i=3 a=nth 3.key "age"
---   |     |
---   |     `- TrueP  PMorph bad=[] good=[24.0,39.0,45.0,27.0]
---   |        |
---   |        `- TrueP  PBoth
---   |           |
---   |           +- TrueP  PNull length=0 as=[]
---   |           |
---   |           `- TrueP  PShow
---   |              |
---   |              +- TrueP  PConst a=[24.0,39.0,45.0,27.0]
---   |              |
---   |              `- ===== PShow =====
---   |                 |
---   |                 +- i=0 a=24.0
---   |                 |
---   |                 +- i=1 a=39.0
---   |                 |
---   |                 +- i=2 a=45.0
---   |                 |
---   |                 `- i=3 a=27.0
---   |
---   `- Debugging jpaths
---      |
---      +- i=0 | key=age | [JPIndex 0,JPKey "age"]
---      |
---      +- i=1 | key=age | [JPIndex 1,JPKey "age"]
---      |
---      +- i=2 | key=age | [JPIndex 2,JPKey "age"]
---      |
---      `- i=3 | key=age | [JPIndex 3,JPKey "age"]
---   <BLANKLINE>
+-- >>> pe1' (PJsonKey "aGE" $ punzip (pfn (map showJPathsNE) $ PShowS 1) (jnumbers' $ PShow 1)) json2
+-- <BLANKLINE>
+-- TrueP  PJsonKey
+-- |
+-- +- TrueP  PFn punzip | a=[(JPKey "age" :| [JPIndex 0],Number 24.0),(JPKey "age" :| [JPIndex 1],Number 39.0),(JPKey "age" :| [JPIndex 2],Number 45 ... | b=([JPKey "age" :| [JPIndex 0],JPKey "age" :| [JPIndex 1],JPKey "age" :| [JPIndex 2],JPKey "age" :| [JPIndex 3]],[Number 2 ...
+-- |  |
+-- |  `- TrueP  PBoth
+-- |     |
+-- |     +- TrueP  PFn | a=[JPKey "age" :| [JPIndex 0],JPKey "age" :| [JPIndex 1],JPKey "age" :| [JPIndex 2],JPKey "age" :| [JPIndex 3]] | b=["nth 0.key \"age\"","nth 1.key \"age\"","nth 2.key \"age\"","nth 3.key \"age\""]
+-- |     |  |
+-- |     |  `- TrueP  PShowS
+-- |     |     |
+-- |     |     +- TrueP  PConst a=["nth 0.key \"age\"","nth 1.key \"age\"","nth 2.key \"age\"","nth 3.key \"age\""]
+-- |     |     |
+-- |     |     `- ===== PShowS =====
+-- |     |        |
+-- |     |        +- i=0 a=nth 0.key "age"
+-- |     |        |
+-- |     |        +- i=1 a=nth 1.key "age"
+-- |     |        |
+-- |     |        +- i=2 a=nth 2.key "age"
+-- |     |        |
+-- |     |        `- i=3 a=nth 3.key "age"
+-- |     |
+-- |     `- TrueP  PMorph bad=[] good=[24.0,39.0,45.0,27.0]
+-- |        |
+-- |        `- TrueP  PBoth
+-- |           |
+-- |           +- TrueP  PNull length=0 as=[]
+-- |           |
+-- |           `- TrueP  PShow
+-- |              |
+-- |              +- TrueP  PConst a=[24.0,39.0,45.0,27.0]
+-- |              |
+-- |              `- ===== PShow =====
+-- |                 |
+-- |                 +- i=0 a=24.0
+-- |                 |
+-- |                 +- i=1 a=39.0
+-- |                 |
+-- |                 +- i=2 a=45.0
+-- |                 |
+-- |                 `- i=3 a=27.0
+-- |
+-- `- Debugging jpaths
+--    |
+--    +- i=0 | key=age | [JPIndex 0,JPKey "age"]
+--    |
+--    +- i=1 | key=age | [JPIndex 1,JPKey "age"]
+--    |
+--    +- i=2 | key=age | [JPIndex 2,JPKey "age"]
+--    |
+--    `- i=3 | key=age | [JPIndex 3,JPKey "age"]
+-- <BLANKLINE>
 --
 punzip :: (Foldable t, Show a, Show b) => Pred z [a] -> Pred z [b] -> Pred z (t (a, b))
 punzip = (PFn "punzip" (unzip . toList) .) . PBoth
@@ -3187,12 +3105,12 @@ pcurry = PFn "curry"
 -- curry . uncurry but has tracing
 -- | adds tracing to 'curry' . 'uncurry'
 --
---   >>> pe' (pcu (fst &&& fst.snd) (-) (pgt 3)) (7,(12,'x'))
---   <BLANKLINE>
---   FalseP PFn uncurry | a=(7,12) | b=-5
---   |
---   `- FalseP -5 > 3
---   <BLANKLINE>
+-- >>> pe' (pcu (fst &&& fst.snd) (-) (pgt 3)) (7,(12,'x'))
+-- <BLANKLINE>
+-- FalseP PFn uncurry | a=(7,12) | b=-5
+-- |
+-- `- FalseP -5 > 3
+-- <BLANKLINE>
 --
 pcu :: (Show a, Show b, Show y) => (x -> (a, b)) -> (a -> b -> y) -> Pred z y -> Pred z x
 pcu f g = phide . pcurry f . puncurry g
@@ -3207,14 +3125,14 @@ pcu f g = phide . pcurry f . puncurry g
 -- pep1 (pquantifier (peven * pgt 5) (plift2 id id (>))) [1..10] -- could decide to add subtract one from one of the ids to offset it a bit
 -- | adds tracing to composed functions
 --
---   >>> pe' (pcomp (first fst) (uncurry (-)) (pgt 3)) ((12,'x'),7)
---   <BLANKLINE>
---   TrueP  PFn PComp a->x | a=((12,'x'),7) | b=(12,7)
---   |
---   `- TrueP  PFn PComp x->b | a=(12,7) | b=5
---      |
---      `- TrueP  5 > 3
---   <BLANKLINE>
+-- >>> pe' (pcomp (first fst) (uncurry (-)) (pgt 3)) ((12,'x'),7)
+-- <BLANKLINE>
+-- TrueP  PFn PComp a->x | a=((12,'x'),7) | b=(12,7)
+-- |
+-- `- TrueP  PFn PComp x->b | a=(12,7) | b=5
+--    |
+--    `- TrueP  5 > 3
+-- <BLANKLINE>
 --
 pcomp :: (Show x, Show b) => (a -> x) -> (x -> b) -> Pred z b -> Pred z a
 pcomp ax xb = PFn "PComp a->x" ax . PFn "PComp x->b" xb
@@ -3233,10 +3151,10 @@ pid = PLift "id" id
 
 -- | infix match on a list
 --
---   >>> pe2' (minfix "abc") "<<<abc>>>"
---   <BLANKLINE>
---   TrueP  PMatch "abc" `isInfixOf` "<<<abc>>>"
---   <BLANKLINE>
+-- >>> pe2' (minfix "abc") "<<<abc>>>"
+-- <BLANKLINE>
+-- TrueP  PMatch "abc" `isInfixOf` "<<<abc>>>"
+-- <BLANKLINE>
 --
 minfix, mprefix, msuffix :: (Show a, Eq a) => [a] -> Pred z [a]
 minfix = PMatch SInfix
@@ -3350,51 +3268,51 @@ pors ps = PMsg Inline "POrs" $ POps ps (PLift "or" or)
 -- way cool:
 -- | generalises PForAll and PExists
 --
---   >>> pe2' (pquantifier (PRange 4 7) 1) [1..10]
---   <BLANKLINE>
---   TrueP  PPartition | lefts=6 (0,1) | rights=4 (3,4)
---   |
---   +- TrueP  PPartition Predicate
---   |  |
---   |  `- TrueP  PFn (***) length | a=([1,2,3,8,9,10],[4,5,6,7]) | b=(6,4)
---   |     |
---   |     `- TrueP  PConst a=(6,4)
---   |
---   `- PPartition debugging info
---      |
---      +- FalseP i=0: 1 < 4 (Under)
---      |
---      +- FalseP i=1: 2 < 4 (Under)
---      |
---      +- FalseP i=2: 3 < 4 (Under)
---      |
---      +- TrueP  i=3: 4 == [4..7]
---      |
---      +- TrueP  i=4: 5 == [4..7]
---      |
---      +- TrueP  i=5: 6 == [4..7]
---      |
---      +- TrueP  i=6: 7 == [4..7]
---      |
---      +- FalseP i=7: 8 > 7 (Over)
---      |
---      +- FalseP i=8: 9 > 7 (Over)
---      |
---      `- FalseP i=9: 10 > 7 (Over)
---   <BLANKLINE>
+-- >>> pe2' (pquantifier (PRange 4 7) 1) [1..10]
+-- <BLANKLINE>
+-- TrueP  PPartition | lefts=6 (0,1) | rights=4 (3,4)
+-- |
+-- +- TrueP  PPartition Predicate
+-- |  |
+-- |  `- TrueP  PFn (***) length | a=([1,2,3,8,9,10],[4,5,6,7]) | b=(6,4)
+-- |     |
+-- |     `- TrueP  PConst a=(6,4)
+-- |
+-- `- PPartition debugging info
+--    |
+--    +- FalseP i=0: 1 < 4 (Under)
+--    |
+--    +- FalseP i=1: 2 < 4 (Under)
+--    |
+--    +- FalseP i=2: 3 < 4 (Under)
+--    |
+--    +- TrueP  i=3: 4 == [4..7]
+--    |
+--    +- TrueP  i=4: 5 == [4..7]
+--    |
+--    +- TrueP  i=5: 6 == [4..7]
+--    |
+--    +- TrueP  i=6: 7 == [4..7]
+--    |
+--    +- FalseP i=7: 8 > 7 (Over)
+--    |
+--    +- FalseP i=8: 9 > 7 (Over)
+--    |
+--    `- FalseP i=9: 10 > 7 (Over)
+-- <BLANKLINE>
 --
---   >>> pe1' (pquantifier (peven * pgt 5) (puncurry (-) (pgt 2))) [1..10]
---   <BLANKLINE>
---   TrueP  PPartition | lefts=7 (0,1) | rights=3 (5,6)
---   |
---   `- TrueP  PPartition Predicate
---      |
---      `- TrueP  PFn (***) length | a=([1,2,3,4,5,7,9],[6,8,10]) | b=(7,3)
---         |
---         `- TrueP  PFn uncurry | a=(7,3) | b=4
---            |
---            `- TrueP  4 > 2
---   <BLANKLINE>
+-- >>> pe1' (pquantifier (peven * pgt 5) (puncurry (-) (pgt 2))) [1..10]
+-- <BLANKLINE>
+-- TrueP  PPartition | lefts=7 (0,1) | rights=3 (5,6)
+-- |
+-- `- TrueP  PPartition Predicate
+--    |
+--    `- TrueP  PFn (***) length | a=([1,2,3,4,5,7,9],[6,8,10]) | b=(7,3)
+--       |
+--       `- TrueP  PFn uncurry | a=(7,3) | b=4
+--          |
+--          `- TrueP  4 > 2
+-- <BLANKLINE>
 --
 pquantifier :: (Show a, Foldable t) => Pred z a -> Pred z (Int, Int) -> Pred z (t a)
 pquantifier p p12 = PPartition p (pstar2 "length" length p12)
@@ -3500,61 +3418,60 @@ pprismREither f p q = PFn "pprismre" (\(x, a) -> either (Left . (x,)) (Right . (
 -- these are useful else too much to remember
 -- | most common version of 'PPrism'
 --
---   >>> :set -XOverloadedStrings
---   >>> pe1' (pprism0 (^? key "glossary" . key "GlossDiv" . key "title" . _String) "s") json1
---   <BLANKLINE>
---   TrueP  PPrism (Just) [] "S"
---   |
---   `- TrueP  PStringCI "S" == "s"
---   <BLANKLINE>
+-- >>> pe1' (pprism0 (^? key "glossary" . key "GlossDiv" . key "title" . _String) "s") json1
+-- <BLANKLINE>
+-- TrueP  PPrism (Just) [] "S"
+-- |
+-- `- TrueP  PStringCI "S" == "s"
+-- <BLANKLINE>
 --
---   >>> let zzz = PLinear Rigid [preq (pprism0 (^? _Bool) 1), preq (pprism0 (^? _Number) 1)]
---   >>> pe2' (pprism0 (^? _Array) zzz) "[1,true]"
---   <BLANKLINE>
---   TrueP  PPrism (Just) [] [Number 1.0,Bool True]
---   |
---   `- TrueP  PLinear | debug=[OneMatch 0,OneMatch 1] match=[(0,[1]),(1,[0])]
---      |
---      +- TrueP  Predicates | PZipAnd | PZipExact | as=[1,1] | (bad,good)=(0,2)
---      |  |
---      |  `- TrueP  PLift and | a=[True,True]
---      |     |
---      |     +- TrueP  i=0
---      |     |  |
---      |     |  +- TrueP  1 == 1
---      |     |  |
---      |     |  `- PPrism
---      |     |     |
---      |     |     +- PConst FalseP
---      |     |     |
---      |     |     `- PConst TrueP
---      |     |
---      |     `- TrueP  i=1
---      |        |
---      |        +- TrueP  1 == 1
---      |        |
---      |        `- PPrism
---      |           |
---      |           +- PConst FalseP
---      |           |
---      |           `- PConst TrueP
---      |
---      +- TrueP  PLinear | OneMatch 0 a=Number 1.0 cnt=1 (i=1, a=Number 1.0)
---      |  |
---      |  +- FalseP i=0: PPrism (Nothing) [] | PConst a=()
---      |  |
---      |  `- TrueP  i=1: PPrism (Just) [] 1.0
---      |     |
---      |     `- TrueP  PConst a=1.0
---      |
---      `- TrueP  PLinear | OneMatch 1 a=Bool True cnt=1 (i=0, a=Bool True)
---         |
---         +- TrueP  i=0: PPrism (Just) [] True
---         |  |
---         |  `- TrueP  PConst a=True
---         |
---         `- FalseP i=1: PPrism (Nothing) [] | PConst a=()
---   <BLANKLINE>
+-- >>> let zzz = PLinear Rigid [preq (pprism0 (^? _Bool) 1), preq (pprism0 (^? _Number) 1)]
+-- >>> pe2' (pprism0 (^? _Array) zzz) "[1,true]"
+-- <BLANKLINE>
+-- TrueP  PPrism (Just) [] [Number 1.0,Bool True]
+-- |
+-- `- TrueP  PLinear | debug=[OneMatch 0,OneMatch 1] match=[(0,[1]),(1,[0])]
+--    |
+--    +- TrueP  Predicates | PZipAnd | PZipExact | as=[1,1] | (bad,good)=(0,2)
+--    |  |
+--    |  `- TrueP  PLift and | a=[True,True]
+--    |     |
+--    |     +- TrueP  i=0
+--    |     |  |
+--    |     |  +- TrueP  1 == 1
+--    |     |  |
+--    |     |  `- PPrism
+--    |     |     |
+--    |     |     +- PConst FalseP
+--    |     |     |
+--    |     |     `- PConst TrueP
+--    |     |
+--    |     `- TrueP  i=1
+--    |        |
+--    |        +- TrueP  1 == 1
+--    |        |
+--    |        `- PPrism
+--    |           |
+--    |           +- PConst FalseP
+--    |           |
+--    |           `- PConst TrueP
+--    |
+--    +- TrueP  PLinear | OneMatch 0 a=Number 1.0 cnt=1 (i=1, a=Number 1.0)
+--    |  |
+--    |  +- FalseP i=0: PPrism (Nothing) [] | PConst a=()
+--    |  |
+--    |  `- TrueP  i=1: PPrism (Just) [] 1.0
+--    |     |
+--    |     `- TrueP  PConst a=1.0
+--    |
+--    `- TrueP  PLinear | OneMatch 1 a=Bool True cnt=1 (i=0, a=Bool True)
+--       |
+--       +- TrueP  i=0: PPrism (Just) [] True
+--       |  |
+--       |  `- TrueP  PConst a=True
+--       |
+--       `- FalseP i=1: PPrism (Nothing) [] | PConst a=()
+-- <BLANKLINE>
 --
 pprism0, pprism1 :: (Show a, Show b) => (a -> Maybe b) -> Pred z b -> Pred z a
 pprism0 f = PPrism "" f pfalse
@@ -3567,7 +3484,7 @@ pprism' :: (Show b, Show c) => String -> (a -> Either b c) -> Pred z b -> Pred z
 pprism' s g = (PFn s g .) . PEither
 
 -- if pred is false we want to add a message! can use PTree but not great: really need to extend BoolPE
---     from Either (NonEmpty String) Bool to Either (NonEmpty String) (Bool,String) ??
+--   from Either (NonEmpty String) Bool to Either (NonEmpty String) (Bool,String) ??
 -- most common option: all required fields and no extra 'a's allowed that arent covered by a predicate
 
 preq, popt, pnever :: Pred z a -> (Pred z Int, Pred z a)
@@ -3605,59 +3522,60 @@ infixr 2 `PXor`
 infixr 2 `PEquiv`
 infixr 2 `PImpl`
 
+-- | indexing
 --
---   >>> pe' (5 .! peq 'f') ['a'..'z']
---   <BLANKLINE>
---   TrueP  PIx 5 'f'
---   |
---   `- TrueP  'f' == 'f'
---   <BLANKLINE>
+-- >>> pe' (5 .! peq 'f') ['a'..'z']
+-- <BLANKLINE>
+-- TrueP  PIx 5 'f'
+-- |
+-- `- TrueP  'f' == 'f'
+-- <BLANKLINE>
 --
---   >>> pe' (5 .! peq 'f' + 1) ['a'..'z']
---   <BLANKLINE>
---   TrueP  POr
---   |
---   +- TrueP  PIx 5 'f'
---   |  |
---   |  `- TrueP  'f' == 'f'
---   |
---   `- TrueP
---   <BLANKLINE>
+-- >>> pe' (5 .! peq 'f' + 1) ['a'..'z']
+-- <BLANKLINE>
+-- TrueP  POr
+-- |
+-- +- TrueP  PIx 5 'f'
+-- |  |
+-- |  `- TrueP  'f' == 'f'
+-- |
+-- `- TrueP
+-- <BLANKLINE>
 --
---   >>> pe' (5 .! peq 'f' * 1) ['a'..'z']
---   <BLANKLINE>
---   TrueP  PAnd
---   |
---   +- TrueP  PIx 5 'f'
---   |  |
---   |  `- TrueP  'f' == 'f'
---   |
---   `- TrueP
---   <BLANKLINE>
+-- >>> pe' (5 .! peq 'f' * 1) ['a'..'z']
+-- <BLANKLINE>
+-- TrueP  PAnd
+-- |
+-- +- TrueP  PIx 5 'f'
+-- |  |
+-- |  `- TrueP  'f' == 'f'
+-- |
+-- `- TrueP
+-- <BLANKLINE>
 --
---   >>> pe' (5 .! peq 'f' .&& 1) (['a'..'z'],())
---   <BLANKLINE>
---   TrueP  PBoth
---   |
---   +- TrueP  PIx 5 'f'
---   |  |
---   |  `- TrueP  'f' == 'f'
---   |
---   `- TrueP
---   <BLANKLINE>
+-- >>> pe' (5 .! peq 'f' `PBoth` 1) (['a'..'z'],())
+-- <BLANKLINE>
+-- TrueP  PBoth
+-- |
+-- +- TrueP  PIx 5 'f'
+-- |  |
+-- |  `- TrueP  'f' == 'f'
+-- |
+-- `- TrueP
+-- <BLANKLINE>
 --
---   >>> pe' (5 .! peq 'f' .&& PLen (pgt 4)) (['a'..'z'],"af")
---   <BLANKLINE>
---   FalseP PBoth
---   |
---   +- TrueP  PIx 5 'f'
---   |  |
---   |  `- TrueP  'f' == 'f'
---   |
---   `- FalseP PLen 2
---      |
---      `- FalseP 2 > 4
---   <BLANKLINE>
+-- >>> pe' (5 .! peq 'f' `PBoth` PLen (pgt 4)) (['a'..'z'],"af")
+-- <BLANKLINE>
+-- FalseP PBoth
+-- |
+-- +- TrueP  PIx 5 'f'
+-- |  |
+-- |  `- TrueP  'f' == 'f'
+-- |
+-- `- FalseP PLen 2
+--    |
+--    `- FalseP 2 > 4
+-- <BLANKLINE>
 --
 (.!) = pix
 (.!), pix :: (Eq (Index s), Show s, Show (IxValue s), Show (Index s),
@@ -3929,9 +3847,6 @@ instance Eq (Pred z a) where
   PGet p == PGet q = p == q
   PGet {} == _ = False
 
---  PPut z == PPut z1 = z == z1
---  PPut {} == _ = False
-
 -- | false and true predicates
 pfalse, ptrue :: Pred z a
 pfalse = PConst $ mkBool FalseP []
@@ -3952,24 +3867,24 @@ pfail = PConst . mkfail
 
 -- | most common use of 'POne' is to fail if empty or if too many elements
 --
---   >>> pe1' (pone $ pgt 4) []
---   <BLANKLINE>
---   FalseP POne empty! | PConst a=()
---   <BLANKLINE>
+-- >>> pe1' (pone $ pgt 4) []
+-- <BLANKLINE>
+-- FalseP POne empty! | PConst a=()
+-- <BLANKLINE>
 --
---   >>> pe1' (pone $ pgt 4) [10]
---   <BLANKLINE>
---   TrueP  POne 10
---   |
---   `- TrueP  10 > 4
---   <BLANKLINE>
+-- >>> pe1' (pone $ pgt 4) [10]
+-- <BLANKLINE>
+-- TrueP  POne 10
+-- |
+-- `- TrueP  10 > 4
+-- <BLANKLINE>
 --
---   >>> pe1' (pone $ pgt 4) [10,11,12]
---   <BLANKLINE>
---   FalseP POne extra values! a=10 s'=[11,12]
---   |
---   `- FalseP PConst a=(10,[11,12])
---   <BLANKLINE>
+-- >>> pe1' (pone $ pgt 4) [10,11,12]
+-- <BLANKLINE>
+-- FalseP POne extra values! a=10 s'=[11,12]
+-- |
+-- `- FalseP PConst a=(10,[11,12])
+-- <BLANKLINE>
 --
 pone :: (AsEmpty s, Cons s s a a, Show a, Show s) => Pred z a -> Pred z s
 pone = POne 0 0
@@ -4012,18 +3927,18 @@ pmaybeT :: (Show a, Show b, Foldable t) => (a -> Maybe b) -> Pred z [Either a b]
 pmaybeT f = PFn "pmaybeT" (map (maybeToEither f) . toList)
 
 --pmorph :: (Foldable t, Show a, Show b) =>
---     (a -> Maybe b) -> Pred z ([a], [b]) -> Pred z (t a)
+--   (a -> Maybe b) -> Pred z ([a], [b]) -> Pred z (t a)
 --pmorph f = pmaybeT f . PFn "partitionEithers" partitionEithers
 
 -- | lifts 'maybeToEither' over a []. emulates 'PMorph' but not as good messages
---   Examples:
+-- Examples:
 --
---   >>> pe1' (pmorph (^? ix 3 . to show) 1) [[1,2,3,4],[10..11],[],[19..30],[]]
---   <BLANKLINE>
---   TrueP  PFn pmorph | a=[[1,2,3,4],[10,11],[],[19,20,21,22,23,24,25,26,27,28,29,30],[]] | b=([[10,11],[],[]],["4","22"])
---   |
---   `- TrueP  PConst a=([[10,11],[],[]],["4","22"])
---   <BLANKLINE>
+-- >>> pe1' (pmorph (^? ix 3 . to show) 1) [[1,2,3,4],[10..11],[],[19..30],[]]
+-- <BLANKLINE>
+-- TrueP  PFn pmorph | a=[[1,2,3,4],[10,11],[],[19,20,21,22,23,24,25,26,27,28,29,30],[]] | b=([[10,11],[],[]],["4","22"])
+-- |
+-- `- TrueP  PConst a=([[10,11],[],[]],["4","22"])
+-- <BLANKLINE>
 --
 pmorph :: (Foldable t, Show a, Show b) =>
      (a -> Maybe b) -> Pred z ([a], [b]) -> Pred z (t a)
@@ -4064,20 +3979,20 @@ pne = PEq False
 
 -- | predicates for comparing values in a tuple
 --
---   >>> pe' peq2 (14,4)
---   <BLANKLINE>
---   FalseP PEq2 14 == 4
---   <BLANKLINE>
+-- >>> pe' peq2 (14,4)
+-- <BLANKLINE>
+-- FalseP PEq2 14 == 4
+-- <BLANKLINE>
 --
---   >>> pe' plt2 (14,4)
---   <BLANKLINE>
---   FalseP PCmp2 14 < 4
---   <BLANKLINE>
+-- >>> pe' plt2 (14,4)
+-- <BLANKLINE>
+-- FalseP PCmp2 14 < 4
+-- <BLANKLINE>
 --
---   >>> pe' pge2 (14,4)
---   <BLANKLINE>
---   TrueP  PCmp2 14 >= 4
---   <BLANKLINE>
+-- >>> pe' pge2 (14,4)
+-- <BLANKLINE>
+-- TrueP  PCmp2 14 >= 4
+-- <BLANKLINE>
 --
 plt2, ple2, pge2, pgt2 :: (Show a, Ord a) => Pred z (a, a)
 plt2 = PCmp2 Lt
@@ -4208,62 +4123,62 @@ pjsonIndex = PJson . matchIndex
 
 -- | match on json 'Number' and pull out any numbers that satisfy the function predicate
 --
---   >>> pe1' ((pjsonNumber (const True)) (psnds $ PLinear Rigid $ map (preq . peq) [24,39])) json2
---   <BLANKLINE>
---   FalseP PJson
---   |
---   +- FalseP PLinear | errors(2): NoMatch 2 | NoMatch 3
---   |  |
---   |  +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,2)
---   |  |  |
---   |  |  `- TrueP  PLift and | a=[True,True]
---   |  |     |
---   |  |     +- TrueP  i=0
---   |  |     |  |
---   |  |     |  +- TrueP  1 == 1
---   |  |     |  |
---   |  |     |  `- a == 24.0
---   |  |     |
---   |  |     `- TrueP  i=1
---   |  |        |
---   |  |        +- TrueP  1 == 1
---   |  |        |
---   |  |        `- a == 39.0
---   |  |
---   |  +- TrueP  PLinear | OneMatch 0 a=24.0 cnt=1 (i=0, a=24.0)
---   |  |  |
---   |  |  +- TrueP  i=0: 24.0 == 24.0
---   |  |  |
---   |  |  `- FalseP i=1: 24.0 == 39.0
---   |  |
---   |  +- TrueP  PLinear | OneMatch 1 a=39.0 cnt=1 (i=1, a=39.0)
---   |  |  |
---   |  |  +- FalseP i=0: 39.0 == 24.0
---   |  |  |
---   |  |  `- TrueP  i=1: 39.0 == 39.0
---   |  |
---   |  +- FalseP PLinear NoMatch 2 a=45.0
---   |  |  |
---   |  |  +- FalseP i=0: 45.0 == 24.0
---   |  |  |
---   |  |  `- FalseP i=1: 45.0 == 39.0
---   |  |
---   |  `- FalseP PLinear NoMatch 3 a=27.0
---   |     |
---   |     +- FalseP i=0: 27.0 == 24.0
---   |     |
---   |     `- FalseP i=1: 27.0 == 39.0
---   |
---   `- Debugging jpaths
---      |
---      +- i=0 | [JPIndex 0,JPKey "age",JPValue (Number 24.0)]
---      |
---      +- i=1 | [JPIndex 1,JPKey "age",JPValue (Number 39.0)]
---      |
---      +- i=2 | [JPIndex 2,JPKey "age",JPValue (Number 45.0)]
---      |
---      `- i=3 | [JPIndex 3,JPKey "age",JPValue (Number 27.0)]
---   <BLANKLINE>
+-- >>> pe1' ((pjsonNumber (const True)) (psnds $ PLinear Rigid $ map (preq . peq) [24,39])) json2
+-- <BLANKLINE>
+-- FalseP PJson
+-- |
+-- +- FalseP PLinear | errors(2): NoMatch 2 | NoMatch 3
+-- |  |
+-- |  +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,2)
+-- |  |  |
+-- |  |  `- TrueP  PLift and | a=[True,True]
+-- |  |     |
+-- |  |     +- TrueP  i=0
+-- |  |     |  |
+-- |  |     |  +- TrueP  1 == 1
+-- |  |     |  |
+-- |  |     |  `- a == 24.0
+-- |  |     |
+-- |  |     `- TrueP  i=1
+-- |  |        |
+-- |  |        +- TrueP  1 == 1
+-- |  |        |
+-- |  |        `- a == 39.0
+-- |  |
+-- |  +- TrueP  PLinear | OneMatch 0 a=24.0 cnt=1 (i=0, a=24.0)
+-- |  |  |
+-- |  |  +- TrueP  i=0: 24.0 == 24.0
+-- |  |  |
+-- |  |  `- FalseP i=1: 24.0 == 39.0
+-- |  |
+-- |  +- TrueP  PLinear | OneMatch 1 a=39.0 cnt=1 (i=1, a=39.0)
+-- |  |  |
+-- |  |  +- FalseP i=0: 39.0 == 24.0
+-- |  |  |
+-- |  |  `- TrueP  i=1: 39.0 == 39.0
+-- |  |
+-- |  +- FalseP PLinear NoMatch 2 a=45.0
+-- |  |  |
+-- |  |  +- FalseP i=0: 45.0 == 24.0
+-- |  |  |
+-- |  |  `- FalseP i=1: 45.0 == 39.0
+-- |  |
+-- |  `- FalseP PLinear NoMatch 3 a=27.0
+-- |     |
+-- |     +- FalseP i=0: 27.0 == 24.0
+-- |     |
+-- |     `- FalseP i=1: 27.0 == 39.0
+-- |
+-- `- Debugging jpaths
+--    |
+--    +- i=0 | [JPIndex 0,JPKey "age",JPValue (Number 24.0)]
+--    |
+--    +- i=1 | [JPIndex 1,JPKey "age",JPValue (Number 39.0)]
+--    |
+--    +- i=2 | [JPIndex 2,JPKey "age",JPValue (Number 45.0)]
+--    |
+--    `- i=3 | [JPIndex 3,JPKey "age",JPValue (Number 27.0)]
+-- <BLANKLINE>
 --
 pjsonNumber :: (Scientific -> Bool) -> Pred z [(NonEmpty JPath, Scientific)] -> Pred z Value
 pjsonNumber = PJson . matchNumber
@@ -4302,40 +4217,40 @@ jnumbers = PMorph (^? _Number)
 
 -- | pull out all the numbers but fail if not all pulled
 --
---   >>> pe2' (PJsonKey "AgE" $ psnds $ jnumbers' $ PShow 1) json2
---   <BLANKLINE>
---   TrueP  PJsonKey
---   |
---   +- TrueP  PMorph [Number 24.0,Number 39.0,Number 45.0,Number 27.0] bad=[] good=[24.0,39.0,45.0,27.0]
---   |  |
---   |  `- TrueP  PBoth
---   |     |
---   |     +- TrueP  PNull length=0 as=[]
---   |     |
---   |     `- TrueP  PShow
---   |        |
---   |        +- TrueP  PConst a=[24.0,39.0,45.0,27.0]
---   |        |
---   |        `- ===== PShow =====
---   |           |
---   |           +- i=0 a=24.0
---   |           |
---   |           +- i=1 a=39.0
---   |           |
---   |           +- i=2 a=45.0
---   |           |
---   |           `- i=3 a=27.0
---   |
---   `- Debugging jpaths
---      |
---      +- i=0 | key=age | [JPIndex 0,JPKey "age"] | value=Number 24.0
---      |
---      +- i=1 | key=age | [JPIndex 1,JPKey "age"] | value=Number 39.0
---      |
---      +- i=2 | key=age | [JPIndex 2,JPKey "age"] | value=Number 45.0
---      |
---      `- i=3 | key=age | [JPIndex 3,JPKey "age"] | value=Number 27.0
---   <BLANKLINE>
+-- >>> pe2' (PJsonKey "AgE" $ psnds $ jnumbers' $ PShow 1) json2
+-- <BLANKLINE>
+-- TrueP  PJsonKey
+-- |
+-- +- TrueP  PMorph [Number 24.0,Number 39.0,Number 45.0,Number 27.0] bad=[] good=[24.0,39.0,45.0,27.0]
+-- |  |
+-- |  `- TrueP  PBoth
+-- |     |
+-- |     +- TrueP  PNull length=0 as=[]
+-- |     |
+-- |     `- TrueP  PShow
+-- |        |
+-- |        +- TrueP  PConst a=[24.0,39.0,45.0,27.0]
+-- |        |
+-- |        `- ===== PShow =====
+-- |           |
+-- |           +- i=0 a=24.0
+-- |           |
+-- |           +- i=1 a=39.0
+-- |           |
+-- |           +- i=2 a=45.0
+-- |           |
+-- |           `- i=3 a=27.0
+-- |
+-- `- Debugging jpaths
+--    |
+--    +- i=0 | key=age | [JPIndex 0,JPKey "age"] | value=Number 24.0
+--    |
+--    +- i=1 | key=age | [JPIndex 1,JPKey "age"] | value=Number 39.0
+--    |
+--    +- i=2 | key=age | [JPIndex 2,JPKey "age"] | value=Number 45.0
+--    |
+--    `- i=3 | key=age | [JPIndex 3,JPKey "age"] | value=Number 27.0
+-- <BLANKLINE>
 --
 jnumbers' :: (Foldable t, AsValue s, Show s) => Pred z [Scientific] -> Pred z (t s)
 jnumbers' = PMorph (^? _Number) . PBoth PNull
@@ -4345,32 +4260,32 @@ jstrings = PMorph (^? _String . to T.unpack)
 
 -- | pull out all the strings but fail if not all pulled
 --
---   >>> pe' (PJsonKey "title" $ psnds $ jstrings' $ PShow 1) json1
---   <BLANKLINE>
---   TrueP  PJsonKey
---   |
---   +- TrueP  PMorph
---   |  |
---   |  `- TrueP  PBoth
---   |     |
---   |     +- TrueP  PNull length=0
---   |     |
---   |     `- TrueP  PShow
---   |        |
---   |        +- TrueP
---   |        |
---   |        `- ===== PShow =====
---   |           |
---   |           +- i=0 a="S"
---   |           |
---   |           `- i=1 a="example glossary"
---   |
---   `- Debugging jpaths
---      |
---      +- i=0 | key=title
---      |
---      `- i=1 | key=title
---   <BLANKLINE>
+-- >>> pe' (PJsonKey "title" $ psnds $ jstrings' $ PShow 1) json1
+-- <BLANKLINE>
+-- TrueP  PJsonKey
+-- |
+-- +- TrueP  PMorph
+-- |  |
+-- |  `- TrueP  PBoth
+-- |     |
+-- |     +- TrueP  PNull length=0
+-- |     |
+-- |     `- TrueP  PShow
+-- |        |
+-- |        +- TrueP
+-- |        |
+-- |        `- ===== PShow =====
+-- |           |
+-- |           +- i=0 a="S"
+-- |           |
+-- |           `- i=1 a="example glossary"
+-- |
+-- `- Debugging jpaths
+--    |
+--    +- i=0 | key=title
+--    |
+--    `- i=1 | key=title
+-- <BLANKLINE>
 --
 jstrings' :: (Foldable t, AsValue s, Show s) => Pred z [String] -> Pred z (t s)
 jstrings' = PMorph (^? _String . to T.unpack) . PBoth PNull
@@ -4410,17 +4325,16 @@ jvalue = PPrism "jvalue" (^? _Value)
 
 -- | change a predicate on 'Value' to a predicate 'Array' but if fails call the () predicate
 --
---   >>> :set -XOverloadedStrings
---   >>> pe' (jarray 0 $ PIx 2 0 $ PIx "firstName" 0 $ "johan") json2
---   <BLANKLINE>
---   FalseP PPrism (Just) [jarray]
---   |
---   `- FalseP PIx 2 Object (fromList [("lastName",String "Doe"),("age",Number 45.0),("firstName",String "John"),("likesPizza",Bool ...
---      |
---      `- FalseP PIx "firstName" String "John"
---         |
---         `- FalseP PStringCI String "John" == String "johan"
---   <BLANKLINE>
+-- >>> pe' (jarray 0 $ PIx 2 0 $ PIx "firstName" 0 $ "johan") json2
+-- <BLANKLINE>
+-- FalseP PPrism (Just) [jarray]
+-- |
+-- `- FalseP PIx 2 Object (fromList [("lastName",String "Doe"),("age",Number 45.0),("firstName",String "John"),("likesPizza",Bool ...
+--    |
+--    `- FalseP PIx "firstName" String "John"
+--       |
+--       `- FalseP PStringCI String "John" == String "johan"
+-- <BLANKLINE>
 --
 jarray :: (AsValue s, Show s) => Pred z () -> Pred z (Vector Value) -> Pred z s
 jarray = PPrism "jarray" (^? _Array)
@@ -4444,22 +4358,22 @@ pjvalues = phide . PFn "pjvalues" (fmap (snd . snd))
 
 -- | finds difference between two dates in days. uses 'pcu'
 --
---   >>> let dt = UTCTime (read "2018-04-19") 360
---   >>> pe' (pdays id (pgt 10)) (dt, dt & date %~ addDays 15)
---   <BLANKLINE>
---   TrueP  PFn uncurry | a=(2018-04-19 00:06:00 UTC,2018-05-04 00:06:00 UTC) | b=15
---   |
---   `- TrueP  15 > 10
---   <BLANKLINE>
+-- >>> let dt = UTCTime (read "2018-04-19") 360
+-- >>> pe' (pdays id (pgt 10)) (dt, dt & date %~ addDays 15)
+-- <BLANKLINE>
+-- TrueP  PFn uncurry | a=(2018-04-19 00:06:00 UTC,2018-05-04 00:06:00 UTC) | b=15
+-- |
+-- `- TrueP  15 > 10
+-- <BLANKLINE>
 --
---   >>> let dt = UTCTime (read "2018-04-19") 360
---   >>> let dt1 = UTCTime (read "2018-04-25") 380
---   >>> pe2' (pdays id (PRange 4 6)) (dt,dt1)
---   <BLANKLINE>
---   TrueP  PFn uncurry | a=(2018-04-19 00:06:00 UTC,2018-04-25 00:06:20 UTC) | b=6
---   |
---   `- TrueP  6 == [4..6]
---   <BLANKLINE>
+-- >>> let dt = UTCTime (read "2018-04-19") 360
+-- >>> let dt1 = UTCTime (read "2018-04-25") 380
+-- >>> pe2' (pdays id (PRange 4 6)) (dt,dt1)
+-- <BLANKLINE>
+-- TrueP  PFn uncurry | a=(2018-04-19 00:06:00 UTC,2018-04-25 00:06:20 UTC) | b=6
+-- |
+-- `- TrueP  6 == [4..6]
+-- <BLANKLINE>
 --
 pdays :: (Show a, Dateable a) => (x -> (a, a)) -> Pred z Integer -> Pred z x
 pdays f = pcu f (on (flip diffDays) (^. date))
@@ -4474,14 +4388,14 @@ pminutes f = pcu f (on (\(d, t) (d1, t1) -> 24 * 60 * diffDays d1 d  + truncate 
 
 -- | finds difference between two dates in seconds. uses 'pcu'
 --
---   >>> let dt = UTCTime (read "2018-04-19") 360
---   >>> let dt1 = UTCTime (read "2018-04-19") 380
---   >>> pe2' (pseconds id (PRange 19 22)) (dt,dt1)
---   <BLANKLINE>
---   TrueP  PFn uncurry | a=(2018-04-19 00:06:00 UTC,2018-04-19 00:06:20 UTC) | b=20
---   |
---   `- TrueP  20 == [19..22]
---   <BLANKLINE>
+-- >>> let dt = UTCTime (read "2018-04-19") 360
+-- >>> let dt1 = UTCTime (read "2018-04-19") 380
+-- >>> pe2' (pseconds id (PRange 19 22)) (dt,dt1)
+-- <BLANKLINE>
+-- TrueP  PFn uncurry | a=(2018-04-19 00:06:00 UTC,2018-04-19 00:06:20 UTC) | b=20
+-- |
+-- `- TrueP  20 == [19..22]
+-- <BLANKLINE>
 --
 pseconds :: (Show a, Dateable a, Timeable a) => (x -> (a, a)) -> Pred z Integer -> Pred z x
 pseconds f = pcu f (on (\(d, t) (d1, t1) -> 24 * 60 * 60 * diffDays d1 d  + truncate (t1-t)) ((^. date) &&& (^. timeAsDiff)))
@@ -4540,72 +4454,72 @@ pdists mx ps = concat $ ps <&> pdist mx
 
 -- | only Loose makes sense with Dist cos Rigid will find all errors just using plain PLinear!
 --
---   >>> pe1' (plinearDist 2 [dopt "idris"]) ["idirs","haskell"]
---   <BLANKLINE>
---   FalseP PLinear Failed Pred [Int]
---   |
---   +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(1,2)
---   |  |
---   |  `- FalseP PLift and | a=[True,False,True]
---   |     |
---   |     +- TrueP  i=0
---   |     |  |
---   |     |  +- TrueP  0 == [0..1]
---   |     |  |
---   |     |  `- PStringCS a == "idris"
---   |     |
---   |     +- FalseP i=1
---   |     |  |
---   |     |  +- FalseP 1 > 0 (Over)
---   |     |  |
---   |     |  `- PDistCI "idris"
---   |     |     |
---   |     |     `- a `elem` [1..2]
---   |     |
---   |     `- TrueP  i=2
---   |        |
---   |        +- TrueP  0 == 0
---   |        |
---   |        `- PAnd
---   |           |
---   |           +- PStringCI a == "idris"
---   |           |
---   |           `- PNot
---   |              |
---   |              `- PStringCS a == "idris"
---   |
---   +- TrueP  PLinear | OneMatch 0 a="idirs" cnt=1 (i=1, a="idirs")
---   |  |
---   |  +- FalseP i=0: PStringCS "idirs" == "idris"
---   |  |
---   |  +- TrueP  i=1: PDistCI | dist=2 | s=idris | t=idirs
---   |  |  |
---   |  |  `- TrueP  2 == [1..2]
---   |  |
---   |  `- FalseP i=2: PAnd
---   |     |
---   |     +- FalseP PStringCI "idirs" == "idris"
---   |     |
---   |     `- TrueP  PNot
---   |        |
---   |        `- FalseP PStringCS "idirs" == "idris"
---   |
---   `- TrueP  PLinear NoMatch 1 a="haskell"
---      |
---      +- FalseP i=0: PStringCS "haskell" == "idris"
---      |
---      +- FalseP i=1: PDistCI | dist=7 | s=idris | t=haskell
---      |  |
---      |  `- FalseP 7 > 2 (Over)
---      |
---      `- FalseP i=2: PAnd
---         |
---         +- FalseP PStringCI "haskell" == "idris"
---         |
---         `- TrueP  PNot
---            |
---            `- FalseP PStringCS "haskell" == "idris"
---   <BLANKLINE>
+-- >>> pe1' (plinearDist 2 [dopt "idris"]) ["idirs","haskell"]
+-- <BLANKLINE>
+-- FalseP PLinear Failed Pred [Int]
+-- |
+-- +- FalseP Predicates | PZipAnd | PZipExact | (bad,good)=(1,2)
+-- |  |
+-- |  `- FalseP PLift and | a=[True,False,True]
+-- |     |
+-- |     +- TrueP  i=0
+-- |     |  |
+-- |     |  +- TrueP  0 == [0..1]
+-- |     |  |
+-- |     |  `- PStringCS a == "idris"
+-- |     |
+-- |     +- FalseP i=1
+-- |     |  |
+-- |     |  +- FalseP 1 > 0 (Over)
+-- |     |  |
+-- |     |  `- PDistCI "idris"
+-- |     |     |
+-- |     |     `- a `elem` [1..2]
+-- |     |
+-- |     `- TrueP  i=2
+-- |        |
+-- |        +- TrueP  0 == 0
+-- |        |
+-- |        `- PAnd
+-- |           |
+-- |           +- PStringCI a == "idris"
+-- |           |
+-- |           `- PNot
+-- |              |
+-- |              `- PStringCS a == "idris"
+-- |
+-- +- TrueP  PLinear | OneMatch 0 a="idirs" cnt=1 (i=1, a="idirs")
+-- |  |
+-- |  +- FalseP i=0: PStringCS "idirs" == "idris"
+-- |  |
+-- |  +- TrueP  i=1: PDistCI | dist=2 | s=idris | t=idirs
+-- |  |  |
+-- |  |  `- TrueP  2 == [1..2]
+-- |  |
+-- |  `- FalseP i=2: PAnd
+-- |     |
+-- |     +- FalseP PStringCI "idirs" == "idris"
+-- |     |
+-- |     `- TrueP  PNot
+-- |        |
+-- |        `- FalseP PStringCS "idirs" == "idris"
+-- |
+-- `- TrueP  PLinear NoMatch 1 a="haskell"
+--    |
+--    +- FalseP i=0: PStringCS "haskell" == "idris"
+--    |
+--    +- FalseP i=1: PDistCI | dist=7 | s=idris | t=haskell
+--    |  |
+--    |  `- FalseP 7 > 2 (Over)
+--    |
+--    `- FalseP i=2: PAnd
+--       |
+--       +- FalseP PStringCI "haskell" == "idris"
+--       |
+--       `- TrueP  PNot
+--          |
+--          `- FalseP PStringCS "haskell" == "idris"
+-- <BLANKLINE>
 --
 plinearDist :: (Foldable t, SConv s) => Int -> [Dist z s] -> Pred z (t s)
 plinearDist n ds = PLinear Loose (pdists n ds)
@@ -4641,274 +4555,270 @@ dneverCI = Dist (PRange 0 0) CI
 
 -- | prefix match: most common version is fail if no match and use Longest match
 --
---   >>> pe2' (pregex (((,,) . read @Int) <$> some (psym isDigit) <*> few (sym 'x') <*> some (psym isDigit)) $ 1) "123x1"
---   <BLANKLINE>
---   TrueP  PRegex RLong as="123x1" b=(123,"x","1") rs=""
---   |
---   `- TrueP  PConst a=((123,"x","1"),"")
---   <BLANKLINE>
+-- >>> pe2' (pregex (((,,) . read @Int) <$> some (psym isDigit) <*> few (sym 'x') <*> some (psym isDigit)) $ 1) "123x1"
+-- <BLANKLINE>
+-- TrueP  PRegex RLong as="123x1" b=(123,"x","1") rs=""
+-- |
+-- `- TrueP  PConst a=((123,"x","1"),"")
+-- <BLANKLINE>
 --
---   >>> pe2' (pregex (((,,) . read @Int) <$> some (psym isDigit) <*> few (psym isDigit) <*> some (psym isDigit)) $ 1) "123x1"
---   <BLANKLINE>
---   TrueP  PRegex RLong as="123x1" b=(12,"","3") rs="x1"
---   |
---   `- TrueP  PConst a=((12,"","3"),"x1")
---   <BLANKLINE>
+-- >>> pe2' (pregex (((,,) . read @Int) <$> some (psym isDigit) <*> few (psym isDigit) <*> some (psym isDigit)) $ 1) "123x1"
+-- <BLANKLINE>
+-- TrueP  PRegex RLong as="123x1" b=(12,"","3") rs="x1"
+-- |
+-- `- TrueP  PConst a=((12,"","3"),"x1")
+-- <BLANKLINE>
 --
---   >>> pe2' (pregex (((,,) . read @Int) <$> some (psym isDigit) <*> few (psym isDigit) <*> some (psym isDigit)) $ 1) "1231"
---   <BLANKLINE>
---   TrueP  PRegex RLong as="1231" b=(123,"","1") rs=""
---   |
---   `- TrueP  PConst a=((123,"","1"),"")
---   <BLANKLINE>
+-- >>> pe2' (pregex (((,,) . read @Int) <$> some (psym isDigit) <*> few (psym isDigit) <*> some (psym isDigit)) $ 1) "1231"
+-- <BLANKLINE>
+-- TrueP  PRegex RLong as="1231" b=(123,"","1") rs=""
+-- |
+-- `- TrueP  PConst a=((123,"","1"),"")
+-- <BLANKLINE>
 --
---   >>> pe2' (pregex ((,,) <$> ratio <* sym 'x' <*> few (psym isDigit) <*> int) 1) "123x987"
---   <BLANKLINE>
---   TrueP  PRegex RLong as="123x987" b=(123 % 1,"",987) rs=""
---   |
---   `- TrueP  PConst a=((123 % 1,"",987),"")
---   <BLANKLINE>
+-- >>> pe2' (pregex ((,,) <$> ratio <* sym 'x' <*> few (psym isDigit) <*> int) 1) "123x987"
+-- <BLANKLINE>
+-- TrueP  PRegex RLong as="123x987" b=(123 % 1,"",987) rs=""
+-- |
+-- `- TrueP  PConst a=((123 % 1,"",987),"")
+-- <BLANKLINE>
 --
 pregex  :: (Foldable t, Show a, Show b) => RE a b -> Pred z (b,[a]) -> Pred z (t a)
 pregex r = PRegex RLong r 0
 
 -- | infix match: most common version is fail if no match and use Longest match
 --
---   >>> pe2' (pregexi (read @Int <$> some (psym isDigit)) 1) "abc123def"
---   <BLANKLINE>
---   TrueP  PRegexI RLong as="abc123def" b=123 used="abc" remaining="def"
---   |
---   `- TrueP  PConst a=("abc",123,"def")
---   <BLANKLINE>
+-- >>> pe2' (pregexi (read @Int <$> some (psym isDigit)) 1) "abc123def"
+-- <BLANKLINE>
+-- TrueP  PRegexI RLong as="abc123def" b=123 used="abc" remaining="def"
+-- |
+-- `- TrueP  PConst a=("abc",123,"def")
+-- <BLANKLINE>
 --
---   >>> pe2' (pregexi (read @Int <$> some (psym isDigit)) $ p_2 (pgt 122)) "abc123def"
---   <BLANKLINE>
---   TrueP  PRegexI RLong as="abc123def" b=123 used="abc" remaining="def"
---   |
---   `- TrueP  PFn _2 | a=("abc",123,"def") | b=123
---      |
---      `- TrueP  123 > 122
---   <BLANKLINE>
+-- >>> pe2' (pregexi (read @Int <$> some (psym isDigit)) $ p_2 (pgt 122)) "abc123def"
+-- <BLANKLINE>
+-- TrueP  PRegexI RLong as="abc123def" b=123 used="abc" remaining="def"
+-- |
+-- `- TrueP  PFn _2 | a=("abc",123,"def") | b=123
+--    |
+--    `- TrueP  123 > 122
+-- <BLANKLINE>
 --
---   >>> pe2' (pregex ((read @Integer <$> some (psym isDigit)) <|> pure 999) $ p_1 (pgt 122)) "123def"
---   <BLANKLINE>
---   TrueP  PRegex RLong as="123def" b=123 rs="def"
---   |
---   `- TrueP  PFn _1 | a=(123,"def") | b=123
---      |
---      `- TrueP  123 > 122
---   <BLANKLINE>
+-- >>> pe2' (pregex ((read @Integer <$> some (psym isDigit)) <|> pure 999) $ p_1 (pgt 122)) "123def"
+-- <BLANKLINE>
+-- TrueP  PRegex RLong as="123def" b=123 rs="def"
+-- |
+-- `- TrueP  PFn _1 | a=(123,"def") | b=123
+--    |
+--    `- TrueP  123 > 122
+-- <BLANKLINE>
 --
---   >>> pe2' (pregexi ((read @Int <$> some (psym isDigit)) <|> pure 999) $ p_2 (pgt 122)) "abc123def"
---   <BLANKLINE>
---   TrueP  PRegexI RLong as="abc123def" b=999 used="" remaining="abc123def"
---   |
---   `- TrueP  PFn _2 | a=("",999,"abc123def") | b=999
---      |
---      `- TrueP  999 > 122
---   <BLANKLINE>
+-- >>> pe2' (pregexi ((read @Int <$> some (psym isDigit)) <|> pure 999) $ p_2 (pgt 122)) "abc123def"
+-- <BLANKLINE>
+-- TrueP  PRegexI RLong as="abc123def" b=999 used="" remaining="abc123def"
+-- |
+-- `- TrueP  PFn _2 | a=("",999,"abc123def") | b=999
+--    |
+--    `- TrueP  999 > 122
+-- <BLANKLINE>
 --
---   >>> pe2' (pregexi (intersperseNP 4 (sym '.') int) $ p_1 PNull * p_2 (PForAll (ple 255)) * p_2 (PLen (peq 4))) "start123.223.1.256end"
---   <BLANKLINE>
---   FalseP PRegexI RLong as="start123.223.1.256end" b=[123,223,1,256] used="start" remaining="end"
---   |
---   `- FalseP PAnd
---      |
---      +- FalseP PAnd
---      |  |
---      |  +- FalseP PFn _1 | a=("start",[123,223,1,256],"end") | b="start"
---      |  |  |
---      |  |  `- FalseP PNull length=5 as="start"
---      |  |
---      |  `- FalseP PFn _2 | a=("start",[123,223,1,256],"end") | b=[123,223,1,256]
---      |     |
---      |     `- FalseP PForAll | cnt=1 (i=3, a=256)
---      |        |
---      |        +- TrueP  i=0: 123 <= 255
---      |        |
---      |        +- TrueP  i=1: 223 <= 255
---      |        |
---      |        +- TrueP  i=2: 1 <= 255
---      |        |
---      |        `- FalseP i=3: 256 <= 255
---      |
---      `- TrueP  PFn _2 | a=("start",[123,223,1,256],"end") | b=[123,223,1,256]
---         |
---         `- TrueP  PLen 4 as=[123,223,1,256]
---            |
---            `- TrueP  4 == 4
---   <BLANKLINE>
+-- >>> pe2' (pregexi (intersperseNP 4 (sym '.') int) $ p_1 PNull * p_2 (PForAll (ple 255)) * p_2 (PLen (peq 4))) "start123.223.1.256end"
+-- <BLANKLINE>
+-- FalseP PRegexI RLong as="start123.223.1.256end" b=[123,223,1,256] used="start" remaining="end"
+-- |
+-- `- FalseP PAnd
+--    |
+--    +- FalseP PAnd
+--    |  |
+--    |  +- FalseP PFn _1 | a=("start",[123,223,1,256],"end") | b="start"
+--    |  |  |
+--    |  |  `- FalseP PNull length=5 as="start"
+--    |  |
+--    |  `- FalseP PFn _2 | a=("start",[123,223,1,256],"end") | b=[123,223,1,256]
+--    |     |
+--    |     `- FalseP PForAll | cnt=1 (i=3, a=256)
+--    |        |
+--    |        +- TrueP  i=0: 123 <= 255
+--    |        |
+--    |        +- TrueP  i=1: 223 <= 255
+--    |        |
+--    |        +- TrueP  i=2: 1 <= 255
+--    |        |
+--    |        `- FalseP i=3: 256 <= 255
+--    |
+--    `- TrueP  PFn _2 | a=("start",[123,223,1,256],"end") | b=[123,223,1,256]
+--       |
+--       `- TrueP  PLen 4 as=[123,223,1,256]
+--          |
+--          `- TrueP  4 == 4
+-- <BLANKLINE>
 --
 pregexi :: (Foldable t, Show a, Show b) => RE a b -> Pred z ([a],b,[a]) -> Pred z (t a)
 pregexi r = PRegexI RLong r 0
 
 -- | most common usecase. match all 'peq2' and use 'RLong' ie longest match
 --
---   >>> :set -XOverloadedStrings
---   >>> pe2' (pregexs [int, "." *> int, "." *> int, "." *> int] $ PBoth (PLen (peq 4) * PForAll (PRange 0 255)) PNull) "123.33.281.2abcdef"
---   <BLANKLINE>
---   FalseP PRegexs (4) | matched all(4) | leftovers="abcdef" | as="123.33.281.2abcdef"
---   |
---   +- FalseP PBoth
---   |  |
---   |  +- TrueP  PEq2 4 == 4
---   |  |
---   |  `- FalseP PBoth
---   |     |
---   |     +- FalseP PAnd
---   |     |  |
---   |     |  +- TrueP  PLen 4 as=[123,33,281,2]
---   |     |  |  |
---   |     |  |  `- TrueP  4 == 4
---   |     |  |
---   |     |  `- FalseP PForAll | cnt=1 (i=2, a=281)
---   |     |     |
---   |     |     +- TrueP  i=0: 123 == [0..255]
---   |     |     |
---   |     |     +- TrueP  i=1: 33 == [0..255]
---   |     |     |
---   |     |     +- FalseP i=2: 281 > 255 (Over)
---   |     |     |
---   |     |     `- TrueP  i=3: 2 == [0..255]
---   |     |
---   |     `- FalseP PNull length=6 as="abcdef"
---   |
---   `- matched all(4) | leftovers="abcdef"
---      |
---      +- i=0 | b=123 | used="123" | remaining=".33.281.2abcdef"
---      |
---      +- i=1 | b=33 | used=".33" | remaining=".281.2abcdef"
---      |
---      +- i=2 | b=281 | used=".281" | remaining=".2abcdef"
---      |
---      `- i=3 | b=2 | used=".2" | remaining="abcdef"
---   <BLANKLINE>
+-- >>> pe2' (pregexs [int, "." *> int, "." *> int, "." *> int] $ PBoth (PLen (peq 4) * PForAll (PRange 0 255)) PNull) "123.33.281.2abcdef"
+-- <BLANKLINE>
+-- FalseP PRegexs (4) | matched all(4) | leftovers="abcdef" | as="123.33.281.2abcdef"
+-- |
+-- +- FalseP PBoth
+-- |  |
+-- |  +- TrueP  PEq2 4 == 4
+-- |  |
+-- |  `- FalseP PBoth
+-- |     |
+-- |     +- FalseP PAnd
+-- |     |  |
+-- |     |  +- TrueP  PLen 4 as=[123,33,281,2]
+-- |     |  |  |
+-- |     |  |  `- TrueP  4 == 4
+-- |     |  |
+-- |     |  `- FalseP PForAll | cnt=1 (i=2, a=281)
+-- |     |     |
+-- |     |     +- TrueP  i=0: 123 == [0..255]
+-- |     |     |
+-- |     |     +- TrueP  i=1: 33 == [0..255]
+-- |     |     |
+-- |     |     +- FalseP i=2: 281 > 255 (Over)
+-- |     |     |
+-- |     |     `- TrueP  i=3: 2 == [0..255]
+-- |     |
+-- |     `- FalseP PNull length=6 as="abcdef"
+-- |
+-- `- matched all(4) | leftovers="abcdef"
+--    |
+--    +- i=0 | b=123 | used="123" | remaining=".33.281.2abcdef"
+--    |
+--    +- i=1 | b=33 | used=".33" | remaining=".281.2abcdef"
+--    |
+--    +- i=2 | b=281 | used=".281" | remaining=".2abcdef"
+--    |
+--    `- i=3 | b=2 | used=".2" | remaining="abcdef"
+-- <BLANKLINE>
 --
 --
---   >>> pe2' (pregexs (int : replicate 3 ("." *> int)) 1) "123.33.1.2"
---   <BLANKLINE>
---   TrueP  PRegexs (4) | matched all(4) | leftovers="" | as="123.33.1.2"
---   |
---   +- TrueP  PBoth
---   |  |
---   |  +- TrueP  PEq2 4 == 4
---   |  |
---   |  `- TrueP  PConst a=([123,33,1,2],"")
---   |
---   `- matched all(4) | leftovers=""
---      |
---      +- i=0 | b=123 | used="123" | remaining=".33.1.2"
---      |
---      +- i=1 | b=33 | used=".33" | remaining=".1.2"
---      |
---      +- i=2 | b=1 | used=".1" | remaining=".2"
---      |
---      `- i=3 | b=2 | used=".2" | remaining=""
---   <BLANKLINE>
+-- >>> pe2' (pregexs (int : replicate 3 ("." *> int)) 1) "123.33.1.2"
+-- <BLANKLINE>
+-- TrueP  PRegexs (4) | matched all(4) | leftovers="" | as="123.33.1.2"
+-- |
+-- +- TrueP  PBoth
+-- |  |
+-- |  +- TrueP  PEq2 4 == 4
+-- |  |
+-- |  `- TrueP  PConst a=([123,33,1,2],"")
+-- |
+-- `- matched all(4) | leftovers=""
+--    |
+--    +- i=0 | b=123 | used="123" | remaining=".33.1.2"
+--    |
+--    +- i=1 | b=33 | used=".33" | remaining=".1.2"
+--    |
+--    +- i=2 | b=1 | used=".1" | remaining=".2"
+--    |
+--    `- i=3 | b=2 | used=".2" | remaining=""
+-- <BLANKLINE>
 --
---   >>> :set -XOverloadedStrings
---   >>> pe2' (pregexs [int, "." *> int, "." *> int, "." *> int] $ PBoth (PLen (peq 4) * PForAll (PRange 0 255)) PNull) "123.33x.281.2abcdef"
---   <BLANKLINE>
---   FalseP PRegexs (4) | only matched 2 of {4} | leftovers="x.281.2abcdef" | as="123.33x.281.2abcdef"
---   |
---   +- FalseP PBoth
---   |  |
---   |  +- FalseP not all matched | PEq2 4 == 2
---   |  |
---   |  `- FalseP PBoth
---   |     |
---   |     +- FalseP PAnd
---   |     |  |
---   |     |  +- FalseP PLen 2 as=[123,33]
---   |     |  |  |
---   |     |  |  `- FalseP 2 == 4
---   |     |  |
---   |     |  `- TrueP  PForAll
---   |     |     |
---   |     |     +- TrueP  i=0: 123 == [0..255]
---   |     |     |
---   |     |     `- TrueP  i=1: 33 == [0..255]
---   |     |
---   |     `- FalseP PNull length=13 as="x.281.2abcdef"
---   |
---   `- only matched 2 of {4} | leftovers="x.281.2abcdef"
---      |
---      +- i=0 | b=123 | used="123" | remaining=".33x.281.2abcdef"
---      |
---      `- i=1 | b=33 | used=".33" | remaining="x.281.2abcdef"
---   <BLANKLINE>
+-- >>> pe2' (pregexs [int, "." *> int, "." *> int, "." *> int] $ PBoth (PLen (peq 4) * PForAll (PRange 0 255)) PNull) "123.33x.281.2abcdef"
+-- <BLANKLINE>
+-- FalseP PRegexs (4) | only matched 2 of {4} | leftovers="x.281.2abcdef" | as="123.33x.281.2abcdef"
+-- |
+-- +- FalseP PBoth
+-- |  |
+-- |  +- FalseP not all matched | PEq2 4 == 2
+-- |  |
+-- |  `- FalseP PBoth
+-- |     |
+-- |     +- FalseP PAnd
+-- |     |  |
+-- |     |  +- FalseP PLen 2 as=[123,33]
+-- |     |  |  |
+-- |     |  |  `- FalseP 2 == 4
+-- |     |  |
+-- |     |  `- TrueP  PForAll
+-- |     |     |
+-- |     |     +- TrueP  i=0: 123 == [0..255]
+-- |     |     |
+-- |     |     `- TrueP  i=1: 33 == [0..255]
+-- |     |
+-- |     `- FalseP PNull length=13 as="x.281.2abcdef"
+-- |
+-- `- only matched 2 of {4} | leftovers="x.281.2abcdef"
+--    |
+--    +- i=0 | b=123 | used="123" | remaining=".33x.281.2abcdef"
+--    |
+--    `- i=1 | b=33 | used=".33" | remaining="x.281.2abcdef"
+-- <BLANKLINE>
 --
---   >>> :set -XOverloadedStrings
---   >>> pe2' (pregexs (replicate 6 (double <* spaces)) $ PFst $ PForAll (PRange 54 304)) "213   1223 23    55 99 1111    8x"
---   <BLANKLINE>
---   FalseP PRegexs (6) | matched all(6) | leftovers="8x" | as="213   1223 23    55 99 1111    8x"
---   |
---   +- FalseP PBoth
---   |  |
---   |  +- TrueP  PEq2 6 == 6
---   |  |
---   |  `- FalseP PFst a=[213.0,1223.0,23.0,55.0,99.0,1111.0] snd="8x"
---   |     |
---   |     `- FalseP PForAll | cnt=3 (i=1, a=1223.0)
---   |        |
---   |        +- TrueP  i=0: 213.0 == [54.0..304.0]
---   |        |
---   |        +- FalseP i=1: 1223.0 > 304.0 (Over)
---   |        |
---   |        +- FalseP i=2: 23.0 < 54.0 (Under)
---   |        |
---   |        +- TrueP  i=3: 55.0 == [54.0..304.0]
---   |        |
---   |        +- TrueP  i=4: 99.0 == [54.0..304.0]
---   |        |
---   |        `- FalseP i=5: 1111.0 > 304.0 (Over)
---   |
---   `- matched all(6) | leftovers="8x"
---      |
---      +- i=0 | b=213.0 | used="213   " | remaining="1223 23    55 99 1111    8x"
---      |
---      +- i=1 | b=1223.0 | used="1223 " | remaining="23    55 99 1111    8x"
---      |
---      +- i=2 | b=23.0 | used="23    " | remaining="55 99 1111    8x"
---      |
---      +- i=3 | b=55.0 | used="55 " | remaining="99 1111    8x"
---      |
---      +- i=4 | b=99.0 | used="99 " | remaining="1111    8x"
---      |
---      `- i=5 | b=1111.0 | used="1111    " | remaining="8x"
---   <BLANKLINE>
+-- >>> pe2' (pregexs (replicate 6 (double <* spaces)) $ PFst $ PForAll (PRange 54 304)) "213   1223 23    55 99 1111    8x"
+-- <BLANKLINE>
+-- FalseP PRegexs (6) | matched all(6) | leftovers="8x" | as="213   1223 23    55 99 1111    8x"
+-- |
+-- +- FalseP PBoth
+-- |  |
+-- |  +- TrueP  PEq2 6 == 6
+-- |  |
+-- |  `- FalseP PFst a=[213.0,1223.0,23.0,55.0,99.0,1111.0] snd="8x"
+-- |     |
+-- |     `- FalseP PForAll | cnt=3 (i=1, a=1223.0)
+-- |        |
+-- |        +- TrueP  i=0: 213.0 == [54.0..304.0]
+-- |        |
+-- |        +- FalseP i=1: 1223.0 > 304.0 (Over)
+-- |        |
+-- |        +- FalseP i=2: 23.0 < 54.0 (Under)
+-- |        |
+-- |        +- TrueP  i=3: 55.0 == [54.0..304.0]
+-- |        |
+-- |        +- TrueP  i=4: 99.0 == [54.0..304.0]
+-- |        |
+-- |        `- FalseP i=5: 1111.0 > 304.0 (Over)
+-- |
+-- `- matched all(6) | leftovers="8x"
+--    |
+--    +- i=0 | b=213.0 | used="213   " | remaining="1223 23    55 99 1111    8x"
+--    |
+--    +- i=1 | b=1223.0 | used="1223 " | remaining="23    55 99 1111    8x"
+--    |
+--    +- i=2 | b=23.0 | used="23    " | remaining="55 99 1111    8x"
+--    |
+--    +- i=3 | b=55.0 | used="55 " | remaining="99 1111    8x"
+--    |
+--    +- i=4 | b=99.0 | used="99 " | remaining="1111    8x"
+--    |
+--    `- i=5 | b=1111.0 | used="1111    " | remaining="8x"
+-- <BLANKLINE>
 --
---   >>> :set -XOverloadedStrings
---   >>> pe2' (pregexs (replicate 6 (int <* spaces)) $ PFst $ PForAll (PRange 100 204)) "213   1223 23    55"
---   <BLANKLINE>
---   FalseP PRegexs (6) | only matched 4 of {6} | leftovers="" | as="213   1223 23    55"
---   |
---   +- FalseP PBoth
---   |  |
---   |  +- FalseP not all matched | PEq2 6 == 4
---   |  |
---   |  `- FalseP PFst a=[213,1223,23,55] snd=""
---   |     |
---   |     `- FalseP PForAll | cnt=4 (i=0, a=213)
---   |        |
---   |        +- FalseP i=0: 213 > 204 (Over)
---   |        |
---   |        +- FalseP i=1: 1223 > 204 (Over)
---   |        |
---   |        +- FalseP i=2: 23 < 100 (Under)
---   |        |
---   |        `- FalseP i=3: 55 < 100 (Under)
---   |
---   `- only matched 4 of {6} | leftovers=""
---      |
---      +- i=0 | b=213 | used="213   " | remaining="1223 23    55"
---      |
---      +- i=1 | b=1223 | used="1223 " | remaining="23    55"
---      |
---      +- i=2 | b=23 | used="23    " | remaining="55"
---      |
---      `- i=3 | b=55 | used="55" | remaining=""
---   <BLANKLINE>
+-- >>> pe2' (pregexs (replicate 6 (int <* spaces)) $ PFst $ PForAll (PRange 100 204)) "213   1223 23    55"
+-- <BLANKLINE>
+-- FalseP PRegexs (6) | only matched 4 of {6} | leftovers="" | as="213   1223 23    55"
+-- |
+-- +- FalseP PBoth
+-- |  |
+-- |  +- FalseP not all matched | PEq2 6 == 4
+-- |  |
+-- |  `- FalseP PFst a=[213,1223,23,55] snd=""
+-- |     |
+-- |     `- FalseP PForAll | cnt=4 (i=0, a=213)
+-- |        |
+-- |        +- FalseP i=0: 213 > 204 (Over)
+-- |        |
+-- |        +- FalseP i=1: 1223 > 204 (Over)
+-- |        |
+-- |        +- FalseP i=2: 23 < 100 (Under)
+-- |        |
+-- |        `- FalseP i=3: 55 < 100 (Under)
+-- |
+-- `- only matched 4 of {6} | leftovers=""
+--    |
+--    +- i=0 | b=213 | used="213   " | remaining="1223 23    55"
+--    |
+--    +- i=1 | b=1223 | used="1223 " | remaining="23    55"
+--    |
+--    +- i=2 | b=23 | used="23    " | remaining="55"
+--    |
+--    `- i=3 | b=55 | used="55" | remaining=""
+-- <BLANKLINE>
 --
 pregexs :: (Foldable t, Eq a, Show a, Show b) => [RE a b] -> Pred z ([b],[a]) -> Pred z (t a)
 pregexs rs p = pregexs' RLong rs (PBoth (pmsgIfNotTrue "not all matched" peq2) p)
@@ -4925,24 +4835,24 @@ pregexsS rs = pregexs rs . phide . PFn "mconcat" (first mconcat)
 -}
 
 -- | most useful use of PRegexN
---   >>> pe2' (pregexN (These 3 5) (spaces *> _d) 0 1) "12  34   56"
---   <BLANKLINE>
---   TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
---   |
---   +- TrueP  PConst a=("12345","6")
---   |
---   `- matched all(5) | leftovers="6"
---      |
---      +- i=0 | b='1' | used="1" | remaining="2  34   56"
---      |
---      +- i=1 | b='2' | used="2" | remaining="  34   56"
---      |
---      +- i=2 | b='3' | used="  3" | remaining="4   56"
---      |
---      +- i=3 | b='4' | used="4" | remaining="   56"
---      |
---      `- i=4 | b='5' | used="   5" | remaining="6"
---   <BLANKLINE>
+-- >>> pe2' (pregexN (These 3 5) (spaces *> _d) 0 1) "12  34   56"
+-- <BLANKLINE>
+-- TrueP  PRegexN {3,5} | matched all(5) | leftovers="6"
+-- |
+-- +- TrueP  PConst a=("12345","6")
+-- |
+-- `- matched all(5) | leftovers="6"
+--    |
+--    +- i=0 | b='1' | used="1" | remaining="2  34   56"
+--    |
+--    +- i=1 | b='2' | used="2" | remaining="  34   56"
+--    |
+--    +- i=2 | b='3' | used="  3" | remaining="4   56"
+--    |
+--    +- i=3 | b='4' | used="4" | remaining="   56"
+--    |
+--    `- i=4 | b='5' | used="   5" | remaining="6"
+-- <BLANKLINE>
 --
 pregexN :: (Foldable t, Eq a, Show a, Show b) => These Int Int -> RE a b -> Pred z ((Int, Int), [a]) -> Pred z ([b], [a]) -> Pred z (t a)
 pregexN th = PRegexN th . (RLong,)
@@ -4955,37 +4865,33 @@ porder cmp = pgroupBy cmp $ POne 0 0 1
 
 -- | runs 'PISect' after getting rid of duplicates
 --
---   >>> :set -XTypeApplications
---   >>> pe2' (pisectNub @[] 1) ("aaabc","adbbef")
---   <BLANKLINE>
---   TrueP  PISect as="abc" bs="adbef" left="c" isect="ab" right="def"
---   |
---   `- TrueP  PConst a=("c","ab","def")
---   <BLANKLINE>
+-- >>> pe2' (pisectNub @[] 1) ("aaabc","adbbef")
+-- <BLANKLINE>
+-- TrueP  PISect as="abc" bs="adbef" left="c" isect="ab" right="def"
+-- |
+-- `- TrueP  PConst a=("c","ab","def")
+-- <BLANKLINE>
 --
---   >>> :set -XTypeApplications
---   >>> pe1' (pisectNub @[] 1) ("aaabc","adef")
---   <BLANKLINE>
---   TrueP  PISect left="bc" isect="a" right="def"
---   |
---   `- TrueP  PConst a=("bc","a","def")
---   <BLANKLINE>
+-- >>> pe1' (pisectNub @[] 1) ("aaabc","adef")
+-- <BLANKLINE>
+-- TrueP  PISect left="bc" isect="a" right="def"
+-- |
+-- `- TrueP  PConst a=("bc","a","def")
+-- <BLANKLINE>
 --
---   >>> :set -XTypeApplications
---   >>> pe1' (pisectNub @[] 1) ("aaabc","adef")
---   <BLANKLINE>
---   TrueP  PISect left="bc" isect="a" right="def"
---   |
---   `- TrueP  PConst a=("bc","a","def")
---   <BLANKLINE>
+-- >>> pe1' (pisectNub @[] 1) ("aaabc","adef")
+-- <BLANKLINE>
+-- TrueP  PISect left="bc" isect="a" right="def"
+-- |
+-- `- TrueP  PConst a=("bc","a","def")
+-- <BLANKLINE>
 --
---   >>> :set -XTypeApplications
---   >>> pe1' (pisectNub @[] 1) ("aaabc","adbbef")
---   <BLANKLINE>
---   TrueP  PISect left="c" isect="ab" right="def"
---   |
---   `- TrueP  PConst a=("c","ab","def")
---   <BLANKLINE>
+-- >>> pe1' (pisectNub @[] 1) ("aaabc","adbbef")
+-- <BLANKLINE>
+-- TrueP  PISect left="c" isect="ab" right="def"
+-- |
+-- `- TrueP  PConst a=("c","ab","def")
+-- <BLANKLINE>
 --
 pisectNub :: (Foldable t, Ord a, Show a) => Pred z ([a], [a], [a]) -> Pred z (t a, t a)
 pisectNub = phide . pstar2 "nub" (nub . toList) . PISect
@@ -5112,8 +5018,8 @@ eval' (PRegexs regexs p) (toList -> as) = do
   let (lrmsgs,tt) = regexsToTT opts (join These (length regexs)) leftovers rs
   ll <- eval' p ((length regexs, length rs), (unzip3 rs ^. _1, leftovers))
 --  let msg | length rs == length regexs = "matched all"
---          | null rs = "matched none"
---          | otherwise = "only matched " <> show (length rs)
+--        | null rs = "matched none"
+--        | otherwise = "only matched " <> show (length rs)
   return $ mkNode (getBool ll, [nm] <> either id id lrmsgs <> [showA opts 2 "as=" as]) [ll,tt]
 
 eval' (PRegexV regexs e p) s = do
@@ -6019,187 +5925,187 @@ matchStringP p (x :| _, _) =
 
 -- | match on any json 'String'
 --
---   >>> pe1' (pjsonString 1 (psnds $ PLinear Rigid $ map (preq . peq) ["Vladimir"])) json2
---   <BLANKLINE>
---   FalseP PJson
---   |
---   +- FalseP PLinear | errors(7): NoMatch 0 | NoMatch 1 | NoMatch 2 | NoMatch 3 | NoMatch 4 | NoMatch 5 | NoMatch 6
---   |  |
---   |  +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,1)
---   |  |  |
---   |  |  `- TrueP  PLift and | a=[True]
---   |  |     |
---   |  |     `- TrueP  i=0
---   |  |        |
---   |  |        +- TrueP  1 == 1
---   |  |        |
---   |  |        `- a == "Vladimir"
---   |  |
---   |  +- FalseP PLinear NoMatch 0 a="Diaz"
---   |  |  |
---   |  |  `- FalseP i=0: "Diaz" == "Vladimir"
---   |  |
---   |  +- FalseP PLinear NoMatch 1 a="Daniel"
---   |  |  |
---   |  |  `- FalseP i=0: "Daniel" == "Vladimir"
---   |  |
---   |  +- FalseP PLinear NoMatch 2 a="Red"
---   |  |  |
---   |  |  `- FalseP i=0: "Red" == "Vladimir"
---   |  |
---   |  +- FalseP PLinear NoMatch 3 a="Rose"
---   |  |  |
---   |  |  `- FalseP i=0: "Rose" == "Vladimir"
---   |  |
---   |  +- FalseP PLinear NoMatch 4 a="Doe"
---   |  |  |
---   |  |  `- FalseP i=0: "Doe" == "Vladimir"
---   |  |
---   |  +- FalseP PLinear NoMatch 5 a="John"
---   |  |  |
---   |  |  `- FalseP i=0: "John" == "Vladimir"
---   |  |
---   |  +- FalseP PLinear NoMatch 6 a="Vygodsky"
---   |  |  |
---   |  |  `- FalseP i=0: "Vygodsky" == "Vladimir"
---   |  |
---   |  `- TrueP  PLinear | OneMatch 7 a="Vladimir" cnt=1 (i=0, a="Vladimir")
---   |     |
---   |     `- TrueP  i=0: "Vladimir" == "Vladimir"
---   |
---   `- Debugging jpaths
---      |
---      +- i=0 | [JPIndex 0,JPKey "lastName",JPValue (String "Diaz")]
---      |
---      +- i=1 | [JPIndex 0,JPKey "firstName",JPValue (String "Daniel")]
---      |
---      +- i=2 | [JPIndex 1,JPKey "lastName",JPValue (String "Red")]
---      |
---      +- i=3 | [JPIndex 1,JPKey "firstName",JPValue (String "Rose")]
---      |
---      +- i=4 | [JPIndex 2,JPKey "lastName",JPValue (String "Doe")]
---      |
---      +- i=5 | [JPIndex 2,JPKey "firstName",JPValue (String "John")]
---      |
---      +- i=6 | [JPIndex 3,JPKey "lastName",JPValue (String "Vygodsky")]
---      |
---      `- i=7 | [JPIndex 3,JPKey "firstName",JPValue (String "Vladimir")]
---   <BLANKLINE>
+-- >>> pe1' (pjsonString 1 (psnds $ PLinear Rigid $ map (preq . peq) ["Vladimir"])) json2
+-- <BLANKLINE>
+-- FalseP PJson
+-- |
+-- +- FalseP PLinear | errors(7): NoMatch 0 | NoMatch 1 | NoMatch 2 | NoMatch 3 | NoMatch 4 | NoMatch 5 | NoMatch 6
+-- |  |
+-- |  +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,1)
+-- |  |  |
+-- |  |  `- TrueP  PLift and | a=[True]
+-- |  |     |
+-- |  |     `- TrueP  i=0
+-- |  |        |
+-- |  |        +- TrueP  1 == 1
+-- |  |        |
+-- |  |        `- a == "Vladimir"
+-- |  |
+-- |  +- FalseP PLinear NoMatch 0 a="Diaz"
+-- |  |  |
+-- |  |  `- FalseP i=0: "Diaz" == "Vladimir"
+-- |  |
+-- |  +- FalseP PLinear NoMatch 1 a="Daniel"
+-- |  |  |
+-- |  |  `- FalseP i=0: "Daniel" == "Vladimir"
+-- |  |
+-- |  +- FalseP PLinear NoMatch 2 a="Red"
+-- |  |  |
+-- |  |  `- FalseP i=0: "Red" == "Vladimir"
+-- |  |
+-- |  +- FalseP PLinear NoMatch 3 a="Rose"
+-- |  |  |
+-- |  |  `- FalseP i=0: "Rose" == "Vladimir"
+-- |  |
+-- |  +- FalseP PLinear NoMatch 4 a="Doe"
+-- |  |  |
+-- |  |  `- FalseP i=0: "Doe" == "Vladimir"
+-- |  |
+-- |  +- FalseP PLinear NoMatch 5 a="John"
+-- |  |  |
+-- |  |  `- FalseP i=0: "John" == "Vladimir"
+-- |  |
+-- |  +- FalseP PLinear NoMatch 6 a="Vygodsky"
+-- |  |  |
+-- |  |  `- FalseP i=0: "Vygodsky" == "Vladimir"
+-- |  |
+-- |  `- TrueP  PLinear | OneMatch 7 a="Vladimir" cnt=1 (i=0, a="Vladimir")
+-- |     |
+-- |     `- TrueP  i=0: "Vladimir" == "Vladimir"
+-- |
+-- `- Debugging jpaths
+--    |
+--    +- i=0 | [JPIndex 0,JPKey "lastName",JPValue (String "Diaz")]
+--    |
+--    +- i=1 | [JPIndex 0,JPKey "firstName",JPValue (String "Daniel")]
+--    |
+--    +- i=2 | [JPIndex 1,JPKey "lastName",JPValue (String "Red")]
+--    |
+--    +- i=3 | [JPIndex 1,JPKey "firstName",JPValue (String "Rose")]
+--    |
+--    +- i=4 | [JPIndex 2,JPKey "lastName",JPValue (String "Doe")]
+--    |
+--    +- i=5 | [JPIndex 2,JPKey "firstName",JPValue (String "John")]
+--    |
+--    +- i=6 | [JPIndex 3,JPKey "lastName",JPValue (String "Vygodsky")]
+--    |
+--    `- i=7 | [JPIndex 3,JPKey "firstName",JPValue (String "Vladimir")]
+-- <BLANKLINE>
 --
---   >>> pe2' (pjsonString (sinfix "iso") $ psnds $ PShow 1) json1
---   <BLANKLINE>
---   TrueP  PJson
---   |
---   +- TrueP  PShow
---   |  |
---   |  +- TrueP  PConst a=["ISO 8879:1986"]
---   |  |
---   |  `- ===== PShow =====
---   |     |
---   |     `- i=0 a="ISO 8879:1986"
---   |
---   `- Debugging jpaths
---      |
---      `- i=0 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "GlossEntry",JPKey "Abbrev",JPValue (String "ISO 8879:1986")] | a="ISO 8879:1986"
---   <BLANKLINE>
+-- >>> pe2' (pjsonString (sinfix "iso") $ psnds $ PShow 1) json1
+-- <BLANKLINE>
+-- TrueP  PJson
+-- |
+-- +- TrueP  PShow
+-- |  |
+-- |  +- TrueP  PConst a=["ISO 8879:1986"]
+-- |  |
+-- |  `- ===== PShow =====
+-- |     |
+-- |     `- i=0 a="ISO 8879:1986"
+-- |
+-- `- Debugging jpaths
+--    |
+--    `- i=0 | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "GlossEntry",JPKey "Abbrev",JPValue (String "ISO 8879:1986")] | a="ISO 8879:1986"
+-- <BLANKLINE>
 --
 pjsonString :: PES z => Pred z String -> Pred z [(NonEmpty JPath, String)] -> Pred z Value
 pjsonString = PJson . matchStringP
 
 -- | 'PJsonKey' but expects exactly one match
 --
---   >>> pe' (pjsonKeyOne "abbrev" 1) json1
---   <BLANKLINE>
---   TrueP  PJsonKey
---   |
---   +- TrueP  POne String "ISO 8879:1986"
---   |  |
---   |  `- TrueP
---   |
---   `- Debugging jpaths
---      |
---      `- i=0 | key=Abbrev
---   <BLANKLINE>
+-- >>> pe' (pjsonKeyOne "abbrev" 1) json1
+-- <BLANKLINE>
+-- TrueP  PJsonKey
+-- |
+-- +- TrueP  POne String "ISO 8879:1986"
+-- |  |
+-- |  `- TrueP
+-- |
+-- `- Debugging jpaths
+--    |
+--    `- i=0 | key=Abbrev
+-- <BLANKLINE>
 --
---   >>> pe' (pjsonKeyOne "abbrev" 1) json0
---   <BLANKLINE>
---   FalseP PJsonKey | json search failed
---   |
---   +- FalseP POne empty!
---   |
---   `- Debugging jpaths
---   <BLANKLINE>
+-- >>> pe' (pjsonKeyOne "abbrev" 1) json0
+-- <BLANKLINE>
+-- FalseP PJsonKey | json search failed
+-- |
+-- +- FalseP POne empty!
+-- |
+-- `- Debugging jpaths
+-- <BLANKLINE>
 --
---   >>> pe' (pjsonKeyOne "title" 1) json1
---   <BLANKLINE>
---   FalseP PJsonKey
---   |
---   +- FalseP POne extra values! a=String "S" s'=[String "example glossary"]
---   |  |
---   |  `- FalseP
---   |
---   `- Debugging jpaths
---      |
---      +- i=0 | key=title
---      |
---      `- i=1 | key=title
---   <BLANKLINE>
+-- >>> pe' (pjsonKeyOne "title" 1) json1
+-- <BLANKLINE>
+-- FalseP PJsonKey
+-- |
+-- +- FalseP POne extra values! a=String "S" s'=[String "example glossary"]
+-- |  |
+-- |  `- FalseP
+-- |
+-- `- Debugging jpaths
+--    |
+--    +- i=0 | key=title
+--    |
+--    `- i=1 | key=title
+-- <BLANKLINE>
 --
---   >>> pe1' (pjsonKeyOne (sinfix "seeal") $ jarray 0 $ PLinear Rigid [preq "xml",preq "gml"]) json1
---   <BLANKLINE>
---   TrueP  PJsonKey
---   |
---   +- TrueP  POne Array [String "GML",String "XML"]
---   |  |
---   |  `- TrueP  PPrism (Just) [jarray] [String "GML",String "XML"]
---   |     |
---   |     `- TrueP  PLinear
---   |        |
---   |        +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,2)
---   |        |  |
---   |        |  `- TrueP  PLift and | a=[True,True]
---   |        |     |
---   |        |     +- TrueP  i=0
---   |        |     |  |
---   |        |     |  +- TrueP  1 == 1
---   |        |     |  |
---   |        |     |  `- PStringCI a == String "xml"
---   |        |     |
---   |        |     `- TrueP  i=1
---   |        |        |
---   |        |        +- TrueP  1 == 1
---   |        |        |
---   |        |        `- PStringCI a == String "gml"
---   |        |
---   |        +- TrueP  PLinear | OneMatch 0 a=String "GML" cnt=1 (i=1, a=String "GML")
---   |        |  |
---   |        |  +- FalseP i=0: PStringCI String "GML" == String "xml"
---   |        |  |
---   |        |  `- TrueP  i=1: PStringCI String "GML" == String "gml"
---   |        |
---   |        `- TrueP  PLinear | OneMatch 1 a=String "XML" cnt=1 (i=0, a=String "XML")
---   |           |
---   |           +- TrueP  i=0: PStringCI String "XML" == String "xml"
---   |           |
---   |           `- FalseP i=1: PStringCI String "XML" == String "gml"
---   |
---   `- Debugging jpaths
---      |
---      `- i=0 | key=GlossSeeAlso | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "GlossEntry",JPKey "GlossDef",JPKey "GlossSeeAlso"]
---   <BLANKLINE>
+-- >>> pe1' (pjsonKeyOne (sinfix "seeal") $ jarray 0 $ PLinear Rigid [preq "xml",preq "gml"]) json1
+-- <BLANKLINE>
+-- TrueP  PJsonKey
+-- |
+-- +- TrueP  POne Array [String "GML",String "XML"]
+-- |  |
+-- |  `- TrueP  PPrism (Just) [jarray] [String "GML",String "XML"]
+-- |     |
+-- |     `- TrueP  PLinear
+-- |        |
+-- |        +- TrueP  Predicates | PZipAnd | PZipExact | (bad,good)=(0,2)
+-- |        |  |
+-- |        |  `- TrueP  PLift and | a=[True,True]
+-- |        |     |
+-- |        |     +- TrueP  i=0
+-- |        |     |  |
+-- |        |     |  +- TrueP  1 == 1
+-- |        |     |  |
+-- |        |     |  `- PStringCI a == String "xml"
+-- |        |     |
+-- |        |     `- TrueP  i=1
+-- |        |        |
+-- |        |        +- TrueP  1 == 1
+-- |        |        |
+-- |        |        `- PStringCI a == String "gml"
+-- |        |
+-- |        +- TrueP  PLinear | OneMatch 0 a=String "GML" cnt=1 (i=1, a=String "GML")
+-- |        |  |
+-- |        |  +- FalseP i=0: PStringCI String "GML" == String "xml"
+-- |        |  |
+-- |        |  `- TrueP  i=1: PStringCI String "GML" == String "gml"
+-- |        |
+-- |        `- TrueP  PLinear | OneMatch 1 a=String "XML" cnt=1 (i=0, a=String "XML")
+-- |           |
+-- |           +- TrueP  i=0: PStringCI String "XML" == String "xml"
+-- |           |
+-- |           `- FalseP i=1: PStringCI String "XML" == String "gml"
+-- |
+-- `- Debugging jpaths
+--    |
+--    `- i=0 | key=GlossSeeAlso | [JPKey "glossary",JPKey "GlossDiv",JPKey "GlossList",JPKey "GlossEntry",JPKey "GlossDef",JPKey "GlossSeeAlso"]
+-- <BLANKLINE>
 --
---   >>> pe' (pjsonKeyOne "abbrev" $ sinfix "iso") json1
---   <BLANKLINE>
---   TrueP  PJsonKey
---   |
---   +- TrueP  POne String "ISO 8879:1986"
---   |  |
---   |  `- TrueP  PStringCI String "iso" `isInfixOf` String "ISO 8879:1986"
---   |
---   `- Debugging jpaths
---      |
---      `- i=0 | key=Abbrev
---   <BLANKLINE>
+-- >>> pe' (pjsonKeyOne "abbrev" $ sinfix "iso") json1
+-- <BLANKLINE>
+-- TrueP  PJsonKey
+-- |
+-- +- TrueP  POne String "ISO 8879:1986"
+-- |  |
+-- |  `- TrueP  PStringCI String "iso" `isInfixOf` String "ISO 8879:1986"
+-- |
+-- `- Debugging jpaths
+--    |
+--    `- i=0 | key=Abbrev
+-- <BLANKLINE>
 --
 pjsonKeyOne :: Pred z String -> Pred z Value -> Pred z Value
 pjsonKeyOne q = PJsonKey q . psnds . pone

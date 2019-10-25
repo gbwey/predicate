@@ -65,20 +65,20 @@ newtype CMap k v = CMap { unCMap :: Map (COrd k) v } deriving Show
 
 -- | builds a map keyed by constructor
 --
---   >>> toCMap (flip compare 7 &&& (:[])) [1..10]
---   CMap {unCMap = fromList [(COrd LT,[1,2,3,4,5,6]),(COrd EQ,[7]),(COrd GT,[8,9,10])]}
+-- >>> toCMap (flip compare 7 &&& (:[])) [1..10]
+-- CMap {unCMap = fromList [(COrd LT,[1,2,3,4,5,6]),(COrd EQ,[7]),(COrd GT,[8,9,10])]}
 --
---   >>> toCMap (between 3 7 &&& (:[])) [1..10]
---   CMap {unCMap = fromList [(COrd LT,[1,2]),(COrd EQ,[3,4,5,6,7]),(COrd GT,[8,9,10])]}
+-- >>> toCMap (between 3 7 &&& (:[])) [1..10]
+-- CMap {unCMap = fromList [(COrd LT,[1,2]),(COrd EQ,[3,4,5,6,7]),(COrd GT,[8,9,10])]}
 --
---   >>> toCMap (flip compare 7 &&& (:[])) [7,7,7,7]
---   CMap {unCMap = fromList [(COrd EQ,[7,7,7,7])]}
+-- >>> toCMap (flip compare 7 &&& (:[])) [7,7,7,7]
+-- CMap {unCMap = fromList [(COrd EQ,[7,7,7,7])]}
 --
---   >>> toCMap (flip compare 7 &&& (:[])) [1..6]
---   CMap {unCMap = fromList [(COrd LT,[1,2,3,4,5,6])]}
+-- >>> toCMap (flip compare 7 &&& (:[])) [1..6]
+-- CMap {unCMap = fromList [(COrd LT,[1,2,3,4,5,6])]}
 --
---   >>> toCMap (flip compare 7 &&& (:[])) [8..10]
---   CMap {unCMap = fromList [(COrd GT,[8,9,10])]}
+-- >>> toCMap (flip compare 7 &&& (:[])) [8..10]
+-- CMap {unCMap = fromList [(COrd GT,[8,9,10])]}
 --
 toCMap :: (Data k, Monoid v) => (a -> (k, v)) -> [a] -> CMap k v
 toCMap f = CMap . M.fromListWith (flip mappend) . map (first COrd . f)
@@ -754,11 +754,11 @@ ie uses span to grab the largest group
 -}
 -- | better version of 'Data.List.groupBy' as it checks each adjacent element
 --
---   >>> groupBy' (<) [1,4,5,2,3,1]
---   [[1,4,5],[2,3],[1]]
+-- >>> groupBy' (<) [1,4,5,2,3,1]
+-- [[1,4,5],[2,3],[1]]
 --
---   >>> groupBy (<) [1,4,5,2,3,1]
---   [[1,4,5,2,3],[1]]
+-- >>> groupBy (<) [1,4,5,2,3,1]
+-- [[1,4,5,2,3],[1]]
 --
 groupBy' :: (a -> a -> Bool) -> [a] -> [[a]]
 groupBy' _ [] = []
