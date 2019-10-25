@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7711b50c6ba4ece5ae1d6d94ff09dff80db34956485b169509d1ac1eee7804e8
+-- hash: ac5bab90c3cfa64b4c978f623664bca14fb71f3f24c5ed764ec2498559fde003
 
 name:           predicate
 version:        0.1.0.0
@@ -44,18 +44,16 @@ library
     , lens-datetime
     , mtl
     , pretty
-    , pretty-terminal
+    , pretty-terminal >=0.1.0.0
     , regex-applicative
     , scientific
-    , semialign
     , shakespeare
     , split
     , tagged
     , text
-    , these
-    , these-lens
+    , these >=1.0.0
     , time
-    , tree-view
+    , tree-view >=0.5
     , unordered-containers
     , vector
     , vinyl >=0.10.0.1
@@ -84,18 +82,16 @@ test-suite doctests
     , lens-datetime
     , mtl
     , pretty
-    , pretty-terminal
+    , pretty-terminal >=0.1.0.0
     , regex-applicative
     , scientific
-    , semialign
     , shakespeare
     , split
     , tagged
     , text
-    , these
-    , these-lens
+    , these >=1.0.0
     , time
-    , tree-view
+    , tree-view >=0.5
     , unordered-containers
     , vector
     , vinyl >=0.10.0.1
@@ -128,10 +124,9 @@ test-suite testpred
     , mtl
     , predicate
     , pretty
-    , pretty-terminal
+    , pretty-terminal >=0.1.0.0
     , regex-applicative
     , scientific
-    , semialign
     , shakespeare
     , split
     , tagged
@@ -139,10 +134,9 @@ test-suite testpred
     , tasty-hunit
     , tasty-quickcheck
     , text
-    , these
-    , these-lens
+    , these >=1.0.0
     , time
-    , tree-view
+    , tree-view >=0.5
     , unordered-containers
     , vector
     , vinyl >=0.10.0.1

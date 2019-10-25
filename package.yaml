@@ -18,18 +18,16 @@ dependencies:
 - lens-datetime
 - mtl
 - pretty
-- pretty-terminal
+- pretty-terminal >= 0.1.0.0
 - regex-applicative
 - scientific
 - shakespeare
 - split
 - tagged
 - text
-- these
-- these-lens
-- semialign
+- these >= 1.0.0
 - time
-- tree-view
+- tree-view >= 0.5
 - unordered-containers
 - vector
 - vinyl >= 0.10.0.1

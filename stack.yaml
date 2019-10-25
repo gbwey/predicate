@@ -5,6 +5,5 @@ packages:
 extra-deps:
 - pretty-terminal-0.1.0.0
 - tree-view-0.5
-- these-lens-1
 arch: x86_64
 resolver: lts-14.10
