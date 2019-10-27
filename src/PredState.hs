@@ -1,4 +1,5 @@
 {-# OPTIONS -Wall #-}
+{-# OPTIONS -Wno-unused-imports #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts #-}

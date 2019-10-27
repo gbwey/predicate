@@ -1,5 +1,6 @@
 -- conquer requires a non showable version to work
 {-# OPTIONS -Wall #-}
+{-# OPTIONS -Wno-unused-imports #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE RankNTypes #-}
