@@ -1,6 +1,5 @@
 -- conquer requires a non showable version to work
 {-# OPTIONS -Wall #-}
-{-# OPTIONS -Wno-unused-imports #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE RankNTypes #-}
@@ -56,8 +55,6 @@ import Data.Vinyl.TypeLevel
 import qualified Data.Vinyl.Functor as W
 import qualified GHC.TypeLits as G
 import Text.Regex.Applicative
-
-import PredJson -- needed for doctest
 
 data Pred a = Pred {
     _ppred :: Tree String
@@ -2059,6 +2056,7 @@ _PUnsnoc (Pred x e) (Pred x1 p) =
 -- >>> :set -XFlexibleContexts
 -- >>> :set -XGADTs
 -- >>> let zzz = _PIx "glossary" 0 . _PIx "GlossDiv" 0 . _PIx "GlossList" 0 . _PIx "GlossEntry" 0 . _PIx "GlossSee" 0
+-- >>> :m + PredJson
 -- >>> pe' (zzz $ scs "mARkup") json1
 -- <BLANKLINE>
 -- FalseP PIx "glossary" Object (fromList [("GlossDiv",Object (fromLi...
@@ -2892,6 +2890,7 @@ _PSpan (Pred x p) (Pred x1 p1) =
 --
 -- or 'PJsonKey' if matching on key
 --
+-- >>> :m + PredJson
 -- >>> pe1' (_PJson (matchStringP (sinfix "a")) $ psnds $ _PShow 1) json1
 -- <BLANKLINE>
 -- TrueP  PJson
@@ -2939,6 +2938,7 @@ _PJson p (Pred qq q) =
 
 -- | matches on the key using the string predicate
 --
+-- >>> :m + PredJson
 -- >>> pe1' (_PJsonKey "abbrev" (-_PNull)) json1
 -- <BLANKLINE>
 -- TrueP  PJsonKey
@@ -3111,6 +3111,7 @@ _PJsonKey p (Pred qq q) =
 -- PJsonP creates a nested tree until it stops or is successful with 'Value' at then end
 -- | given a json path will get the json value at that path
 --
+-- >>> :m + PredJson
 -- >>> pe1' (_PJsonP [JPIndex 2,JPKey "age",JPValue (Number 33),JPValue ""] 0 1) json2
 -- <BLANKLINE>
 -- FalseP PJsonP path=nth 2.key "age"._Number._String
@@ -3401,6 +3402,7 @@ pchoose abc pb pc = _PFn "choose" abc (_PEither pb pc)
 
 -- | unzip a list
 --
+-- >>> :m + PredJson
 -- >>> pe1' (_PJsonKey "aGE" $ punzip (pfn (map showJPathsNE) $ _PShowS 1) (jnumbers' $ _PShow 1)) json2
 -- <BLANKLINE>
 -- TrueP  PJsonKey
@@ -3755,6 +3757,7 @@ pprismREither f p q = _PFn "pprismre" (\(x, a) -> either (Left . (x,)) (Right . 
 
 -- | most common version of 'PPrism'
 --
+-- >>> :m + PredJson
 -- >>> pe1' (pprism0 (^? key "glossary" . key "GlossDiv" . key "title" . _String) "s") json1
 -- <BLANKLINE>
 -- TrueP  PPrism (Just) [] "S"
@@ -4455,6 +4458,7 @@ matchStringP p (x :| _, _) =
     Nothing -> Nothing
 -- | match on any json 'String'
 --
+-- >>> :m + PredJson
 -- >>> pe1' (pjsonString 1 (psnds $ _PLinear Rigid $ map (preq . peq) ["Vladimir"])) json2
 -- <BLANKLINE>
 -- FalseP PJson
@@ -4545,6 +4549,7 @@ pjsonString = _PJson . matchStringP
 
 -- | 'PJsonKey' but expects exactly one match
 --
+-- >>> :m + PredJson
 -- >>> pe' (pjsonKeyOne "abbrev" 1) json1
 -- <BLANKLINE>
 -- TrueP  PJsonKey
@@ -4723,6 +4728,7 @@ pjsonIndex = _PJson . matchIndex
 
 -- | match on json 'Number' and pull out any numbers that satisfy the function predicate
 --
+-- >>> :m + PredJson
 -- >>> pe1' ((pjsonNumber (const True)) (psnds $ _PLinear Rigid $ map (preq . peq) [24,39])) json2
 -- <BLANKLINE>
 -- FalseP PJson
@@ -4815,6 +4821,7 @@ jnumbers :: (Foldable t, AsValue s, Show s) => Pred ([s], [Scientific]) -> Pred 
 jnumbers = _PMorph (^? _Number)
 -- | pull out all the numbers but fail if not all pulled
 --
+-- >>> :m + PredJson
 -- >>> pe2' (_PJsonKey "AgE" $ psnds $ jnumbers' $ _PShow 1) json2
 -- <BLANKLINE>
 -- TrueP  PJsonKey
@@ -4858,6 +4865,7 @@ jstrings = _PMorph (^? _String . to T.unpack)
 
 -- | pull out all the strings but fail if not all pulled
 --
+-- >>> :m + PredJson
 -- >>> pe' (_PJsonKey "title" $ psnds $ jstrings' $ _PShow 1) json1
 -- <BLANKLINE>
 -- TrueP  PJsonKey
@@ -4923,6 +4931,7 @@ jvalue = _PPrism "jvalue" (^? _Value)
 
 -- | change a predicate on 'Value' to a predicate 'Array' but if fails call the () predicate
 --
+-- >>> :m + PredJson
 -- >>> pe' (jarray 0 $ _PIx 2 0 $ _PIx "firstName" 0 $ "johan") json2
 -- <BLANKLINE>
 -- FalseP PPrism (Just) [jarray]
