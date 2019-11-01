@@ -1,9 +1,6 @@
-flags: {}
-extra-package-dbs: []
+resolver: lts-14.10
 packages:
-- location: '.'
+- '.'
 extra-deps:
 - pretty-terminal-0.1.0.0
 - tree-view-0.5
-arch: x86_64
-resolver: lts-14.10
