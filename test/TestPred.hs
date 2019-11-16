@@ -3,17 +3,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TupleSections #-}
-module Main where
+module TestPred where
 import Test.Tasty
 import Test.Tasty.HUnit
 import PredState
 import Text.Show.Functions ()
 
-main :: IO ()
-main = suite
-
-suite :: IO ()
-suite = defaultMain $ testGroup "TestPred"
+suite :: TestTree
+suite = testGroup "TestPred"
   [ testCase "peq.fail" $ expectLeft (runPred @() (peq 7) (8::Int))
   , testCase "peq.ok" $ expectRight (runPred @() (peq 7) (7::Int))
   , testCase "palg8.fail1 out of bounds" $ expectLeft (runPred @() alg8 0)

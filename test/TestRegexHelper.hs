@@ -13,11 +13,8 @@ import Data.Either
 import Control.Arrow
 --import Test.QuickCheck
 
-main :: IO ()
-main = suite
-
-suite :: IO ()
-suite = defaultMain $ testGroup "TestRegexHelper"
+suite :: TestTree
+suite = testGroup "TestRegexHelper"
   [ testCase "stringci.ok1" $ (@?=) ("AbC" =~ stringCI "aBc") (Just "AbC")
   , testCase "tokenizespaces.ok1" $ (@?=) ("   abc def  g   " =~ tokenizeSpaces) (Just ["abc","def","g"])
   , testCase "tokenizeN.ok1" $ (@?=) ("abc_----def_g " =~ tokenizeN (`elem` ['_','-'])) (Just ["abc","def","g "])

@@ -70,8 +70,8 @@ tests:
     dependencies:
     # - predicate
     - doctest
-  testpred:
-    main: "TestPred.hs"
+  testspec:
+    main: "TestSpec.hs"
     ghc-options:
     - -threaded
     - -O0
