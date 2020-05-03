@@ -42,7 +42,7 @@ library:
   - -Wincomplete-record-updates
   - -Wincomplete-uni-patterns
   - -Wredundant-constraints
-  - -fomit-interface-pragmas
+#  - -fomit-interface-pragmas
   other-modules: []
   exposed-modules:
   - Pred
@@ -63,7 +63,7 @@ tests:
     other-modules: []
     ghc-options:
     - -threaded
-    - -fomit-interface-pragmas
+#    - -fomit-interface-pragmas
     source-dirs:
     - .
     - src
@@ -75,7 +75,7 @@ tests:
     ghc-options:
     - -threaded
     - -O0
-    - -fomit-interface-pragmas
+#    - -fomit-interface-pragmas
     source-dirs:
     - test
     dependencies:

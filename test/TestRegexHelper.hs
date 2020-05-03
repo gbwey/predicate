@@ -1,7 +1,5 @@
 {-# OPTIONS -Wall #-}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TupleSections #-}
 module TestRegexHelper where
 import Control.Monad

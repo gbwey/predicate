@@ -5689,7 +5689,7 @@ eval' (PBreak p p12) (toList -> as) = do
   case splitAndP opts [nm] (ts <> take 1 ts') of
        Left e -> return e
        Right (bads, _) -> do
-            ll <- eval' p12 (take (length ts) as, drop (length ts) as)
+            ll <- eval' p12 (splitAt (length ts) as)
             return $ breakImpl2 opts nm (ts<>take 1 ts') (bads, ts') ll
 
 eval' (PSpan p p12) (toList -> as) = do
@@ -5702,7 +5702,7 @@ eval' (PSpan p p12) (toList -> as) = do
   case splitAndP opts [nm] (ts <> take 1 ts') of
        Left e -> return e
        Right (bads, _) -> do
-            ll <- eval' p12 (take (length ts) as, drop (length ts) as)
+            ll <- eval' p12 (splitAt (length ts) as)
             return $ breakImpl2 opts nm (ts<>take 1 ts') (bads, ts') ll
 
 eval' (PJson p q) v = do
@@ -6123,7 +6123,7 @@ pjsonKeyOne q = PJsonKey q . psnds . pone
 pjsonKeyOne' :: Pred z String -> Pred z (NonEmpty JPath, Value) -> Pred z Value
 pjsonKeyOne' q = PJsonKey q . pone
 
-jkeyPrint :: PES z => AsValue s => Pred z String -> s -> IO [Value]
+jkeyPrint :: (PES z, AsValue s) => Pred z String -> s -> IO [Value]
 jkeyPrint pk js = jkeyPrint' $ jvisitor (matchKeyP pk) (js ^?! _Value)
 
 

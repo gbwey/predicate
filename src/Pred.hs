@@ -4750,7 +4750,7 @@ eval opts (PBreak p p12) (toList -> as) =
     in case splitAndP opts [nm] (ts <> take 1 ts') of
          Left e -> e
          Right (bads, _) ->
-              let ll = eval opts p12 (take (length ts) as, drop (length ts) as)
+              let ll = eval opts p12 (splitAt (length ts) as)
               in breakImpl2 opts nm (ts<>take 1 ts') (bads, ts') ll
 
 eval opts (PSpan p p12) (toList -> as) =
@@ -4761,7 +4761,7 @@ eval opts (PSpan p p12) (toList -> as) =
     in case splitAndP opts [nm] (ts <> take 1 ts') of
          Left e -> e
          Right (bads, _) ->
-              let ll = eval opts p12 (take (length ts) as, drop (length ts) as)
+              let ll = eval opts p12 (splitAt (length ts) as)
               in breakImpl2 opts nm (ts<>take 1 ts') (bads, ts') ll
 
 eval opts (PJson p q) v =

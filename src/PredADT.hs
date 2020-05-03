@@ -2864,7 +2864,7 @@ _PBreak (Pred x p) (Pred x1 p1) =
     in case splitAndP opts [nm] (ts <> take 1 ts') of
          Left e -> e
          Right (bads, _) ->
-              let ll = p1 opts (take (length ts) as, drop (length ts) as)
+              let ll = p1 opts (splitAt (length ts) as)
               in breakImpl2 opts nm (ts<>take 1 ts') (bads, ts') ll
     where nm = "PBreak"
 
@@ -2879,7 +2879,7 @@ _PSpan (Pred x p) (Pred x1 p1) =
     in case splitAndP opts [nm] (ts <> take 1 ts') of
          Left e -> e
          Right (bads, _) ->
-              let ll = p1 opts (take (length ts) as, drop (length ts) as)
+              let ll = p1 opts (splitAt (length ts) as)
               in breakImpl2 opts nm (ts<>take 1 ts') (bads, ts') ll
     where nm = "PSpan"
 

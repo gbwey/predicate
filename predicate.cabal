@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1ea12c88f69b021954f86fe585bbeeafc02d687eef5caa889e2e1342be84716d
+-- hash: 5f698bf064113321697ec3eaf929a41d4776d5235924b52febc7973bdb5782c9
 
 name:           predicate
 version:        0.1.0.0
@@ -28,7 +28,7 @@ library
       JsonHelper
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints -fomit-interface-pragmas
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
   build-depends:
       aeson
     , aeson-pretty
@@ -65,7 +65,7 @@ test-suite doctests
   hs-source-dirs:
       ./.
       src
-  ghc-options: -threaded -fomit-interface-pragmas
+  ghc-options: -threaded
   build-depends:
       aeson
     , aeson-pretty
@@ -106,7 +106,7 @@ test-suite testspec
       Paths_predicate
   hs-source-dirs:
       test
-  ghc-options: -threaded -O0 -fomit-interface-pragmas
+  ghc-options: -threaded -O0
   build-depends:
       QuickCheck
     , aeson

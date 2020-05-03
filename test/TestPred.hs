@@ -2,7 +2,6 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE TupleSections #-}
 module TestPred where
 import Test.Tasty
 import Test.Tasty.HUnit

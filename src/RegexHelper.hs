@@ -3,7 +3,6 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DataKinds #-}
 module RegexHelper where
 import Text.Regex.Applicative
@@ -105,7 +104,7 @@ intersperseNP = intersperseP' . replicateM . pred
 
 -- | need to force failure if no match! ie empty not pure () as we had before
 intersperseP' :: Alternative f => (f b -> f [b]) -> f a -> f b -> f [b]
-intersperseP' f d p = ((:) <$> p <*> f (d *> p)) <|> empty
+intersperseP' f d p = (:) <$> p <*> f (d *> p)
 
 -- | match at least i regexs ie re{i,}
 widthMin :: Int -> RE s a -> RE s [a]
