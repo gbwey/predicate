@@ -1,7 +1,8 @@
 name: predicate
 version: '0.1.0.0'
-author: Grant Weyburne
-maintainer: gbwey9@gmail.com
+author: gbwey
+maintainer: gbwey
+copyright:           2019 Grant Weyburne
 license: BSD3
 dependencies:
 - aeson

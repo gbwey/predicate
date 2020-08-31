@@ -234,10 +234,10 @@ _W = psym (\c -> not (isAlphaNum c || c=='_'))
 
 
 _d1, _w1, _s1, _h1 :: RE Char String
-_d1 = (:[]) <$> psym isDigit
-_s1 = (:[]) <$> psym isSpace
-_w1 = (:[]) <$> psym (\c -> isAlphaNum c || c=='_')
-_h1 = (:[]) <$> psym isHexDigit
+_d1 = pure <$> psym isDigit
+_s1 = pure <$> psym isSpace
+_w1 = pure <$> psym (\c -> isAlphaNum c || c=='_')
+_h1 = pure <$> psym isHexDigit
 
 --hexDigit :: Num a => RE Char a
 --hexDigit = fromIntegral . digitToInt <$> psym isHexDigit

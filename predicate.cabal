@@ -1,15 +1,16 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5f698bf064113321697ec3eaf929a41d4776d5235924b52febc7973bdb5782c9
+-- hash: 698e3b6f68afcef467e976d25827dd5b2f4546a9844d689a134613aa22c655b6
 
 name:           predicate
 version:        0.1.0.0
-author:         Grant Weyburne
-maintainer:     gbwey9@gmail.com
+author:         gbwey
+maintainer:     gbwey
+copyright:      2019 Grant Weyburne
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
