@@ -1,10 +1,9 @@
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE LambdaCase #-}
 module TestPred where
-import Test.Tasty
-import Test.Tasty.HUnit
+import Test.Tasty ( testGroup, TestTree )
+import Test.Tasty.HUnit ( testCase, assertFailure )
 import PredState
 import Text.Show.Functions ()
 

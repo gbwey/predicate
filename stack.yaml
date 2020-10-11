@@ -1,6 +1,11 @@
-resolver: lts-14.27
+resolver: nightly-2020-09-28
+# resolver: lts-14.27
 packages:
 - '.'
 extra-deps:
 - pretty-terminal-0.1.0.0
 - tree-view-0.5
+
+ghc-options:
+  "$locals": -fwrite-ide-info
+  "$everything": -haddock

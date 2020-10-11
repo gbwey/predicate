@@ -1,1 +1,5 @@
+.stack-work-profile/
 .stack-work/
+stack.yaml.lock
+dist-newstyle/
+.hie/

@@ -42,8 +42,14 @@ library:
   - -Wcompat
   - -Wincomplete-record-updates
   - -Wincomplete-uni-patterns
-  - -Wredundant-constraints
-#  - -fomit-interface-pragmas
+  - -Wpartial-fields
+  - -Wunused-type-patterns
+  when:
+   - condition: impl(ghc >= 8.8)
+     ghc-options:
+     - -fwrite-ide-info
+     - -hiedir=.hie
+
   other-modules: []
   exposed-modules:
   - Pred
@@ -64,19 +70,37 @@ tests:
     other-modules: []
     ghc-options:
     - -threaded
-#    - -fomit-interface-pragmas
+    - -Wall
+    - -Wcompat
+    - -Wincomplete-record-updates
+    - -Wincomplete-uni-patterns
+    - -Wpartial-fields
+    - -Wunused-type-patterns
+    when:
+    -  condition: impl(ghc >= 8.8)
+       ghc-options:
+       - -fwrite-ide-info
+       - -hiedir=.hie
     source-dirs:
     - .
-    - src
     dependencies:
-    # - predicate
     - doctest
   testspec:
     main: "TestSpec.hs"
     ghc-options:
     - -threaded
     - -O0
-#    - -fomit-interface-pragmas
+    - -Wall
+    - -Wcompat
+    - -Wincomplete-record-updates
+    - -Wincomplete-uni-patterns
+    - -Wpartial-fields
+    - -Wunused-type-patterns
+    when:
+    -  condition: impl(ghc >= 8.8)
+       ghc-options:
+       - -fwrite-ide-info
+       - -hiedir=.hie
     source-dirs:
     - test
     dependencies:

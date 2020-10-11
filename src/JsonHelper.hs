@@ -19,7 +19,6 @@ it :: BL.ByteString
 ("abcfred","[\"abcfred\",true]")
 -}
 
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DataKinds #-}
@@ -28,29 +27,29 @@ it :: BL.ByteString
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ViewPatterns #-}
 module JsonHelper where
-import Data.Foldable
+import Data.Foldable ( Foldable(toList), forM_ )
 import Control.Lens
 import Control.Arrow
-import Data.List
-import Data.Tree
+import Data.List ( intercalate )
+import Data.Tree ( Tree(Node) )
 import Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as N
 import qualified Data.Text as T
 import Data.Text (Text)
-import Data.Aeson
+import Data.Aeson ( Value(..) )
 import Data.Aeson.Lens
-import Data.Aeson.Encode.Pretty
+import Data.Aeson.Encode.Pretty ( encodePretty )
 import qualified Data.ByteString.Lazy.Char8 as BL8
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as H
-import Data.Scientific
+import Data.Scientific ( Scientific )
 import qualified Data.Sequence as Seq
 import qualified Control.Monad.State.Strict as S
-import Control.Monad
+import Control.Monad ( forM )
 import qualified Formatting as F
 import PredHelper
-import Data.Data
-import Data.Function
+import Data.Data ( Data(toConstr) )
+import Data.Function ( on )
 
 -- | pretty print json
 jprtPretty :: Value -> IO ()

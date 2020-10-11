@@ -1,4 +1,3 @@
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeOperators #-}
@@ -14,12 +13,12 @@
 {-# LANGUAGE AllowAmbiguousTypes #-} -- need this cos of fromIx
 {-# LANGUAGE PatternSynonyms #-}
 module VinylHelper where
-import Data.Semigroup
+import Data.Semigroup ( Sum(Sum, getSum) )
 import Data.Vinyl
-import Data.Vinyl.TypeLevel
+import Data.Vinyl.TypeLevel ( Nat(..), RIndex )
 import qualified Data.Vinyl.Functor as W
 import qualified Data.Vinyl.Recursive as WR
-import Data.Proxy
+import Data.Proxy ( Proxy(..) )
 import qualified GHC.TypeLits as G
 
 recLen :: Rec f rs -> Int

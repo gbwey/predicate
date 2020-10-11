@@ -1,4 +1,3 @@
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeApplications #-}
@@ -11,38 +10,48 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE MultiWayIf #-}
 module PredHelper where
-import Data.Foldable
+import Data.Foldable ( Foldable(toList) )
 import Control.Lens
 import Control.Arrow
 import Data.List
-import Data.Function
+    ( intercalate,
+      isInfixOf,
+      isPrefixOf,
+      isSuffixOf,
+      partition,
+      unfoldr )
+import Data.Function ( on )
 import qualified Data.Tree.View as TV
-import Data.Tree
-import Data.Tree.Lens
-import Data.Proxy
+import Data.Tree ( Forest, Tree(Node), drawTree )
+import Data.Tree.Lens ( root )
+import Data.Proxy ( Proxy(..) )
 import Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as N
-import Data.Char
-import Data.Maybe
+import Data.Char ( isSpace, toLower )
+import Data.Maybe ( fromMaybe, mapMaybe )
 import qualified Data.Map.Strict as M
 import Data.Map.Strict (Map)
 import qualified Data.Text as T
 import Data.Text (Text)
-import Control.Applicative
-import Data.Bool
-import Data.Ord
-import Data.Data
-import Data.Tagged
-import Data.Aeson
+import Control.Applicative ( Applicative(liftA2) )
+import Data.Bool ( bool )
+import Data.Ord ( comparing )
+import Data.Data ( Data(toConstr), constrIndex )
+import Data.Tagged ( Tagged )
+import Data.Aeson ( Value(String) )
 import qualified Data.ByteString.Lazy.Char8 as BL8
 import qualified Data.ByteString.Char8 as BS8
-import Control.Monad
+import Control.Monad ( join )
 import System.Console.Pretty
-import Data.Semigroup
-import Data.These
-import Data.List.Split
-import Text.EditDistance
+import Data.Semigroup ( Sum(Sum, getSum) )
+import Data.These ( mergeTheseWith, these, These(..) )
+import Data.List.Split ( dropDelims, split, whenElt )
+import Text.EditDistance ( levenshteinDistance, defaultEditCosts )
 import GHC.Generics (Generic)
+-- $setup
+-- >>> :m + Data.Ord
+-- >>> :m + Data.List
+-- >>> :m + Data.Char
 
 -- | overrides Ord instance to hold the constructor value
 newtype COrd k = COrd k deriving Show

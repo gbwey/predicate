@@ -1,13 +1,14 @@
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 module TestRegexHelper where
-import Control.Monad
-import Test.Tasty
+import Control.Monad ( replicateM )
+import Test.Tasty ( testGroup, TestTree )
 import Test.Tasty.HUnit
+    ( HasCallStack, testCase, (@?=), assertFailure )
 import RegexHelper
 import Text.Regex.Applicative
-import Data.Either
+    ( (=~), few, findLongestPrefix, sym, Alternative(many, some) )
+import Data.Either ( lefts )
 import Control.Arrow
 --import Test.QuickCheck
 

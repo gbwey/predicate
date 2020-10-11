@@ -1,7 +1,7 @@
 module Main where
 import qualified TestPred
 import qualified TestRegexHelper
-import Test.Tasty
+import Test.Tasty ( defaultMain, testGroup )
 
 main :: IO ()
 main =

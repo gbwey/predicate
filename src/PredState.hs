@@ -1,4 +1,3 @@
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -13,32 +12,32 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module PredState where
-import Data.Foldable
+import Data.Foldable ( Foldable(toList) )
 import Control.Lens
-import Control.Lens.Extras
-import Data.Function
-import Data.Tree
-import Data.Tree.Lens
---import Data.Tree.Pretty
-import Data.Coerce
-import Data.Proxy
+import Control.Lens.Extras ( is )
+import Data.Function ( on )
+import Data.Tree ( Tree(Node), drawTree )
+import Data.Tree.Lens ( branches, root )
+import Data.Coerce ( coerce, Coercible )
+import Data.Proxy ( Proxy(Proxy), asProxyTypeOf )
 import Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as N
 import qualified Data.Text as T
 import Data.Text (Text)
-import Data.Aeson
+import Data.Aeson ( Value )
 import Data.Aeson.Lens
-import Data.Char
-import Data.String
+import Data.Char ( isAlpha, isAlphaNum )
+import Data.String ( IsString(..) )
 import Control.Arrow
 import PredHelper
 import RegexHelper
 import VinylHelper
-import Data.Either
-import Data.These
-import Data.These.Combinators
-import Data.List hiding (uncons)
-import Data.Time
+import Data.Either ( partitionEithers )
+import Data.These ( these, These(..) )
+import Data.These.Combinators ( bimapThese )
+import Data.List
+    ( intercalate, isInfixOf, isPrefixOf, isSuffixOf, nub )
+import Data.Time ( diffDays )
 import Data.Time.Lens
 import qualified Data.Sequence as Seq
 import Data.Sequence (Seq)
@@ -47,18 +46,28 @@ import Data.Map.Strict (Map)
 import qualified Control.Monad.State.Strict as S
 import qualified Data.HashMap.Strict as H
 import Data.HashMap.Strict (HashMap)
-import Data.Hashable
-import Data.Scientific
+import Data.Hashable ( Hashable )
+import Data.Scientific ( Scientific )
 import Data.Vector (Vector)
 import JsonHelper
-import Data.Maybe
+import Data.Maybe ( maybeToList )
 import qualified Control.Monad.Reader as R
-import Control.Monad
+import Control.Monad ( join, zipWithM, forM, when )
 import Data.Vinyl
 import qualified Data.Vinyl.Functor as V
 import Data.Vinyl.TypeLevel
 import qualified GHC.TypeLits as G
-import Text.Regex.Applicative
+import Text.Regex.Applicative ( RE )
+
+-- $setup
+-- >>> :m + Data.Time
+-- >>> :m + Text.Regex.Applicative
+-- >>> :m + Data.Scientific
+-- >>> :m + Data.Char
+-- >>> :m + Data.Aeson
+-- >>> :m + Control.Applicative
+-- >>> :m + Data.Functor
+
 
 data Pred z a where
   -- | leaf constructor that sets the final state. see 'BoolPE'

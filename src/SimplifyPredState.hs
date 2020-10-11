@@ -4,8 +4,8 @@
 module SimplifyPredState where
 import Control.Lens
 import Control.Arrow
-import Data.Function
-import Data.Coerce
+import Data.Function ( on )
+import Data.Coerce ( coerce )
 import PredState
 import PredHelper
 

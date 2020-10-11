@@ -1,4 +1,3 @@
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeApplications #-}
@@ -6,23 +5,23 @@
 {-# LANGUAGE DataKinds #-}
 module RegexHelper where
 import Text.Regex.Applicative
-import Text.Regex.Applicative.Common
+import Text.Regex.Applicative.Common ( hexDigit )
 import Data.Char
-import Data.Function
-import Data.Ratio
-import Data.List
-import Data.Foldable
-import Data.Maybe
-import Control.Monad
-import Data.Time
-import Data.These
+import Data.Function ( on )
+import Data.Ratio ( (%) )
+import Data.List ( foldl', intercalate )
+import Data.Foldable ( asum )
+import Data.Maybe ( catMaybes )
+import Control.Monad ( join, replicateM )
+import Data.Time ( fromGregorian, Day )
+import Data.These ( these, These(..) )
 import Control.Lens
 import qualified Data.Vinyl.Recursive as WR
 import qualified Data.Vinyl as W
-import Data.Vinyl
-import Data.Vinyl.TypeLevel
+import Data.Vinyl ( rtraverse, Rec )
+import Data.Vinyl.TypeLevel ( RecAll )
 import qualified Data.Vinyl.Functor as W
-import Data.Proxy
+import Data.Proxy ( Proxy(Proxy) )
 import Data.List.NonEmpty (NonEmpty(..))
 
 -- | regex flag

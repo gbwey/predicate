@@ -1,11 +1,10 @@
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE QuasiQuotes #-}
 module PredJson where
 import qualified Text.Shakespeare.Text as I
 import qualified Data.Text as T
-import Data.Aeson.Lens
-import Data.Aeson
-import Control.Lens
+import Data.Aeson.Lens ( AsValue(_Value) )
+import Data.Aeson ( Value )
+import Control.Lens ( (^?!) )
 
 json0' :: String
 json0' = T.unpack [I.st|

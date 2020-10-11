@@ -1,5 +1,4 @@
 -- conquer requires a non showable version to work
-{-# OPTIONS -Wall #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE RankNTypes #-}
@@ -11,42 +10,44 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
 module PredADT where
-import Data.Foldable
+import Data.Foldable ( Foldable(toList) )
 import Control.Lens
-import Control.Lens.Extras
+import Control.Lens.Extras ( is )
 import Control.Arrow
-import Data.List hiding (uncons)
-import Data.Function
+import Data.List
+    ( intercalate, isInfixOf, isPrefixOf, isSuffixOf, nub )
+import Data.Function ( on )
 import Data.Tree
-import Data.Tree.Lens
+import Data.Tree.Lens ( branches, root )
 import Data.Time.Lens
-import Data.Time
+import Data.Time ( diffDays )
 import Data.List.NonEmpty (NonEmpty(..))
 import qualified Data.List.NonEmpty as N
-import Data.Char
-import Data.Maybe
+import Data.Char ( isAlpha, isAlphaNum )
+import Data.Maybe ( maybeToList )
 import qualified Data.Map.Strict as M
 import Data.Map.Strict (Map)
 import qualified Control.Monad.State.Strict as S
-import Control.Monad
+import Control.Monad ( join, forM )
 import qualified Data.Text as T
 import Data.Text (Text)
 import Data.Vector (Vector)
 import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as H
-import Data.Scientific
-import Data.Aeson
+import Data.Scientific ( Scientific )
+import Data.Aeson ( Value )
 import Data.Aeson.Lens
 import PredHelper
 import Data.Functor.Contravariant.Divisible
-import Data.Proxy
-import Data.Coerce
-import Data.String
-import Data.Void
-import Data.Hashable
-import Data.Either
-import Data.These
-import Data.These.Combinators
+    ( Decidable(..), Divisible(..) )
+import Data.Proxy ( Proxy(Proxy), asProxyTypeOf )
+import Data.Coerce ( coerce, Coercible )
+import Data.String ( IsString(..) )
+import Data.Void ( absurd )
+import Data.Hashable ( Hashable )
+import Data.Either ( partitionEithers )
+import Data.These ( these, These(..) )
+import Data.These.Combinators ( bimapThese )
 import RegexHelper
 import VinylHelper
 import JsonHelper
@@ -54,7 +55,15 @@ import Data.Vinyl
 import Data.Vinyl.TypeLevel
 import qualified Data.Vinyl.Functor as W
 import qualified GHC.TypeLits as G
-import Text.Regex.Applicative
+import Text.Regex.Applicative ( RE )
+-- $setup
+-- >>> :m + Data.Time
+-- >>> :m + Text.Regex.Applicative
+-- >>> :m + Data.Scientific
+-- >>> :m + Data.Char
+-- >>> :m + Data.Aeson
+-- >>> :m + Control.Applicative
+-- >>> :m + Data.Functor
 
 data Pred a = Pred {
     _ppred :: Tree String

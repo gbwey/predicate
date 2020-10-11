@@ -4,7 +4,7 @@
 module SimplifyPred where
 import Control.Lens
 import Control.Arrow
-import Data.Function
+import Data.Function ( on )
 import Data.Coerce
 import Pred
 import PredHelper

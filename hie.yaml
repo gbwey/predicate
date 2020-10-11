@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "src"
+      component: "predicate:lib"
+
+    - path: "src"
+      component: "predicate:test:doctests"
+
+    - path: "doctest"
+      component: "predicate:test:doctests"
+
+    - path: "test"
+      component: "predicate:test:testspec"
