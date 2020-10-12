@@ -9,6 +9,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE NoStarIsType #-}
 module Pred where
 import Data.Foldable ( Foldable(toList) )
 import Control.Lens

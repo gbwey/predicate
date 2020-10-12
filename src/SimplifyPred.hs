@@ -1,6 +1,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE NoStarIsType #-}
 module SimplifyPred where
 import Control.Lens
 import Control.Arrow

@@ -3,6 +3,7 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE NoStarIsType #-}
 module RegexHelper where
 import Text.Regex.Applicative
 import Text.Regex.Applicative.Common ( hexDigit )

@@ -12,6 +12,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE AllowAmbiguousTypes #-} -- need this cos of fromIx
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE NoStarIsType #-}
 module VinylHelper where
 import Data.Semigroup ( Sum(Sum, getSum) )
 import Data.Vinyl

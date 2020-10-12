@@ -1,4 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE NoStarIsType #-}
 module PredJson where
 import qualified Text.Shakespeare.Text as I
 import qualified Data.Text as T

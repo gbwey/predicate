@@ -26,6 +26,7 @@ it :: BL.ByteString
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ViewPatterns #-}
+{-# LANGUAGE NoStarIsType #-}
 module JsonHelper where
 import Data.Foldable ( Foldable(toList), forM_ )
 import Control.Lens

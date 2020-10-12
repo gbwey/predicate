@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b0ba8dd55f93f03e3f8f758a0ee893bcb138e09ab1df6765c176d5c4cb2f92fc
+-- hash: fde56ac67b5f9477c1146125f07e563c32a2cf6bbbacfbb63786c107d560debc
 
 name:           predicate
 version:        0.1.0.0
@@ -29,7 +29,7 @@ library
       JsonHelper
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns
+  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns -Wredundant-constraints
   build-depends:
       aeson
     , aeson-pretty
@@ -67,7 +67,7 @@ test-suite doctests
   main-is: doctests.hs
   hs-source-dirs:
       ./.
-  ghc-options: -threaded -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns
+  ghc-options: -threaded -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns -Wredundant-constraints
   build-depends:
       aeson
     , aeson-pretty
@@ -110,7 +110,7 @@ test-suite testspec
       Paths_predicate
   hs-source-dirs:
       test
-  ghc-options: -threaded -O0 -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns
+  ghc-options: -threaded -O0 -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns -Wredundant-constraints
   build-depends:
       QuickCheck
     , aeson

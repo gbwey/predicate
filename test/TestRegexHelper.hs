@@ -38,10 +38,10 @@ liftMaybe :: Eq a => a -> a -> Either (a,a) ()
 liftMaybe expected actual | expected == actual = Right ()
                           | otherwise = Left (expected, actual)
 
-expectAll' :: (Show a, Show a1, Eq a, Eq a1) => a1 -> (a -> a1) -> [a] -> IO ()
+expectAll' :: (Show a, Show a1, Eq a1) => a1 -> (a -> a1) -> [a] -> IO ()
 expectAll' w p = expectAll (liftMaybe w . p)
 
-expectAll :: (Eq a, Show a, HasCallStack, Show b) => (a -> Either b ()) -> [a] -> IO ()
+expectAll :: (Show a, HasCallStack, Show b) => (a -> Either b ()) -> [a] -> IO ()
 expectAll p as = case lefts (map (\a -> left (a,) (p a)) as) of
                    [] -> pure ()
                    xs@(_:_) -> assertFailure $ "expected all to succeed but " <> show (length xs) <> " failed " <> show xs

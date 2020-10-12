@@ -44,6 +44,7 @@ library:
   - -Wincomplete-uni-patterns
   - -Wpartial-fields
   - -Wunused-type-patterns
+  - -Wredundant-constraints
   when:
    - condition: impl(ghc >= 8.8)
      ghc-options:
@@ -76,6 +77,7 @@ tests:
     - -Wincomplete-uni-patterns
     - -Wpartial-fields
     - -Wunused-type-patterns
+    - -Wredundant-constraints
     when:
     -  condition: impl(ghc >= 8.8)
        ghc-options:
@@ -96,6 +98,7 @@ tests:
     - -Wincomplete-uni-patterns
     - -Wpartial-fields
     - -Wunused-type-patterns
+    - -Wredundant-constraints
     when:
     -  condition: impl(ghc >= 8.8)
        ghc-options:

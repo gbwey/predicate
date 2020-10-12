@@ -9,6 +9,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE MultiWayIf #-}
+{-# LANGUAGE NoStarIsType #-}
 module PredHelper where
 import Data.Foldable ( Foldable(toList) )
 import Control.Lens
