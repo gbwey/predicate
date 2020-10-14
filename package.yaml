@@ -50,6 +50,7 @@ library:
      ghc-options:
      - -fwrite-ide-info
      - -hiedir=.hie
+     - -Widentities
 
   other-modules: []
   exposed-modules:
@@ -83,6 +84,7 @@ tests:
        ghc-options:
        - -fwrite-ide-info
        - -hiedir=.hie
+       - -Widentities
     source-dirs:
     - .
     dependencies:
@@ -104,6 +106,7 @@ tests:
        ghc-options:
        - -fwrite-ide-info
        - -hiedir=.hie
+       - -Widentities
     source-dirs:
     - test
     dependencies:
