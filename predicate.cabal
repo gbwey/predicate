@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c392f297302cfdb8e7a641d31819cf94d23fc8802d7fc10fe3f39454e3169809
+-- hash: ce1e6f7393526b2492b08029457b2518f95cfd96c7422ede35a950131e712057
 
 name:           predicate
 version:        0.1.0.0
@@ -29,7 +29,7 @@ library
       JsonHelper
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns -Wredundant-constraints
+  ghc-options: -Wall -Wcompat -Wno-star-is-type -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wunused-type-patterns -Wredundant-constraints -Wnoncanonical-monad-instances
   build-depends:
       aeson
     , aeson-pretty

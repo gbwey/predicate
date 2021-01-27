@@ -40,17 +40,20 @@ library:
   ghc-options:
   - -Wall
   - -Wcompat
+  - -Wno-star-is-type
   - -Wincomplete-record-updates
   - -Wincomplete-uni-patterns
   - -Wpartial-fields
   - -Wunused-type-patterns
   - -Wredundant-constraints
+  - -Wnoncanonical-monad-instances
   when:
    - condition: impl(ghc >= 8.8)
      ghc-options:
      - -fwrite-ide-info
      - -hiedir=.hie
      - -Widentities
+   #  - -Wmissing-deriving-strategies
 
   other-modules: []
   exposed-modules:
